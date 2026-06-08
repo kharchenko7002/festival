@@ -1,0 +1,1618 @@
+{
+  "festival": {
+    "navn": "2INF Festival 2027",
+    "dato": "2027-03-18",
+    "sted": "Hamar katedralskole",
+    "bygning": "Teknologibygget",
+    "beskrivelse": "Karriere- og teknologifestival arrangert av VG2 Informasjonsteknologi.",
+    "kontaktEpost": "2inf-festival@hamar.vgs.no",
+    "startTid": "09:00",
+    "sluttTid": "15:00"
+  },
+  "bedrifter": [
+    {
+      "id": 1,
+      "navn": "Norsk Tipping",
+      "kontaktperson": "Kari Hansen",
+      "epost": "kari.hansen@norsktipping.no",
+      "telefon": "90011223",
+      "bransje": "Programvareutvikling",
+      "standnummer": "B01",
+      "harForedrag": true,
+      "nettside": "https://www.norsk-tipping.no",
+      "beskrivelse": "Jobber med utvikling, dataanalyse og digitale spilltjenester."
+    },
+    {
+      "id": 2,
+      "navn": "Eidsiva Digital",
+      "kontaktperson": "Per Olsen",
+      "epost": "per.olsen@eidsiva.no",
+      "telefon": "90022334",
+      "bransje": "IT-drift og infrastruktur",
+      "standnummer": "B02",
+      "harForedrag": true,
+      "nettside": "https://www.eidsiva.no",
+      "beskrivelse": "Leverer digitale tjenester, nettverk og infrastruktur."
+    },
+    {
+      "id": 3,
+      "navn": "Sopra Steria",
+      "kontaktperson": "Anne Berg",
+      "epost": "anne.berg@soprasteria.no",
+      "telefon": "90033445",
+      "bransje": "Konsulenttjenester",
+      "standnummer": "B03",
+      "harForedrag": true,
+      "nettside": "https://www.soprasteria.no",
+      "beskrivelse": "Jobber med rådgivning, utvikling og digital transformasjon."
+    },
+    {
+      "id": 4,
+      "navn": "Tietoevry",
+      "kontaktperson": "Lars Hansen",
+      "epost": "lars.hansen@tietoevry.com",
+      "telefon": "90044556",
+      "bransje": "Programvare og skytjenester",
+      "standnummer": "B04",
+      "harForedrag": true,
+      "nettside": "https://www.tietoevry.com",
+      "beskrivelse": "Utvikler digitale løsninger for offentlig og privat sektor."
+    },
+    {
+      "id": 5,
+      "navn": "Atea",
+      "kontaktperson": "Maria Olsen",
+      "epost": "maria.olsen@atea.no",
+      "telefon": "90055667",
+      "bransje": "IT-infrastruktur",
+      "standnummer": "B05",
+      "harForedrag": true,
+      "nettside": "https://www.atea.no",
+      "beskrivelse": "Leverer utstyr, drift, sikkerhet og rådgivning innen IT."
+    },
+    {
+      "id": 6,
+      "navn": "Computas",
+      "kontaktperson": "Erik Nilsen",
+      "epost": "erik.nilsen@computas.com",
+      "telefon": "90066778",
+      "bransje": "Systemutvikling",
+      "standnummer": "B06",
+      "harForedrag": true,
+      "nettside": "https://www.computas.com",
+      "beskrivelse": "Utvikler digitale løsninger med fokus på brukerbehov og teknologi."
+    },
+    {
+      "id": 7,
+      "navn": "Bouvet",
+      "kontaktperson": "Sofie Lund",
+      "epost": "sofie.lund@bouvet.no",
+      "telefon": "90077889",
+      "bransje": "Design og utvikling",
+      "standnummer": "B07",
+      "harForedrag": true,
+      "nettside": "https://www.bouvet.no",
+      "beskrivelse": "Jobber med design, utvikling, rådgivning og prosjektledelse."
+    },
+    {
+      "id": 8,
+      "navn": "Mnemonic",
+      "kontaktperson": "Thomas Lie",
+      "epost": "thomas.lie@mnemonic.no",
+      "telefon": "90088990",
+      "bransje": "Informasjonssikkerhet",
+      "standnummer": "B08",
+      "harForedrag": true,
+      "nettside": "https://www.mnemonic.io",
+      "beskrivelse": "Jobber med cybersikkerhet, hendelseshåndtering og sikkerhetsanalyse."
+    },
+    {
+      "id": 9,
+      "navn": "Visma",
+      "kontaktperson": "Ida Moen",
+      "epost": "ida.moen@visma.com",
+      "telefon": "90100112",
+      "bransje": "Forretningssystemer",
+      "standnummer": "B09",
+      "harForedrag": true,
+      "nettside": "https://www.visma.no",
+      "beskrivelse": "Utvikler programvare for økonomi, skole, HR og administrasjon."
+    },
+    {
+      "id": 10,
+      "navn": "Capgemini",
+      "kontaktperson": "Martin Holm",
+      "epost": "martin.holm@capgemini.com",
+      "telefon": "90111223",
+      "bransje": "Konsulent og teknologi",
+      "standnummer": "B10",
+      "harForedrag": true,
+      "nettside": "https://www.capgemini.com/no-no",
+      "beskrivelse": "Leverer konsulenttjenester innen teknologi, sky og utvikling."
+    },
+    {
+      "id": 11,
+      "navn": "Elvia",
+      "kontaktperson": "Nora Dahl",
+      "epost": "nora.dahl@elvia.no",
+      "telefon": "90122334",
+      "bransje": "Energi og digitalisering",
+      "standnummer": "B11",
+      "harForedrag": false,
+      "nettside": "https://www.elvia.no",
+      "beskrivelse": "Jobber med strømnett, sensordata og digitale driftsløsninger."
+    },
+    {
+      "id": 12,
+      "navn": "Hamar kommune IT",
+      "kontaktperson": "Geir Bakken",
+      "epost": "geir.bakken@hamar.kommune.no",
+      "telefon": "90133445",
+      "bransje": "Offentlig IT-drift",
+      "standnummer": "B12",
+      "harForedrag": true,
+      "nettside": "https://www.hamar.kommune.no",
+      "beskrivelse": "Drifter digitale tjenester, nettverk og brukerstøtte i kommunen."
+    },
+    {
+      "id": 13,
+      "navn": "Sykehuset Innlandet IKT",
+      "kontaktperson": "Lina Solberg",
+      "epost": "lina.solberg@sykehuset-innlandet.no",
+      "telefon": "90144556",
+      "bransje": "Helse-IKT",
+      "standnummer": "B13",
+      "harForedrag": true,
+      "nettside": "https://www.sykehuset-innlandet.no",
+      "beskrivelse": "Jobber med sikre IT-løsninger i helsesektoren."
+    },
+    {
+      "id": 14,
+      "navn": "NAV IT",
+      "kontaktperson": "Marius Strand",
+      "epost": "marius.strand@nav.no",
+      "telefon": "90155667",
+      "bransje": "Offentlig digitalisering",
+      "standnummer": "B14",
+      "harForedrag": true,
+      "nettside": "https://www.nav.no",
+      "beskrivelse": "Utvikler digitale tjenester for innbyggere og ansatte."
+    },
+    {
+      "id": 15,
+      "navn": "Entur",
+      "kontaktperson": "Hanne Lien",
+      "epost": "hanne.lien@entur.org",
+      "telefon": "90166778",
+      "bransje": "Mobilitet og data",
+      "standnummer": "B15",
+      "harForedrag": true,
+      "nettside": "https://www.entur.org",
+      "beskrivelse": "Jobber med reisedata, API-er og digitale mobilitetstjenester."
+    },
+    {
+      "id": 16,
+      "navn": "Telenor",
+      "kontaktperson": "Oskar Vik",
+      "epost": "oskar.vik@telenor.no",
+      "telefon": "90177889",
+      "bransje": "Telekom og nettverk",
+      "standnummer": "B16",
+      "harForedrag": true,
+      "nettside": "https://www.telenor.no",
+      "beskrivelse": "Leverer mobilnett, bredbånd og sikker kommunikasjon."
+    },
+    {
+      "id": 17,
+      "navn": "Kantega",
+      "kontaktperson": "Julie Aas",
+      "epost": "julie.aas@kantega.no",
+      "telefon": "90188990",
+      "bransje": "Smidig utvikling",
+      "standnummer": "B17",
+      "harForedrag": false,
+      "nettside": "https://www.kantega.no",
+      "beskrivelse": "Jobber med smidig utvikling og digitale produkter."
+    },
+    {
+      "id": 18,
+      "navn": "Crayon",
+      "kontaktperson": "Anders Eide",
+      "epost": "anders.eide@crayon.com",
+      "telefon": "90200112",
+      "bransje": "Sky og lisensiering",
+      "standnummer": "B18",
+      "harForedrag": true,
+      "nettside": "https://www.crayon.com",
+      "beskrivelse": "Rådgir om sky, lisensiering, data og kunstig intelligens."
+    },
+    {
+      "id": 19,
+      "navn": "Knowit",
+      "kontaktperson": "Mina Haugen",
+      "epost": "mina.haugen@knowit.no",
+      "telefon": "90211223",
+      "bransje": "Digital design og utvikling",
+      "standnummer": "B19",
+      "harForedrag": true,
+      "nettside": "https://www.knowit.no",
+      "beskrivelse": "Jobber med brukeropplevelse, teknologi og digital strategi."
+    },
+    {
+      "id": 20,
+      "navn": "Accenture",
+      "kontaktperson": "Stian Røed",
+      "epost": "stian.roed@accenture.com",
+      "telefon": "90222334",
+      "bransje": "Teknologirådgivning",
+      "standnummer": "B20",
+      "harForedrag": true,
+      "nettside": "https://www.accenture.com/no-en",
+      "beskrivelse": "Leverer teknologi, rådgivning og digital transformasjon globalt."
+    }
+  ],
+  "laerere": [
+    {
+      "id": 1,
+      "navn": "Daniel Kristoffersen",
+      "epost": "daniel.kristoffersen@hamar.vgs.no",
+      "ansvarsomraade": "Festivalansvarlig",
+      "telefon": "9100100"
+    },
+    {
+      "id": 2,
+      "navn": "Anne Johansen",
+      "epost": "anne.johansen@hamar.vgs.no",
+      "ansvarsomraade": "Bedriftskontakt",
+      "telefon": "9100101"
+    },
+    {
+      "id": 3,
+      "navn": "Per Nilsen",
+      "epost": "per.nilsen@hamar.vgs.no",
+      "ansvarsomraade": "Teknisk ansvarlig",
+      "telefon": "9100102"
+    },
+    {
+      "id": 4,
+      "navn": "Marte Løken",
+      "epost": "marte.loken@hamar.vgs.no",
+      "ansvarsomraade": "Elevkoordinator",
+      "telefon": "9100103"
+    },
+    {
+      "id": 5,
+      "navn": "Thomas Berg",
+      "epost": "thomas.berg@hamar.vgs.no",
+      "ansvarsomraade": "Rom og logistikk",
+      "telefon": "9100104"
+    },
+    {
+      "id": 6,
+      "navn": "Silje Hansen",
+      "epost": "silje.hansen@hamar.vgs.no",
+      "ansvarsomraade": "Kommunikasjon",
+      "telefon": "9100105"
+    },
+    {
+      "id": 7,
+      "navn": "Espen Solheim",
+      "epost": "espen.solheim@hamar.vgs.no",
+      "ansvarsomraade": "Sikkerhet og HMS",
+      "telefon": "9100106"
+    },
+    {
+      "id": 8,
+      "navn": "Hilde Moen",
+      "epost": "hilde.moen@hamar.vgs.no",
+      "ansvarsomraade": "Programansvarlig",
+      "telefon": "9100107"
+    },
+    {
+      "id": 9,
+      "navn": "Rune Dahl",
+      "epost": "rune.dahl@hamar.vgs.no",
+      "ansvarsomraade": "Nettverk og infrastruktur",
+      "telefon": "9100108"
+    },
+    {
+      "id": 10,
+      "navn": "Ingrid Aas",
+      "epost": "ingrid.aas@hamar.vgs.no",
+      "ansvarsomraade": "Registrering",
+      "telefon": "9100109"
+    },
+    {
+      "id": 11,
+      "navn": "Morten Lie",
+      "epost": "morten.lie@hamar.vgs.no",
+      "ansvarsomraade": "Utstillerkontakt",
+      "telefon": "9100110"
+    },
+    {
+      "id": 12,
+      "navn": "Katrine Holm",
+      "epost": "katrine.holm@hamar.vgs.no",
+      "ansvarsomraade": "Workshopansvarlig",
+      "telefon": "9100111"
+    },
+    {
+      "id": 13,
+      "navn": "Vegard Strand",
+      "epost": "vegard.strand@hamar.vgs.no",
+      "ansvarsomraade": "Utstyr og AV",
+      "telefon": "9100112"
+    },
+    {
+      "id": 14,
+      "navn": "Lene Bakken",
+      "epost": "lene.bakken@hamar.vgs.no",
+      "ansvarsomraade": "Informasjonspunkt",
+      "telefon": "9100113"
+    },
+    {
+      "id": 15,
+      "navn": "Ola Tangen",
+      "epost": "ola.tangen@hamar.vgs.no",
+      "ansvarsomraade": "Dokumentasjon",
+      "telefon": "9100114"
+    }
+  ],
+  "elever": [
+    {
+      "id": 1,
+      "navn": "Emma Hansen",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "emma.hansen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 2,
+      "navn": "Jonas Nilsen",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "jonas.nilsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 3,
+      "navn": "Sofie Moen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "sofie.moen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 4,
+      "navn": "Markus Dahl",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "markus.dahl@elev.hamar.vgs.no"
+    },
+    {
+      "id": 5,
+      "navn": "Ida Strand",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "ida.strand@elev.hamar.vgs.no"
+    },
+    {
+      "id": 6,
+      "navn": "Henrik Bakken",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "henrik.bakken@elev.hamar.vgs.no"
+    },
+    {
+      "id": 7,
+      "navn": "Nora Eide",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "nora.eide@elev.hamar.vgs.no"
+    },
+    {
+      "id": 8,
+      "navn": "Oliver Berg",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "oliver.berg@elev.hamar.vgs.no"
+    },
+    {
+      "id": 9,
+      "navn": "Maja Johansen",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "maja.johansen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 10,
+      "navn": "Lucas Solberg",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "lucas.solberg@elev.hamar.vgs.no"
+    },
+    {
+      "id": 11,
+      "navn": "Thea Haugen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "thea.haugen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 12,
+      "navn": "Sander Holm",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "sander.holm@elev.hamar.vgs.no"
+    },
+    {
+      "id": 13,
+      "navn": "Sara Vik",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "sara.vik@elev.hamar.vgs.no"
+    },
+    {
+      "id": 14,
+      "navn": "Emil Tangen",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "emil.tangen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 15,
+      "navn": "Leah Olsen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "leah.olsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 16,
+      "navn": "Mathias Larsen",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "mathias.larsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 17,
+      "navn": "Julie Lund",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "julie.lund@elev.hamar.vgs.no"
+    },
+    {
+      "id": 18,
+      "navn": "Aksel Aas",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "aksel.aas@elev.hamar.vgs.no"
+    },
+    {
+      "id": 19,
+      "navn": "Ingrid Lie",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "ingrid.lie@elev.hamar.vgs.no"
+    },
+    {
+      "id": 20,
+      "navn": "Noah Røed",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "noah.roed@elev.hamar.vgs.no"
+    },
+    {
+      "id": 21,
+      "navn": "Emma Hansen",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "emma.hansen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 22,
+      "navn": "Jonas Nilsen",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "jonas.nilsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 23,
+      "navn": "Sofie Moen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "sofie.moen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 24,
+      "navn": "Markus Dahl",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "markus.dahl@elev.hamar.vgs.no"
+    },
+    {
+      "id": 25,
+      "navn": "Ida Strand",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "ida.strand@elev.hamar.vgs.no"
+    },
+    {
+      "id": 26,
+      "navn": "Henrik Bakken",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "henrik.bakken@elev.hamar.vgs.no"
+    },
+    {
+      "id": 27,
+      "navn": "Nora Eide",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "nora.eide@elev.hamar.vgs.no"
+    },
+    {
+      "id": 28,
+      "navn": "Oliver Berg",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "oliver.berg@elev.hamar.vgs.no"
+    },
+    {
+      "id": 29,
+      "navn": "Maja Johansen",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "maja.johansen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 30,
+      "navn": "Lucas Solberg",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "lucas.solberg@elev.hamar.vgs.no"
+    },
+    {
+      "id": 31,
+      "navn": "Thea Haugen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "thea.haugen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 32,
+      "navn": "Sander Holm",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "sander.holm@elev.hamar.vgs.no"
+    },
+    {
+      "id": 33,
+      "navn": "Sara Vik",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "sara.vik@elev.hamar.vgs.no"
+    },
+    {
+      "id": 34,
+      "navn": "Emil Tangen",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "emil.tangen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 35,
+      "navn": "Leah Olsen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "leah.olsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 36,
+      "navn": "Mathias Larsen",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "mathias.larsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 37,
+      "navn": "Julie Lund",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "julie.lund@elev.hamar.vgs.no"
+    },
+    {
+      "id": 38,
+      "navn": "Aksel Aas",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "aksel.aas@elev.hamar.vgs.no"
+    },
+    {
+      "id": 39,
+      "navn": "Ingrid Lie",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "ingrid.lie@elev.hamar.vgs.no"
+    },
+    {
+      "id": 40,
+      "navn": "Noah Røed",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "noah.roed@elev.hamar.vgs.no"
+    },
+    {
+      "id": 41,
+      "navn": "Emma Hansen",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "emma.hansen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 42,
+      "navn": "Jonas Nilsen",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "jonas.nilsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 43,
+      "navn": "Sofie Moen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "sofie.moen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 44,
+      "navn": "Markus Dahl",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "markus.dahl@elev.hamar.vgs.no"
+    },
+    {
+      "id": 45,
+      "navn": "Ida Strand",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "ida.strand@elev.hamar.vgs.no"
+    },
+    {
+      "id": 46,
+      "navn": "Henrik Bakken",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "henrik.bakken@elev.hamar.vgs.no"
+    },
+    {
+      "id": 47,
+      "navn": "Nora Eide",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "nora.eide@elev.hamar.vgs.no"
+    },
+    {
+      "id": 48,
+      "navn": "Oliver Berg",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "oliver.berg@elev.hamar.vgs.no"
+    },
+    {
+      "id": 49,
+      "navn": "Maja Johansen",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "maja.johansen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 50,
+      "navn": "Lucas Solberg",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "lucas.solberg@elev.hamar.vgs.no"
+    },
+    {
+      "id": 51,
+      "navn": "Thea Haugen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "thea.haugen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 52,
+      "navn": "Sander Holm",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "sander.holm@elev.hamar.vgs.no"
+    },
+    {
+      "id": 53,
+      "navn": "Sara Vik",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "sara.vik@elev.hamar.vgs.no"
+    },
+    {
+      "id": 54,
+      "navn": "Emil Tangen",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "emil.tangen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 55,
+      "navn": "Leah Olsen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "leah.olsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 56,
+      "navn": "Mathias Larsen",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "mathias.larsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 57,
+      "navn": "Julie Lund",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "julie.lund@elev.hamar.vgs.no"
+    },
+    {
+      "id": 58,
+      "navn": "Aksel Aas",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "aksel.aas@elev.hamar.vgs.no"
+    },
+    {
+      "id": 59,
+      "navn": "Ingrid Lie",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "ingrid.lie@elev.hamar.vgs.no"
+    },
+    {
+      "id": 60,
+      "navn": "Noah Røed",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "noah.roed@elev.hamar.vgs.no"
+    },
+    {
+      "id": 61,
+      "navn": "Emma Hansen",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "emma.hansen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 62,
+      "navn": "Jonas Nilsen",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "jonas.nilsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 63,
+      "navn": "Sofie Moen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "sofie.moen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 64,
+      "navn": "Markus Dahl",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "markus.dahl@elev.hamar.vgs.no"
+    },
+    {
+      "id": 65,
+      "navn": "Ida Strand",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "ida.strand@elev.hamar.vgs.no"
+    },
+    {
+      "id": 66,
+      "navn": "Henrik Bakken",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "henrik.bakken@elev.hamar.vgs.no"
+    },
+    {
+      "id": 67,
+      "navn": "Nora Eide",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "nora.eide@elev.hamar.vgs.no"
+    },
+    {
+      "id": 68,
+      "navn": "Oliver Berg",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "oliver.berg@elev.hamar.vgs.no"
+    },
+    {
+      "id": 69,
+      "navn": "Maja Johansen",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "maja.johansen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 70,
+      "navn": "Lucas Solberg",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "lucas.solberg@elev.hamar.vgs.no"
+    },
+    {
+      "id": 71,
+      "navn": "Thea Haugen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "thea.haugen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 72,
+      "navn": "Sander Holm",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "sander.holm@elev.hamar.vgs.no"
+    },
+    {
+      "id": 73,
+      "navn": "Sara Vik",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Vertskap",
+      "epost": "sara.vik@elev.hamar.vgs.no"
+    },
+    {
+      "id": 74,
+      "navn": "Emil Tangen",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Teknisk støtte",
+      "epost": "emil.tangen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 75,
+      "navn": "Leah Olsen",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Registrering",
+      "epost": "leah.olsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 76,
+      "navn": "Mathias Larsen",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "Romansvarlig",
+      "epost": "mathias.larsen@elev.hamar.vgs.no"
+    },
+    {
+      "id": 77,
+      "navn": "Julie Lund",
+      "klasse": "2INF",
+      "gruppe": "A",
+      "rolle": "Programvert",
+      "epost": "julie.lund@elev.hamar.vgs.no"
+    },
+    {
+      "id": 78,
+      "navn": "Aksel Aas",
+      "klasse": "2INF",
+      "gruppe": "B",
+      "rolle": "Utstillerkontakt",
+      "epost": "aksel.aas@elev.hamar.vgs.no"
+    },
+    {
+      "id": 79,
+      "navn": "Ingrid Lie",
+      "klasse": "2INF",
+      "gruppe": "C",
+      "rolle": "Publikumsinformasjon",
+      "epost": "ingrid.lie@elev.hamar.vgs.no"
+    },
+    {
+      "id": 80,
+      "navn": "Noah Røed",
+      "klasse": "2INF",
+      "gruppe": "D",
+      "rolle": "AV-støtte",
+      "epost": "noah.roed@elev.hamar.vgs.no"
+    }
+  ],
+  "rom": [
+    {
+      "id": 1,
+      "romnummer": "A201",
+      "bygning": "Teknologibygget",
+      "kapasitet": 30,
+      "utstyr": [
+        "Prosjektor",
+        "Lydanlegg",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 2,
+      "romnummer": "A202",
+      "bygning": "Teknologibygget",
+      "kapasitet": 25,
+      "utstyr": [
+        "Prosjektor",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 3,
+      "romnummer": "A203",
+      "bygning": "Teknologibygget",
+      "kapasitet": 40,
+      "utstyr": [
+        "Lydanlegg",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 4,
+      "romnummer": "A204",
+      "bygning": "Teknologibygget",
+      "kapasitet": 20,
+      "utstyr": [
+        "WiFi",
+        "Tavle"
+      ]
+    },
+    {
+      "id": 5,
+      "romnummer": "A205",
+      "bygning": "Teknologibygget",
+      "kapasitet": 35,
+      "utstyr": [
+        "Prosjektor",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 6,
+      "romnummer": "B101",
+      "bygning": "Hovedbygget",
+      "kapasitet": 28,
+      "utstyr": [
+        "Prosjektor",
+        "Lydanlegg",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 7,
+      "romnummer": "B102",
+      "bygning": "Hovedbygget",
+      "kapasitet": 22,
+      "utstyr": [
+        "Prosjektor",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 8,
+      "romnummer": "B103",
+      "bygning": "Hovedbygget",
+      "kapasitet": 32,
+      "utstyr": [
+        "WiFi",
+        "Tavle"
+      ]
+    },
+    {
+      "id": 9,
+      "romnummer": "C301",
+      "bygning": "Mediebygget",
+      "kapasitet": 24,
+      "utstyr": [
+        "Prosjektor",
+        "WiFi",
+        "Kamera"
+      ]
+    },
+    {
+      "id": 10,
+      "romnummer": "C302",
+      "bygning": "Mediebygget",
+      "kapasitet": 26,
+      "utstyr": [
+        "Prosjektor",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 11,
+      "romnummer": "D101",
+      "bygning": "Auditorium",
+      "kapasitet": 80,
+      "utstyr": [
+        "Storskjerm",
+        "Lydanlegg",
+        "Mikrofon",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 12,
+      "romnummer": "D102",
+      "bygning": "Auditorium",
+      "kapasitet": 60,
+      "utstyr": [
+        "Storskjerm",
+        "Lydanlegg",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 13,
+      "romnummer": "Lab 1",
+      "bygning": "Teknologibygget",
+      "kapasitet": 18,
+      "utstyr": [
+        "PC-er",
+        "Switch",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 14,
+      "romnummer": "Lab 2",
+      "bygning": "Teknologibygget",
+      "kapasitet": 18,
+      "utstyr": [
+        "PC-er",
+        "Serverrack",
+        "WiFi"
+      ]
+    },
+    {
+      "id": 15,
+      "romnummer": "Kantine",
+      "bygning": "Fellesareal",
+      "kapasitet": 120,
+      "utstyr": [
+        "Lydanlegg",
+        "WiFi",
+        "Sceneområde"
+      ]
+    }
+  ],
+  "foredrag": [
+    {
+      "id": 1,
+      "tittel": "Karriere som utvikler",
+      "beskrivelse": "Foredrag om karriere som utvikler med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 1,
+      "startTid": "09:00",
+      "sluttTid": "09:30",
+      "maksPlasser": 30,
+      "kategori": "Utvikling",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 2,
+      "tittel": "Moderne IT-drift",
+      "beskrivelse": "Foredrag om moderne it-drift med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 2,
+      "startTid": "09:45",
+      "sluttTid": "10:15",
+      "maksPlasser": 25,
+      "kategori": "Drift",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 3,
+      "tittel": "Hvordan jobber en IT-konsulent?",
+      "beskrivelse": "Foredrag om hvordan jobber en it-konsulent? med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 3,
+      "startTid": "10:30",
+      "sluttTid": "11:00",
+      "maksPlasser": 40,
+      "kategori": "Sikkerhet",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 4,
+      "tittel": "Sikkerhet i moderne nettverk",
+      "beskrivelse": "Foredrag om sikkerhet i moderne nettverk med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 4,
+      "startTid": "11:15",
+      "sluttTid": "11:45",
+      "maksPlasser": 20,
+      "kategori": "Karriere",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 5,
+      "tittel": "Fra idé til digital tjeneste",
+      "beskrivelse": "Foredrag om fra idé til digital tjeneste med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 5,
+      "startTid": "12:15",
+      "sluttTid": "12:45",
+      "maksPlasser": 35,
+      "kategori": "Kunstig intelligens",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 6,
+      "tittel": "Hvordan bruke skyen riktig?",
+      "beskrivelse": "Foredrag om hvordan bruke skyen riktig? med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 6,
+      "startTid": "13:00",
+      "sluttTid": "13:30",
+      "maksPlasser": 28,
+      "kategori": "Nettverk",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 7,
+      "tittel": "Frontendutvikling i praksis",
+      "beskrivelse": "Foredrag om frontendutvikling i praksis med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 7,
+      "startTid": "13:45",
+      "sluttTid": "14:15",
+      "maksPlasser": 22,
+      "kategori": "Design",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 8,
+      "tittel": "Backend og API-er",
+      "beskrivelse": "Foredrag om backend og api-er med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 8,
+      "startTid": "09:00",
+      "sluttTid": "09:30",
+      "maksPlasser": 32,
+      "kategori": "Dataanalyse",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 9,
+      "tittel": "Hva gjør en sikkerhetsanalytiker?",
+      "beskrivelse": "Foredrag om hva gjør en sikkerhetsanalytiker? med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 9,
+      "startTid": "09:45",
+      "sluttTid": "10:15",
+      "maksPlasser": 24,
+      "kategori": "Utvikling",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 10,
+      "tittel": "Automatisering med scripts",
+      "beskrivelse": "Foredrag om automatisering med scripts med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 10,
+      "startTid": "10:30",
+      "sluttTid": "11:00",
+      "maksPlasser": 26,
+      "kategori": "Drift",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 11,
+      "tittel": "Docker i utvikling og drift",
+      "beskrivelse": "Foredrag om docker i utvikling og drift med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 11,
+      "startTid": "11:15",
+      "sluttTid": "11:45",
+      "maksPlasser": 80,
+      "kategori": "Sikkerhet",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 12,
+      "tittel": "Universell utforming på web",
+      "beskrivelse": "Foredrag om universell utforming på web med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 12,
+      "startTid": "12:15",
+      "sluttTid": "12:45",
+      "maksPlasser": 60,
+      "kategori": "Karriere",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 13,
+      "tittel": "Hvordan jobbe smidig?",
+      "beskrivelse": "Foredrag om hvordan jobbe smidig? med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 13,
+      "startTid": "13:00",
+      "sluttTid": "13:30",
+      "maksPlasser": 18,
+      "kategori": "Kunstig intelligens",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 14,
+      "tittel": "Dataanalyse og beslutningsstøtte",
+      "beskrivelse": "Foredrag om dataanalyse og beslutningsstøtte med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 14,
+      "startTid": "13:45",
+      "sluttTid": "14:15",
+      "maksPlasser": 18,
+      "kategori": "Nettverk",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 15,
+      "tittel": "Nettverk i store organisasjoner",
+      "beskrivelse": "Foredrag om nettverk i store organisasjoner med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 15,
+      "startTid": "09:00",
+      "sluttTid": "09:30",
+      "maksPlasser": 120,
+      "kategori": "Design",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 16,
+      "tittel": "Kunstig intelligens i arbeidslivet",
+      "beskrivelse": "Foredrag om kunstig intelligens i arbeidslivet med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 16,
+      "startTid": "09:45",
+      "sluttTid": "10:15",
+      "maksPlasser": 30,
+      "kategori": "Dataanalyse",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 17,
+      "tittel": "Personvern og GDPR i IT-prosjekter",
+      "beskrivelse": "Foredrag om personvern og gdpr i it-prosjekter med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 17,
+      "startTid": "10:30",
+      "sluttTid": "11:00",
+      "maksPlasser": 25,
+      "kategori": "Utvikling",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 18,
+      "tittel": "DevOps fra utvikling til produksjon",
+      "beskrivelse": "Foredrag om devops fra utvikling til produksjon med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 18,
+      "startTid": "11:15",
+      "sluttTid": "11:45",
+      "maksPlasser": 40,
+      "kategori": "Drift",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 19,
+      "tittel": "Hva er god brukerstøtte?",
+      "beskrivelse": "Foredrag om hva er god brukerstøtte? med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 19,
+      "startTid": "12:15",
+      "sluttTid": "12:45",
+      "maksPlasser": 20,
+      "kategori": "Sikkerhet",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 20,
+      "tittel": "Hvordan fungerer moderne betalingsløsninger?",
+      "beskrivelse": "Foredrag om hvordan fungerer moderne betalingsløsninger? med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 20,
+      "startTid": "13:00",
+      "sluttTid": "13:30",
+      "maksPlasser": 35,
+      "kategori": "Karriere",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 21,
+      "tittel": "Introduksjon til cybersikkerhet",
+      "beskrivelse": "Foredrag om introduksjon til cybersikkerhet med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 1,
+      "startTid": "13:45",
+      "sluttTid": "14:15",
+      "maksPlasser": 28,
+      "kategori": "Kunstig intelligens",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 22,
+      "tittel": "Sikker pålogging og identitet",
+      "beskrivelse": "Foredrag om sikker pålogging og identitet med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 2,
+      "startTid": "09:00",
+      "sluttTid": "09:30",
+      "maksPlasser": 22,
+      "kategori": "Nettverk",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 23,
+      "tittel": "Designsystemer og komponenter",
+      "beskrivelse": "Foredrag om designsystemer og komponenter med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 3,
+      "startTid": "09:45",
+      "sluttTid": "10:15",
+      "maksPlasser": 32,
+      "kategori": "Design",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 24,
+      "tittel": "Databasevalg i webprosjekter",
+      "beskrivelse": "Foredrag om databasevalg i webprosjekter med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 4,
+      "startTid": "10:30",
+      "sluttTid": "11:00",
+      "maksPlasser": 24,
+      "kategori": "Dataanalyse",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 25,
+      "tittel": "Hvordan feilsøke effektivt?",
+      "beskrivelse": "Foredrag om hvordan feilsøke effektivt? med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 5,
+      "startTid": "11:15",
+      "sluttTid": "11:45",
+      "maksPlasser": 26,
+      "kategori": "Utvikling",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 26,
+      "tittel": "Fra skole til lærling",
+      "beskrivelse": "Foredrag om fra skole til lærling med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 6,
+      "startTid": "12:15",
+      "sluttTid": "12:45",
+      "maksPlasser": 80,
+      "kategori": "Drift",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 27,
+      "tittel": "IoT og sensordata",
+      "beskrivelse": "Foredrag om iot og sensordata med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 7,
+      "startTid": "13:00",
+      "sluttTid": "13:30",
+      "maksPlasser": 60,
+      "kategori": "Sikkerhet",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 28,
+      "tittel": "API-design for nybegynnere",
+      "beskrivelse": "Foredrag om api-design for nybegynnere med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 8,
+      "startTid": "13:45",
+      "sluttTid": "14:15",
+      "maksPlasser": 18,
+      "kategori": "Karriere",
+      "rom": "Auditorium B"
+    },
+    {
+      "id": 29,
+      "tittel": "Brannmur og nettverkssegmentering",
+      "beskrivelse": "Foredrag om brannmur og nettverkssegmentering med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 9,
+      "startTid": "09:00",
+      "sluttTid": "09:30",
+      "maksPlasser": 18,
+      "kategori": "Kunstig intelligens",
+      "rom": "Auditorium A"
+    },
+    {
+      "id": 30,
+      "tittel": "Hvordan dokumentere tekniske løsninger?",
+      "beskrivelse": "Foredrag om hvordan dokumentere tekniske løsninger? med praktiske eksempler fra arbeidslivet.",
+      "holderBedriftId": 10,
+      "startTid": "09:45",
+      "sluttTid": "10:15",
+      "maksPlasser": 120,
+      "kategori": "Nettverk",
+      "rom": "Auditorium A"
+    }
+  ],
+  "workshops": [
+    {
+      "id": 1,
+      "tittel": "Bygg din første React-applikasjon",
+      "holderBedriftId": 1,
+      "romId": 4,
+      "startTid": "10:00",
+      "sluttTid": "11:00",
+      "maksPlasser": 18,
+      "forkunnskaper": "Grunnleggende HTML, CSS og JavaScript"
+    },
+    {
+      "id": 2,
+      "tittel": "Introduksjon til Docker",
+      "holderBedriftId": 2,
+      "romId": 5,
+      "startTid": "11:00",
+      "sluttTid": "12:00",
+      "maksPlasser": 22,
+      "forkunnskaper": "Grunnleggende terminalbruk"
+    },
+    {
+      "id": 3,
+      "tittel": "Lag et enkelt API",
+      "holderBedriftId": 3,
+      "romId": 6,
+      "startTid": "12:00",
+      "sluttTid": "13:00",
+      "maksPlasser": 26,
+      "forkunnskaper": "Grunnleggende JavaScript"
+    },
+    {
+      "id": 4,
+      "tittel": "Sikker SSH-tilgang til server",
+      "holderBedriftId": 4,
+      "romId": 7,
+      "startTid": "13:00",
+      "sluttTid": "14:00",
+      "maksPlasser": 30,
+      "forkunnskaper": "Litt Linux-erfaring"
+    },
+    {
+      "id": 5,
+      "tittel": "Design en universelt utformet nettside",
+      "holderBedriftId": 5,
+      "romId": 8,
+      "startTid": "10:00",
+      "sluttTid": "11:00",
+      "maksPlasser": 34,
+      "forkunnskaper": "Ingen"
+    },
+    {
+      "id": 6,
+      "tittel": "Sett opp en enkel database",
+      "holderBedriftId": 6,
+      "romId": 9,
+      "startTid": "11:00",
+      "sluttTid": "12:00",
+      "maksPlasser": 18,
+      "forkunnskaper": "Grunnleggende SQL"
+    },
+    {
+      "id": 7,
+      "tittel": "Feilsøking i nettverk",
+      "holderBedriftId": 7,
+      "romId": 10,
+      "startTid": "12:00",
+      "sluttTid": "13:00",
+      "maksPlasser": 22,
+      "forkunnskaper": "Grunnleggende IP-forståelse"
+    },
+    {
+      "id": 8,
+      "tittel": "Bygg dashboard med festivaldata",
+      "holderBedriftId": 8,
+      "romId": 11,
+      "startTid": "13:00",
+      "sluttTid": "14:00",
+      "maksPlasser": 26,
+      "forkunnskaper": "Grunnleggende webutvikling"
+    },
+    {
+      "id": 9,
+      "tittel": "Kom i gang med Git og GitHub",
+      "holderBedriftId": 9,
+      "romId": 12,
+      "startTid": "10:00",
+      "sluttTid": "11:00",
+      "maksPlasser": 30,
+      "forkunnskaper": "Ingen"
+    },
+    {
+      "id": 10,
+      "tittel": "Lag innloggingsflyt",
+      "holderBedriftId": 10,
+      "romId": 13,
+      "startTid": "11:00",
+      "sluttTid": "12:00",
+      "maksPlasser": 34,
+      "forkunnskaper": "Litt programmeringserfaring"
+    },
+    {
+      "id": 11,
+      "tittel": "Nginx som webserver",
+      "holderBedriftId": 11,
+      "romId": 14,
+      "startTid": "12:00",
+      "sluttTid": "13:00",
+      "maksPlasser": 18,
+      "forkunnskaper": "Litt Linux-erfaring"
+    },
+    {
+      "id": 12,
+      "tittel": "Bruk JSON-data i frontend",
+      "holderBedriftId": 12,
+      "romId": 15,
+      "startTid": "13:00",
+      "sluttTid": "14:00",
+      "maksPlasser": 22,
+      "forkunnskaper": "Grunnleggende JavaScript"
+    }
+  ]
+}
