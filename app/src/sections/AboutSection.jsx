@@ -36,13 +36,21 @@ function AboutSection() {
         <div className="grid gap-6 md:grid-cols-3">
           {features.map((feature, index) => (
             <Reveal as="article" key={feature.title} delay={index * 120}>
-              <div className="flex h-full flex-col gap-4 rounded-2xl border border-slate-100 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-xl">
-                <span
-                  aria-hidden="true"
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-2xl"
-                >
-                  {feature.icon}
-                </span>
+              <div className="flex h-full flex-col gap-4 rounded-3xl border border-slate-100 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-xl">
+                <div className="flex items-center justify-between">
+                  <span
+                    aria-hidden="true"
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-2xl"
+                  >
+                    {feature.icon}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="text-sm font-bold tracking-widest text-slate-200"
+                  >
+                    0{index + 1}
+                  </span>
+                </div>
                 <h3 className="text-lg font-semibold text-slate-900">
                   {feature.title}
                 </h3>

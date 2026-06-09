@@ -52,14 +52,15 @@ function PracticalInfoSection() {
 
       <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 sm:px-6 lg:py-24">
         <Reveal>
-          <div className="flex flex-col items-center gap-3 text-center">
-            <span className="text-sm font-semibold uppercase tracking-widest text-accent-300">
+          <div className="flex max-w-2xl flex-col items-start gap-4 text-left">
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent-300">
+              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent-400" />
               Praktisk info
             </span>
-            <h2 className="text-3xl font-bold sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
               Nyttig å vite før du kommer
             </h2>
-            <p className="max-w-2xl text-base leading-relaxed text-brand-100">
+            <p className="text-base leading-relaxed text-brand-100 sm:text-lg">
               Det viktigste du trenger å vite om registrering, nettverk, oppmøte
               og utstyr.
             </p>

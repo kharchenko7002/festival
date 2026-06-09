@@ -37,12 +37,15 @@ function Header() {
         <a
           href="#festival"
           onClick={closeMenu}
-          className="flex items-center gap-2.5 text-lg font-bold text-slate-900"
+          className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-navy-900"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-accent-500 text-sm font-bold text-white shadow-sm shadow-brand-500/30">
+          <span
+            aria-hidden="true"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy-800 text-sm font-bold text-gold-400 shadow-sm"
+          >
             2i
           </span>
-          2INF Festival
+          2INF&nbsp;Festival
         </a>
 
         {/* Desktop navigation */}
@@ -64,7 +67,7 @@ function Header() {
         {/* Desktop call to action */}
         <a
           href="#program"
-          className="hidden rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/25 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg lg:inline-flex"
+          className="btn-primary hidden !px-5 !py-2.5 !text-sm lg:inline-flex"
         >
           Se program
         </a>
@@ -105,7 +108,7 @@ function Header() {
               <a
                 href="#program"
                 onClick={closeMenu}
-                className="block rounded-xl bg-brand-600 px-4 py-3 text-center text-base font-semibold text-white transition hover:bg-brand-700"
+                className="btn-primary w-full"
               >
                 Se program
               </a>
