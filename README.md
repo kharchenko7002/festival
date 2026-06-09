@@ -7,9 +7,20 @@ Valgt hovedretning: **IT-utvikling**.
 
 - **Live (internt nett):** https://festival.lan
 - **Direkte på IP:** https://10.20.30.20
+- **Vercel-preview:** https://festival-mu-ten.vercel.app/
 - **GitHub:** https://github.com/kharchenko7002/festival
 - **Branch:** `main`
 
+> **Merk om Vercel-preview:**  
+> Vercel-lenken er kun en enkel forhåndsvisning/prototype for å se hvordan nettsiden ser ut i nettleseren.  
+> Den viser ikke hele den ferdige løsningen med Ubuntu Server, Docker, Nginx, HTTPS, Windows DNS og det interne festivalnettverket.
+>
+> For å teste den ekte løsningen må man være koblet til festivalnettverket **2INF-Festival-KostiantynK**.  
+> Når man er koblet til dette nettverket, kan nettsiden åpnes via:
+>
+> `https://festival.lan`
+>
+> Dette er hovedadressen for den ferdige løsningen i det interne nettverket.
 ---
 
 ## Kort beskrivelse
