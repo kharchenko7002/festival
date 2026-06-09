@@ -102,11 +102,11 @@ function PracticalInfoSection() {
               <p className="text-base font-medium text-white">
                 Klar for festivaldagen?
               </p>
-              <a href="#program" className="btn-primary">
-                Se programmet
+              <a href="#pamelding" className="btn-primary">
+                Meld meg på
               </a>
-              <a href="#kontakt" className="btn-light">
-                Kontakt oss
+              <a href="#program" className="btn-light">
+                Se programmet
               </a>
             </Reveal>
           </div>

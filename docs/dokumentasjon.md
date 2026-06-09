@@ -51,7 +51,7 @@ Prosjektet er organisert slik:
 2inf-festival/
 ├── app/
 │   ├── src/
-│   │   ├── components/   (Header, Footer, SectionTitle, StatCard, SearchInput, Badge)
+│   │   ├── components/   (Header, Footer, SectionTitle, StatCard, SearchInput, Badge, Reveal, CookieConsent)
 │   │   ├── sections/     (Hero, About, Program, Companies, Workshops, Rooms, Info, Contact)
 │   │   ├── utils/        (dataHelpers.js)
 │   │   ├── data/
@@ -76,7 +76,7 @@ Prosjektet er organisert slik:
 Forklaring:
 
 - `app/` inneholder React/Vite-applikasjonen.
-- `app/src/components/` inneholder gjenbrukbare UI-komponenter (Header, Footer, SectionTitle, StatCard, SearchInput, Badge).
+- `app/src/components/` inneholder gjenbrukbare UI-komponenter (Header, Footer, SectionTitle, StatCard, SearchInput, Badge, Reveal for scroll-animasjoner og CookieConsent for samtykkebanner).
 - `app/src/sections/` inneholder de enkelte seksjonene på nettsiden (Hero, About, Program, Companies, Workshops, Rooms, Info, Contact).
 - `app/src/utils/dataHelpers.js` inneholder hjelpefunksjoner som leser og kobler sammen data fra `datasett.json`.
 - `data/` inneholder original JSON-fil fra oppgaven.
@@ -191,6 +191,32 @@ Nettsiden er videreutviklet fra prototype til en mer komplett og profesjonell fe
 
 Bygging og kvalitet er verifisert med `npm run build` og `npm run lint` – begge kjører uten feil.
 
+### Ferdig utviklet nettside
+
+Webapplikasjonen regnes nå som **ferdig utviklet**. I tillegg til funksjonaliteten over er hele nettsiden bygget om til en polert, SaaS-inspirert landingsside:
+
+- Et konsistent visuelt system med rent hvitt, dyp marineblå og en varm gul aksentfarge, definert i `src/index.css`.
+- Ny hero-seksjon med stor overskrift, infokort for dato/tid/sted og en dashboard-mockup bygget i Tailwind.
+- Gjenbrukbare knappe- og kortstiler og lette CSS-animasjoner (hover-løft, svevende heroelementer og scroll-baserte fade/slide-inn via `Reveal`-komponenten). Det brukes ingen tunge animasjonsbibliotek.
+- Animasjoner respekterer `prefers-reduced-motion` for brukere som ønsker mindre bevegelse.
+- En **samtykkebanner for informasjonskapsler** (`CookieConsent`) vises ved første besøk. Valget («Godta»/«Avslå») lagres i nettleserens `localStorage`, slik at banneret ikke dukker opp igjen.
+
+All synlig tekst på nettsiden er på norsk bokmål, og alt innhold hentes fra `app/src/data/datasett.json`.
+
+#### Seksjoner på nettsiden
+
+| Seksjon | Innhold | Funksjonalitet |
+|---|---|---|
+| Festival (hero) | Navn, dato, tid, sted, bygning, beskrivelse, kontakt-e-post | Lenker til program og bedrifter |
+| Nøkkeltall | Antall bedrifter, foredrag, workshops og rom | Tall hentes fra datasettet |
+| Om festivalen | Forklaring av festivalen | – |
+| Program | Foredrag med tid, kategori, rom, maks plasser og bedrift | Søk, kategorifilter og sortering etter starttid |
+| Bedrifter | Navn, bransje, standnummer, beskrivelse og nettside | Søk på navn og bransje |
+| Workshops | Tid, bedrift, rom, maks plasser og forkunnskaper | Bedrift via `holderBedriftId`, rom via `romId` |
+| Rom | Romnummer, kapasitet og utstyr | Gruppert etter bygning |
+| Praktisk informasjon | Registrering, Wi-Fi, oppmøte, utstyr, åpningstider, stab | – |
+| Kontakt | Festivalens e-post og ansvarlige lærere | Lærere hentes etter ansvarsområde |
+
 ---
 
 ## 8. Docker
@@ -220,6 +246,19 @@ Fordeler med Docker i dette prosjektet:
 - Miljøet blir mer likt på forskjellige maskiner
 - Applikasjonen kan demonstreres uten manuell oppsett av webserver
 - Docker passer godt med kravet om lokal kjøring og videreutvikling
+
+### Deploy til Ubuntu Server
+
+Nettsiden skal deployes til **Ubuntu Server (10.20.30.20)** med **Docker**. Docker er allerede installert og testet på serveren (Docker 29.5.3, `docker run hello-world` fungerer). Imaget bygges fra `Dockerfile` og kjøres som en container som serverer den ferdigbygde React-appen via Nginx.
+
+Planlagt URL i festivalnettverket:
+
+```text
+http://festival.festival.local   (via DNS-sonen festival.local på Windows Server)
+http://10.20.30.20                (direkte på IP)
+```
+
+A-recordet `festival.festival.local -> 10.20.30.20` er allerede opprettet i DNS-sonen på Windows Server, slik at navnet peker mot Ubuntu Server der containeren skal kjøre.
 
 ---
 
@@ -492,6 +531,8 @@ Testing er viktig for å vise at løsningen fungerer og for å dokumentere event
 | Workshops vises fra JSON | OK |
 | Romoversikt vises fra JSON | OK |
 | Praktisk informasjon og kontakt vises | OK |
+| SaaS-redesign vises (hero, farger, animasjoner) | OK |
+| Samtykkebanner for informasjonskapsler vises og lagrer valg | OK |
 | `npm run build` | OK |
 | `npm run lint` | OK |
 
@@ -503,6 +544,7 @@ Testing er viktig for å vise at løsningen fungerer og for å dokumentere event
 | SSH med passord | Innlogging avvises |
 | Windows DNS | DNS-oppslag fungerer |
 | Ubuntu Docker | Container kan kjøres på Ubuntu Server |
+| Deploy på Ubuntu Server | Nettsiden er tilgjengelig på `http://festival.festival.local` og `http://10.20.30.20` |
 
 ---
 
@@ -568,48 +610,43 @@ git log --oneline --decorate --all > log.txt
 
 ### Oppdatering per 09.06.2026
 
-Webapplikasjonen er videreutviklet og regnes nå som ferdig på utviklingsdelen:
+Webapplikasjonen er **ferdig utviklet**:
 
 - Tailwind CSS installert og konfigurert
 - Prosjektet strukturert med `components/`, `sections/` og `utils/`
-- Nettsiden viser data fra `datasett.json`
+- Nettsiden viser festival, program, bedrifter, workshops, rom, praktisk informasjon og kontakt fra `app/src/data/datasett.json`
 - Program viser foredrag med søk, kategorifilter og sortering
 - Bedrifter vises fra JSON med søk på navn og bransje
 - Workshops vises fra JSON med bedrift og rom koblet via id
 - Romoversikt vises fra JSON, gruppert etter bygning
 - Praktisk informasjon og kontaktseksjon er laget
+- Hele nettsiden er bygget om til en polert, SaaS-inspirert landingsside med ny hero, konsistent fargesystem og lette animasjoner
+- Samtykkebanner for informasjonskapsler er lagt til
 - Responsivt design for mobil og PC
 - `npm run build` og `npm run lint` er testet uten feil
 
-Gjenstår fortsatt: serveroppsett (Windows/Ubuntu), `festivalsjef`-bruker med SSH-nøkkel, endelig `log.txt` og ZIP for innlevering.
+Serveroppsettet (Proxmox, Ubuntu Server, Windows Server med DNS) er også ferdig og testet, se egne dokumenter. Gjenstår fortsatt: deploy av Docker-imaget på Ubuntu Server (10.20.30.20) med tilgang via `http://festival.festival.local` / `http://10.20.30.20`, endelig `log.txt` og ZIP for innlevering.
 
 ---
 
 ## 15. Videre arbeid
 
-Neste steg i prosjektet:
+Webapplikasjonen og serveroppsettet er ferdige. Gjenstående steg i prosjektet:
 
-1. Videreutvikle React-nettsiden
-2. Vise program, bedrifter, workshops og rom fra JSON
-3. Forbedre responsivt design
-4. Skrive ferdig README
-5. Sette opp Windows Server med DNS
-6. Sette opp Ubuntu Server med Docker, Nginx og Node.js
-7. Opprette bruker `festivalsjef`
-8. Legge inn SSH-nøkkel
-9. Deaktivere passordinnlogging via SSH
-10. Teste hele løsningen
-11. Generere `log.txt`
-12. Pakke prosjektet som ZIP
+1. Deploye Docker-imaget på Ubuntu Server (10.20.30.20)
+2. Verifisere tilgang via `http://festival.festival.local` og `http://10.20.30.20`
+3. Vurdere HTTPS i produksjon
+4. Generere `log.txt`
+5. Pakke prosjektet som ZIP for innlevering
 
 ---
 
 ## 16. Konklusjon
 
-Prosjektet har kommet godt i gang. Grunnstrukturen er laget, Git brukes aktivt, Docker fungerer, og datasettet er lagt inn. Nettverket er også satt opp og testet.
+Prosjektet er kommet langt. Grunnstrukturen er laget, Git brukes aktivt, Docker fungerer, og datasettet er lagt inn. Nettverket og serverne er satt opp og testet.
 
-Webapplikasjonen er videreutviklet med Tailwind CSS og en komponentbasert struktur, og viser nå program, bedrifter, workshops, rom, praktisk informasjon og kontakt dynamisk fra `datasett.json`. Bygging og linting er testet uten feil.
+Webapplikasjonen er **ferdig utviklet** med React, Vite og Tailwind CSS i en komponentbasert struktur (`components/`, `sections/`, `utils/`). Nettsiden viser festival, program, bedrifter, workshops, rom, praktisk informasjon og kontakt dynamisk fra `app/src/data/datasett.json`, med søk/filter/sortering i programmet og søk i bedriftsoversikten. Den er bygget om til en polert, SaaS-inspirert landingsside med samtykkebanner for informasjonskapsler, og `npm run build` og `npm run lint` er testet uten feil.
 
-Det viktigste videre er å fullføre serveroppsett (Windows og Ubuntu), sette opp `festivalsjef`-bruker med SSH-nøkkel, og sluttføre dokumentasjon, `log.txt` og innlevering.
+Det viktigste videre er å deploye Docker-imaget på Ubuntu Server (10.20.30.20) med tilgang via `http://festival.festival.local` / `http://10.20.30.20`, og deretter sluttføre `log.txt` og ZIP for innlevering.
 
 Løsningen følger hovedretningen IT-utvikling, men inneholder også dokumentasjon av nettverk, drift, sikkerhet og servere for å dekke den tverrfaglige delen av eksamen.

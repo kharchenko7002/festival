@@ -98,11 +98,11 @@ function HeroSection() {
 
               {/* Calls to action */}
               <div className="flex flex-wrap items-center gap-3 pt-1">
-                <a href="#program" className="btn-primary">
-                  Se program
+                <a href="#pamelding" className="btn-primary">
+                  Meld meg på
                 </a>
-                <a href="#bedrifter" className="btn-light">
-                  Utforsk bedrifter
+                <a href="#program" className="btn-light">
+                  Se program
                 </a>
               </div>
 

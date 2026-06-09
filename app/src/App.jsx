@@ -1,5 +1,6 @@
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
+import CookieConsent from './components/CookieConsent.jsx'
 import HeroSection from './sections/HeroSection.jsx'
 import AboutSection from './sections/AboutSection.jsx'
 import ProgramSection from './sections/ProgramSection.jsx'
@@ -7,6 +8,7 @@ import CompaniesSection from './sections/CompaniesSection.jsx'
 import WorkshopsSection from './sections/WorkshopsSection.jsx'
 import RoomsSection from './sections/RoomsSection.jsx'
 import PracticalInfoSection from './sections/PracticalInfoSection.jsx'
+import PamendingSection from './sections/PamendingSection.jsx'
 import ContactSection from './sections/ContactSection.jsx'
 import { getFestival } from './utils/dataHelpers.js'
 
@@ -34,10 +36,13 @@ function App() {
         <WorkshopsSection />
         <RoomsSection />
         <PracticalInfoSection />
+        <PamendingSection />
         <ContactSection />
       </main>
 
       <Footer festival={festival} />
+
+      <CookieConsent />
     </div>
   )
 }

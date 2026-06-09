@@ -174,5 +174,46 @@ HTTPS i produksjon (vurdering, ikke krav i testmiljø)
 nå virtualisert på Proxmox med en ryddig nettverksbro, Ubuntu Server kjører
 tjenestene som webapplikasjonen trenger, og Windows Server leverer DNS. Sikker
 tilgang er på plass med nøkkelbasert SSH og deaktivert root-innlogging. Det
-viktigste som gjenstår er å generere `log.txt` og pakke prosjektet for
-innlevering.
+viktigste som gjenstår er å deploye webapplikasjonen på Ubuntu Server, generere
+`log.txt` og pakke prosjektet for innlevering.
+
+---
+
+## Tillegg: ferdigstilling av webapplikasjonen (09.06.2026)
+
+Senere samme dag ble webapplikasjonen ferdigstilt. Dette arbeidet hører til
+utviklingsdelen, men noteres her siden det skjedde i samme dato.
+
+### Arbeid utført
+
+- Hele nettsiden ble bygget om til en polert, SaaS-inspirert landingsside med
+  et konsistent fargesystem (rent hvitt, dyp marineblå og en varm gul aksent),
+  definert i `app/src/index.css`.
+- Ny hero-seksjon med stor overskrift, infokort for dato/tid/sted og en
+  dashboard-mockup bygget i Tailwind.
+- Alle seksjonene (om, program, bedrifter, workshops, rom, praktisk
+  informasjon og kontakt) fikk nytt kortdesign og lette CSS-animasjoner
+  (hover-løft, svevende heroelementer og scroll-baserte fade/slide-inn via
+  `Reveal`-komponenten). Ingen tunge animasjonsbibliotek er brukt.
+- En samtykkebanner for informasjonskapsler (`CookieConsent`) ble lagt til.
+  Valget lagres i `localStorage`, slik at banneret kun vises ved første besøk.
+- Funksjonaliteten ble bevart: søk/filter/sortering i programmet, søk i
+  bedriftsoversikten, kobling av `holderBedriftId` og `romId`, romgruppering
+  per bygning og valg av kontaktlærere.
+
+### Tekniske detaljer
+
+```text
+React + Vite + Tailwind CSS
+Datakilde: app/src/data/datasett.json (lest via utils/dataHelpers.js)
+Struktur: components/, sections/, utils/
+npm run build: OK
+npm run lint: OK
+```
+
+### Gjenstår for webdelen
+
+```text
+Deploy til Ubuntu Server (10.20.30.20) med Docker
+URL: http://festival.festival.local eller http://10.20.30.20
+```

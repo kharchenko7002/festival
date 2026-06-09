@@ -8,6 +8,7 @@ const navLinks = [
   { label: 'Workshops', href: '#workshops' },
   { label: 'Rom', href: '#rom' },
   { label: 'Info', href: '#info' },
+  { label: 'Påmelding', href: '#pamelding' },
   { label: 'Kontakt', href: '#kontakt' },
 ]
 
@@ -37,15 +38,9 @@ function Header() {
         <a
           href="#festival"
           onClick={closeMenu}
-          className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-navy-900"
+          className="text-xl font-extrabold tracking-tight text-navy-900 sm:text-2xl"
         >
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy-800 text-sm font-bold text-gold-400 shadow-sm"
-          >
-            2i
-          </span>
-          2INF&nbsp;Festival
+          2INF&nbsp;<span className="text-brand-600">Festival</span>
         </a>
 
         {/* Desktop navigation */}
@@ -64,13 +59,15 @@ function Header() {
           </ul>
         </nav>
 
-        {/* Desktop call to action */}
-        <a
-          href="#program"
-          className="btn-primary hidden !px-5 !py-2.5 !text-sm lg:inline-flex"
-        >
-          Se program
-        </a>
+        {/* Desktop calls to action */}
+        <div className="hidden items-center gap-2 lg:flex">
+          <a href="#program" className="btn-ghost !px-5 !py-2.5 !text-sm">
+            Se program
+          </a>
+          <a href="#pamelding" className="btn-blue !px-5 !py-2.5 !text-sm">
+            Meld meg på
+          </a>
+        </div>
 
         {/* Mobile menu toggle */}
         <button
@@ -104,13 +101,20 @@ function Header() {
                 </a>
               </li>
             ))}
-            <li className="px-1 py-2">
+            <li className="flex flex-col gap-2 px-1 py-2">
               <a
                 href="#program"
                 onClick={closeMenu}
-                className="btn-primary w-full"
+                className="btn-ghost w-full"
               >
                 Se program
+              </a>
+              <a
+                href="#pamelding"
+                onClick={closeMenu}
+                className="btn-blue w-full"
+              >
+                Meld meg på
               </a>
             </li>
           </ul>

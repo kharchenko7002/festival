@@ -64,6 +64,36 @@ export const getTeachersByAreas = (areas) =>
     )
     .filter(Boolean)
 
+// --- Registration form options ---------------------------------------------
+// Helpers that feed the dropdowns in the front-end-only Påmelding section.
+
+// Companies as dropdown options, alphabetically sorted: { value, label }
+export const getCompanyOptions = () =>
+  [...data.bedrifter]
+    .sort((a, b) => a.navn.localeCompare(b.navn, 'no'))
+    .map((company) => ({ value: company.id, label: company.navn }))
+
+// Workshops as dropdown options, sorted by start time. The label includes
+// the time span so visitors can tell overlapping sessions apart.
+export const getWorkshopOptions = () =>
+  sortByStartTime(data.workshops).map((workshop) => ({
+    value: workshop.id,
+    label: `${workshop.tittel} (${workshop.startTid}–${workshop.sluttTid})`,
+  }))
+
+// Unique time slots derived from the workshop schedule, sorted ascending.
+// A whole-day option is added first for visitors without a fixed preference.
+export const getAvailableTimeSlots = () => {
+  const slots = data.workshops.map(
+    (workshop) => `${workshop.startTid}–${workshop.sluttTid}`,
+  )
+  const unique = [...new Set(slots)].sort(
+    (a, b) => toMinutes(a.split('–')[0]) - toMinutes(b.split('–')[0]),
+  )
+  const festival = data.festival
+  return [`Hele dagen (${festival.startTid}–${festival.sluttTid})`, ...unique]
+}
+
 // --- Summary statistics ----------------------------------------------------
 
 // Key figures used by the hero stat cards
