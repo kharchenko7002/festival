@@ -51,8 +51,14 @@ Prosjektet er organisert slik:
 2inf-festival/
 ├── app/
 │   ├── src/
-│   │   └── data/
-│   │       └── datasett.json
+│   │   ├── components/   (Header, Footer, SectionTitle, StatCard, SearchInput, Badge)
+│   │   ├── sections/     (Hero, About, Program, Companies, Workshops, Rooms, Info, Contact)
+│   │   ├── utils/        (dataHelpers.js)
+│   │   ├── data/
+│   │   │   └── datasett.json
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
 │   ├── public/
 │   ├── package.json
 │   └── ...
@@ -70,6 +76,9 @@ Prosjektet er organisert slik:
 Forklaring:
 
 - `app/` inneholder React/Vite-applikasjonen.
+- `app/src/components/` inneholder gjenbrukbare UI-komponenter (Header, Footer, SectionTitle, StatCard, SearchInput, Badge).
+- `app/src/sections/` inneholder de enkelte seksjonene på nettsiden (Hero, About, Program, Companies, Workshops, Rooms, Info, Contact).
+- `app/src/utils/dataHelpers.js` inneholder hjelpefunksjoner som leser og kobler sammen data fra `datasett.json`.
 - `data/` inneholder original JSON-fil fra oppgaven.
 - `app/src/data/` inneholder en kopi av JSON-filen som brukes av webapplikasjonen.
 - `docs/` inneholder dokumentasjon.
@@ -130,6 +139,10 @@ Dette gjør løsningen enklere å videreutvikle.
 
 Jeg har valgt Vite fordi det gir rask utvikling lokalt og er enkelt å sette opp sammen med React. Vite starter raskt, har enkel prosjektstruktur og passer godt for en eksamensoppgave der løsningen må kunne demonstreres effektivt.
 
+### Tailwind CSS
+
+Jeg har installert og konfigurert Tailwind CSS for å style nettsiden. Tailwind gjør det raskt å lage et moderne og responsivt design direkte i komponentene, med god kontroll på avstand, farger og brytningspunkter for mobil og PC. Tailwind er satt opp som Vite-plugin (`@tailwindcss/vite`) og importeres i `src/index.css`, der det også er definert egne brandfarger for festivalen.
+
 ### JSON
 
 Jeg bruker `datasett.json` som datakilde. Dette gjør at innholdet kan endres uten at man må skrive alt direkte inn i HTML/JSX. Det gjør også løsningen mer realistisk, fordi data og presentasjon holdes mer adskilt.
@@ -161,6 +174,22 @@ Planlagt innhold i nettsiden:
 Nettsiden skal fungere på både mobil og PC. Derfor skal designet være responsivt.
 
 Per 08.06.2026 er en første prototype/startside laget. Datasettet er lagt inn i prosjektet og klart for videre bruk i webapplikasjonen.
+
+### Videreutvikling per 09.06.2026
+
+Nettsiden er videreutviklet fra prototype til en mer komplett og profesjonell festivalplattform:
+
+- Tailwind CSS er installert og konfigurert for et moderne, responsivt design.
+- Prosjektet er strukturert med `components/`, `sections/` og `utils/`.
+- Innholdet hentes dynamisk fra `datasett.json` via hjelpefunksjoner i `utils/dataHelpers.js`.
+- **Program** viser foredrag med tid, kategori, rom, maks plasser og bedrift, og har **søk, kategorifilter og sortering etter starttid**.
+- **Bedrifter** vises fra JSON med navn, bransje, standnummer, beskrivelse og nettside, og har søk på navn og bransje.
+- **Workshops** vises fra JSON og kobler `holderBedriftId` til bedrift og `romId` til rom, med tid, maks plasser og forkunnskaper.
+- **Romoversikt** vises fra JSON og er gruppert etter bygning, med romnummer, kapasitet og utstyr.
+- **Praktisk informasjon** og **kontaktseksjon** er laget, der kontakt bruker festivalens e-post og relevante lærere fra datasettet.
+- Nettsiden er responsiv med en sticky header og mobilmeny.
+
+Bygging og kvalitet er verifisert med `npm run build` og `npm run lint` – begge kjører uten feil.
 
 ---
 
@@ -268,6 +297,27 @@ WAN/internett fungerer: OK
 ---
 
 ## 10. Serveroppsett
+
+### Status per 09.06.2026: ferdig
+
+Serverdelen er nå **ferdig satt opp og testet**. Infrastrukturen er
+virtualisert på en Proxmox-host og består av én Ubuntu Server og én Windows
+Server i nettverket `10.20.30.0/24`.
+
+| Komponent      | Status   | Kort beskrivelse                                              |
+| -------------- | -------- | ------------------------------------------------------------ |
+| Proxmox host   | ✅ Ferdig | Node `kostia` (10.20.30.4), `vmbr0` mot `nic0`, `vmbr1` fjernet |
+| Ubuntu Server  | ✅ Ferdig | 10.20.30.20 med Nginx, Node.js (v22.22.1), Docker (29.5.3), SSH-nøkkel |
+| Windows Server | ✅ Ferdig | 10.20.30.10, Server 2019, PowerShell Remoting (WinRM)        |
+| DNS            | ✅ Ferdig | DNS-rolle på Windows, sone `festival.local` med A-records    |
+
+Detaljert dokumentasjon og tester finnes i:
+
+- `docs/serveroppsett-09-06-2026.md`
+- `docs/testresultat-servere-09-06-2026.md`
+- `docs/arbeidslogg-09-06-2026.md`
+
+Avsnittene under viser den opprinnelige planen, som nå er gjennomført.
 
 ### Windows Server
 
@@ -436,17 +486,19 @@ Testing er viktig for å vise at løsningen fungerer og for å dokumentere event
 | Ping `google.com` | OK |
 | Wi-Fi klient får IP automatisk | OK |
 | Internett fungerer på mobil | OK |
+| Tailwind CSS installert og konfigurert | OK |
+| Program vises fra JSON med søk og filter | OK |
+| Bedrifter vises fra JSON | OK |
+| Workshops vises fra JSON | OK |
+| Romoversikt vises fra JSON | OK |
+| Praktisk informasjon og kontakt vises | OK |
+| `npm run build` | OK |
+| `npm run lint` | OK |
 
 ### Tester som skal gjennomføres videre
 
 | Test | Forventet resultat |
 |---|---|
-| Program vises fra JSON | Foredrag vises med tid, rom og kategori |
-| Bedrifter vises fra JSON | Bedrifter vises med navn, bransje og standnummer |
-| Workshops vises fra JSON | Workshops vises med tid, rom og maks plasser |
-| Rom vises fra JSON | Rom vises med romnummer, kapasitet og utstyr |
-| Mobilvisning | Siden tilpasser seg liten skjerm |
-| PC-visning | Siden fungerer på stor skjerm |
 | SSH med nøkkel | festivalsjef kan logge inn |
 | SSH med passord | Innlogging avvises |
 | Windows DNS | DNS-oppslag fungerer |
@@ -506,10 +558,6 @@ git log --oneline --decorate --all > log.txt
 
 ### Ikke ferdig ennå
 
-- Full visning av program fra JSON
-- Full visning av bedrifter fra JSON
-- Full visning av workshops fra JSON
-- Full visning av rom/kart
 - Windows Server-oppsett
 - Ubuntu Server-oppsett
 - festivalsjef-bruker med SSH-nøkkel
@@ -517,6 +565,23 @@ git log --oneline --decorate --all > log.txt
 - Endelig README
 - Endelig `log.txt`
 - ZIP for innlevering
+
+### Oppdatering per 09.06.2026
+
+Webapplikasjonen er videreutviklet og regnes nå som ferdig på utviklingsdelen:
+
+- Tailwind CSS installert og konfigurert
+- Prosjektet strukturert med `components/`, `sections/` og `utils/`
+- Nettsiden viser data fra `datasett.json`
+- Program viser foredrag med søk, kategorifilter og sortering
+- Bedrifter vises fra JSON med søk på navn og bransje
+- Workshops vises fra JSON med bedrift og rom koblet via id
+- Romoversikt vises fra JSON, gruppert etter bygning
+- Praktisk informasjon og kontaktseksjon er laget
+- Responsivt design for mobil og PC
+- `npm run build` og `npm run lint` er testet uten feil
+
+Gjenstår fortsatt: serveroppsett (Windows/Ubuntu), `festivalsjef`-bruker med SSH-nøkkel, endelig `log.txt` og ZIP for innlevering.
 
 ---
 
@@ -543,6 +608,8 @@ Neste steg i prosjektet:
 
 Prosjektet har kommet godt i gang. Grunnstrukturen er laget, Git brukes aktivt, Docker fungerer, og datasettet er lagt inn. Nettverket er også satt opp og testet.
 
-Det viktigste videre er å forbedre webapplikasjonen slik at den bruker data fra `datasett.json`, samt å fullføre serveroppsett og sluttføre dokumentasjonen.
+Webapplikasjonen er videreutviklet med Tailwind CSS og en komponentbasert struktur, og viser nå program, bedrifter, workshops, rom, praktisk informasjon og kontakt dynamisk fra `datasett.json`. Bygging og linting er testet uten feil.
+
+Det viktigste videre er å fullføre serveroppsett (Windows og Ubuntu), sette opp `festivalsjef`-bruker med SSH-nøkkel, og sluttføre dokumentasjon, `log.txt` og innlevering.
 
 Løsningen følger hovedretningen IT-utvikling, men inneholder også dokumentasjon av nettverk, drift, sikkerhet og servere for å dekke den tverrfaglige delen av eksamen.

@@ -244,3 +244,84 @@ Neste gang skal jeg jobbe videre med:
 Arbeidet 08.06.2026 har vært produktivt. Prosjektet har fått en god teknisk start med Git, React, Docker og datasett. Nettverket er også satt opp og testet.
 
 Det viktigste videre er å gjøre webapplikasjonen mer komplett og fullføre serverdelen.
+
+---
+
+## Tillegg – 09.06.2026
+
+### Mål for økten
+
+Videreutvikle webapplikasjonen fra prototype til en mer profesjonell, moderne og responsiv festivalplattform som viser data fra `datasett.json`.
+
+### Arbeid utført
+
+**Tailwind CSS**
+
+Jeg installerte og konfigurerte Tailwind CSS som Vite-plugin og importerte det i `src/index.css`. Dette gir et moderne og responsivt design.
+
+```text
+Tailwind CSS installert: OK
+Tailwind konfigurert i Vite: OK
+```
+
+**Komponentstruktur**
+
+Prosjektet ble strukturert med en tydelig mappestruktur:
+
+```text
+app/src/
+├── components/   (Header, Footer, SectionTitle, StatCard, SearchInput, Badge)
+├── sections/     (Hero, About, Program, Companies, Workshops, Rooms, Info, Contact)
+├── utils/        (dataHelpers.js)
+├── data/         (datasett.json)
+├── App.jsx
+├── main.jsx
+└── index.css
+```
+
+**Visning av data fra datasett.json**
+
+Nettsiden henter nå innhold dynamisk fra `datasett.json` via hjelpefunksjoner i `utils/dataHelpers.js`:
+
+```text
+Festivalinfo og statistikk i hero: OK
+Program (foredrag) med søk og filter: OK
+Bedrifter vist fra JSON: OK
+Workshops vist fra JSON: OK
+Romoversikt vist fra JSON: OK
+Praktisk informasjon og kontakt laget: OK
+```
+
+Detaljer:
+
+- **Program** viser foredrag med tid, kategori, rom, maks plasser og bedrift. Det er lagt til søk, kategorifilter og sortering etter starttid.
+- **Bedrifter** vises med navn, bransje, standnummer, beskrivelse og nettside, med søk på navn og bransje.
+- **Workshops** kobler `holderBedriftId` til bedrift og `romId` til rom, og viser tid, maks plasser og forkunnskaper.
+- **Romoversikt** er gruppert etter bygning og viser romnummer, kapasitet og utstyr.
+- **Praktisk informasjon** og **kontakt** er laget, der kontakt bruker festivalens e-post og relevante lærere fra datasettet.
+
+**Testing**
+
+```text
+npm run build: OK (ingen feil)
+npm run lint: OK (ingen feil)
+```
+
+### Status ved slutten av økten
+
+```text
+Tailwind CSS: ferdig
+Komponentstruktur: ferdig
+JSON-visning på nettsiden: ferdig
+Program med søk og filter: ferdig
+Bedrifter fra JSON: ferdig
+Workshops fra JSON: ferdig
+Romoversikt fra JSON: ferdig
+Praktisk informasjon og kontakt: ferdig
+Responsivt design: ferdig
+Build og lint: testet OK
+```
+
+### Egen vurdering
+
+Økten 09.06.2026 har gjort webapplikasjonen langt mer komplett. Nettsiden er nå strukturert, responsiv og henter alt innhold fra `datasett.json`. Det viktigste videre er serveroppsett og sluttføring av innlevering.
