@@ -94,6 +94,33 @@ export const getAvailableTimeSlots = () => {
   return [`Hele dagen (${festival.startTid}–${festival.sluttTid})`, ...unique]
 }
 
+// Full detail object for a selected workshop, used by the registration
+// summary. Resolves company and room via the related ids.
+export const getWorkshopDetails = (id) => {
+  const workshop = data.workshops.find((item) => item.id === Number(id))
+  if (!workshop) return null
+  return {
+    tittel: workshop.tittel,
+    bedrift: getCompanyName(workshop.holderBedriftId),
+    rom: getRoomName(workshop.romId),
+    tid: `${workshop.startTid}–${workshop.sluttTid}`,
+    maksPlasser: workshop.maksPlasser,
+    forkunnskaper: workshop.forkunnskaper,
+  }
+}
+
+// Short company info for the registration summary
+export const getCompanyDetails = (id) => {
+  const company = getCompanyById(Number(id))
+  if (!company) return null
+  return {
+    navn: company.navn,
+    bransje: company.bransje,
+    standnummer: company.standnummer,
+    nettside: company.nettside,
+  }
+}
+
 // --- Summary statistics ----------------------------------------------------
 
 // Key figures used by the hero stat cards

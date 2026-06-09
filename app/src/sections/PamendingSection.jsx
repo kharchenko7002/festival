@@ -4,6 +4,8 @@ import {
   getCompanyOptions,
   getWorkshopOptions,
   getAvailableTimeSlots,
+  getWorkshopDetails,
+  getCompanyDetails,
 } from '../utils/dataHelpers.js'
 
 // Shared styling for the form controls so every field looks consistent.
@@ -33,6 +35,10 @@ function PamendingSection() {
   const companyOptions = getCompanyOptions()
   const workshopOptions = getWorkshopOptions()
   const timeSlots = getAvailableTimeSlots()
+
+  // Live summaries for the current selection (null when nothing is chosen)
+  const workshopDetails = form.workshop ? getWorkshopDetails(form.workshop) : null
+  const companyDetails = form.bedrift ? getCompanyDetails(form.bedrift) : null
 
   // Update a single field by name
   const handleChange = (event) => {
@@ -243,6 +249,90 @@ function PamendingSection() {
                     />
                   </div>
                 </div>
+
+                {/* Live summaries based on the current selection */}
+                {(workshopDetails || companyDetails) && (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {workshopDetails && (
+                      <div className="rounded-2xl border border-brand-100 bg-brand-50 p-5">
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-brand-700">
+                          Valgt workshop
+                        </p>
+                        <h4 className="text-base font-semibold text-navy-900">
+                          {workshopDetails.tittel}
+                        </h4>
+                        <dl className="mt-3 flex flex-col gap-1.5 text-sm text-slate-600">
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-400">Bedrift</dt>
+                            <dd className="text-right font-medium text-slate-700">
+                              {workshopDetails.bedrift}
+                            </dd>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-400">Rom</dt>
+                            <dd className="text-right">{workshopDetails.rom}</dd>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-400">Tid</dt>
+                            <dd className="text-right">{workshopDetails.tid}</dd>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-400">Maks deltakere</dt>
+                            <dd className="text-right">
+                              {workshopDetails.maksPlasser}
+                            </dd>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-400">Forkunnskaper</dt>
+                            <dd className="text-right">
+                              {workshopDetails.forkunnskaper}
+                            </dd>
+                          </div>
+                        </dl>
+                      </div>
+                    )}
+
+                    {companyDetails && (
+                      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-brand-700">
+                          Valgt bedrift
+                        </p>
+                        <h4 className="text-base font-semibold text-navy-900">
+                          {companyDetails.navn}
+                        </h4>
+                        <dl className="mt-3 flex flex-col gap-1.5 text-sm text-slate-600">
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-400">Bransje</dt>
+                            <dd className="text-right font-medium text-slate-700">
+                              {companyDetails.bransje}
+                            </dd>
+                          </div>
+                          <div className="flex justify-between gap-3">
+                            <dt className="text-slate-400">Standnummer</dt>
+                            <dd className="text-right">
+                              {companyDetails.standnummer}
+                            </dd>
+                          </div>
+                          {companyDetails.nettside && (
+                            <div className="flex justify-between gap-3">
+                              <dt className="text-slate-400">Nettside</dt>
+                              <dd className="text-right">
+                                <a
+                                  href={companyDetails.nettside}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="break-all font-medium text-brand-600 underline-offset-4 hover:underline"
+                                >
+                                  Besøk nettside
+                                </a>
+                              </dd>
+                            </div>
+                          )}
+                        </dl>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <button type="submit" className="btn-blue w-full sm:w-fit sm:self-start">
                   Send påmelding

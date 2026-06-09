@@ -1,71 +1,91 @@
 # 2INF Festival
 
-Dette prosjektet er laget som forberedelse til tverrfaglig eksamen i informasjonsteknologi.
+Webapplikasjon og infrastruktur for **2INF Festival**, laget som
+eksamensprosjekt i faget ITK2004 (tverrfaglig eksamen i informasjonsteknologi).
 
-Jeg har valgt hovedretningen **IT-utvikling**. Prosjektet består av en webapplikasjon for 2INF Festival, samt dokumentasjon av nettverk, serveroppsett, sikkerhet, testing, Docker og teknologivalg.
+Valgt hovedretning: **IT-utvikling**.
 
-## Status
+- **Live (internt nett):** https://festival.lan
+- **Direkte på IP:** https://10.20.30.20
+- **GitHub:** https://github.com/kharchenko7002/festival
+- **Branch:** `main`
 
-Webapplikasjonen er **ferdig utviklet**. React/Vite-nettsiden bruker Tailwind CSS, henter alt innhold fra `app/src/data/datasett.json` og presenterer festivalen som en moderne, responsiv landingsside.
+---
 
-Per 08.06.2026 var følgende gjort:
+## Kort beskrivelse
 
-- React/Vite-applikasjon er opprettet
-- Enkel startside/prototype er laget
-- Dockerfile er laget og Docker build/run er testet
-- datasett.json er lagt inn i prosjektet
-- Git repository er opprettet med flere commits
-- Nettverk er satt opp og testet
+2INF Festival er en karriere- og teknologifestival arrangert av VG2
+Informasjonsteknologi. Nettsiden presenterer festivalen som en moderne,
+responsiv landingsside: program, bedrifter, workshops, rom, praktisk
+informasjon, kontakt og en **påmeldingsseksjon**. Alt innhold hentes fra
+`app/src/data/datasett.json`.
 
-Per 09.06.2026 er følgende gjort:
+Nettsiden kjører i en Docker-container på en Ubuntu Server, bak en Nginx
+reverse proxy med HTTPS. Navnet `festival.lan` løses via en intern DNS-server
+på Windows Server.
 
-- Tailwind CSS er installert og konfigurert
-- Prosjektet er strukturert med gjenbrukbare komponenter (`components/`), seksjoner (`sections/`) og hjelpefunksjoner (`utils/`)
-- Festivaldata vises fra `app/src/data/datasett.json` (festival, bedrifter, foredrag, workshops, rom, lærere)
-- Nettsiden viser festival, program, bedrifter, workshops, rom, praktisk informasjon og kontakt
-- Program har søk, kategorifilter og sortering etter tid
-- Bedrifter har søk på navn og bransje
-- Romoversikt er gruppert etter bygning
-- Hele nettsiden er bygget om til en polert, SaaS-inspirert landingsside med ny hero-seksjon, konsistent fargesystem og lette animasjoner
-- En samtykkebanner for informasjonskapsler er lagt til
-- Nettsiden er responsiv for mobil og PC
-- `npm run build` og `npm run lint` er testet uten feil
+---
 
-### Serverstatus per 09.06.2026 (ferdig)
+## Eksamenskontekst
 
-Serverdelen er ferdig satt opp og testet. Infrastrukturen er virtualisert på en Proxmox-host i nettverket `10.20.30.0/24`:
+Prosjektet er laget til tverrfaglig eksamen. Oppgaven (case 2INF Festival)
+krever både en webløsning og et dokumentert IT-miljø med nettverk, servere,
+sikkerhet, Docker og testing. Hovedretningen er **IT-utvikling**, men siden
+eksamen er tverrfaglig, dokumenteres også drift, nettverk og sikkerhet.
 
-- Proxmox-host (node kostia, 10.20.30.4) – `vmbr0` mot `nic0`, gammel `vmbr1` fjernet
-- Ubuntu Server (10.20.30.20) – Nginx, Node.js v22.22.1 og Docker 29.5.3, SSH med nøkkel
-- Bruker `festivalsjef` med sudo/docker, passord- og root-SSH deaktivert
-- Windows Server 2019 (10.20.30.10) – PowerShell Remoting (WinRM)
-- DNS-rolle på Windows med sonen `festival.local` og A-records for begge serverne
-- Alle nettverks-, tjeneste-, SSH- og DNS-tester bestått
+---
 
-Detaljer i `docs/serveroppsett-09-06-2026.md` og `docs/testresultat-servere-09-06-2026.md`.
+## Hovedfunksjoner
 
-## Teknologi
+- Responsiv landingsside (mobil og PC) i en lys, hvit-blå SaaS-stil
+- Header med tekstlogo «2INF Festival» og CTA-knapp **«Meld meg på»**
+- **Program** med søk, kategorifilter og sortering etter starttid
+- **Bedrifter** med søk på navn og bransje
+- **Workshops** som kobler `holderBedriftId → bedrifter.id` og `romId → rom.id`
+- **Rom** gruppert etter bygning, med kapasitet og utstyr
+- **Praktisk informasjon** og **kontakt** (lærere hentet etter ansvarsområde)
+- **Påmelding** – frontend-prototype med skjema, nedtrekksmenyer fra datasettet
+  og live oppsummering av valgt workshop og bedrift
+- Bilder i flere seksjoner (About, Workshops, Praktisk info, Kontakt)
+- Samtykkebanner for informasjonskapsler (valg lagres i `localStorage`)
+- Lette CSS-animasjoner som respekterer `prefers-reduced-motion`
 
-Prosjektet bruker:
+---
 
-- React
-- Vite
-- Tailwind CSS
-- JavaScript
-- JSON
-- Docker
-- Nginx
-- Git
+## Teknologier
+
+| Område | Teknologi |
+| --- | --- |
+| Frontend-rammeverk | React 19 |
+| Byggeverktøy | Vite |
+| Styling | Tailwind CSS |
+| Språk | JavaScript / JSX |
+| Datakilde | JSON (`datasett.json`) |
+| Container | Docker |
+| Webserver / proxy | Nginx |
+| Server-OS | Ubuntu Server 26.04 LTS |
+| DNS | Windows Server 2019 |
+| Virtualisering | Proxmox VE |
+| Nettverk | UniFi (USG 3P, U6 Lite) + TP-Link-svitsj |
+| Versjonskontroll | Git / GitHub |
+
+Begrunnelse for valgene står i `docs/teknologivalg.md`.
+
+---
 
 ## Prosjektstruktur
 
 ```text
 2inf-festival/
 ├── app/
+│   ├── public/
+│   │   └── images/          (bilder brukt i seksjonene)
 │   ├── src/
-│   │   ├── components/   (Header, Footer, SectionTitle, StatCard, SearchInput, Badge, Reveal, CookieConsent)
-│   │   ├── sections/     (Hero, About, Program, Companies, Workshops, Rooms, Info, Contact)
-│   │   ├── utils/        (dataHelpers.js)
+│   │   ├── components/       (Header, Footer, SectionTitle, StatCard,
+│   │   │                      SearchInput, Badge, Reveal, CookieConsent)
+│   │   ├── sections/         (Hero, About, Program, Companies, Workshops,
+│   │   │                      Rooms, PracticalInfo, Pamending, Contact)
+│   │   ├── utils/            (dataHelpers.js)
 │   │   ├── data/
 │   │   │   └── datasett.json
 │   │   ├── App.jsx
@@ -73,24 +93,17 @@ Prosjektet bruker:
 │   │   └── index.css
 │   └── package.json
 ├── data/
-│   └── datasett.json
-├── docs/
+│   └── datasett.json         (originalfil fra oppgaven)
+├── docs/                     (all dokumentasjon)
 ├── Dockerfile
 ├── .dockerignore
-├── README.md
-└── log.txt
+├── .gitignore
+└── README.md
 ```
 
-## Data
+---
 
-Festivaldata ligger i:
-
-- `data/datasett.json` – originalfilen fra oppgaven
-- `app/src/data/datasett.json` – kopien som brukes av React-applikasjonen
-
-All visning på nettsiden bygger på `app/src/data/datasett.json`, og data leses gjennom hjelpefunksjonene i `app/src/utils/dataHelpers.js`.
-
-## Kjøre prosjektet lokalt uten Docker
+## Lokal utvikling
 
 ```bash
 cd app
@@ -98,90 +111,117 @@ npm install
 npm run dev
 ```
 
-Åpne nettsiden: `http://localhost:5173`
+Nettsiden åpnes på `http://localhost:5173`.
 
-## Kjøre prosjektet med Docker
-
-Fra prosjektroten:
-
-```bash
-docker build -t 2inf-festival .
-docker run -p 8080:80 2inf-festival
-```
-
-Åpne nettsiden: `http://localhost:8080`
-
-## Bygging og testing
+## Bygg og linting
 
 ```bash
 cd app
-npm run build   # produksjonsbygg med Vite – testet uten feil
-npm run lint    # ESLint – testet uten feil
+npm run build   # produksjonsbygg med Vite
+npm run lint    # ESLint
 ```
 
-## Deploy
+Begge kommandoene kjører uten feil (se `docs/testing.md`).
 
-Nettsiden skal deployes til **Ubuntu Server (10.20.30.20)** med **Docker**. Imaget bygges fra `Dockerfile` og kjøres som en container som serverer den ferdigbygde React-appen via Nginx.
+---
 
-Planlagt URL i festivalnettverket:
+## Docker
 
-- `http://festival.festival.local` (via DNS-sonen `festival.local` på Windows Server)
-- `http://10.20.30.20` (direkte på IP)
+Imaget bygges fra `Dockerfile` i prosjektroten. Det er et to-trinns bygg:
+React-appen bygges med Node, og den ferdige `dist/`-mappen serveres av Nginx.
+
+```bash
+docker build -t 2inf-festival .
+docker run -d -p 8080:80 --name 2inf-festival 2inf-festival
+```
+
+Nettsiden åpnes på `http://localhost:8080`.
+
+---
+
+## Deployment på Ubuntu Server (oppsummering)
+
+Nettsiden er deployet på **Ubuntu Server (10.20.30.20)**:
+
+1. Prosjektet er kopiert til serveren.
+2. Docker-imaget er bygget på serveren.
+3. Containeren kjører og serverer den bygde appen på port 80 internt.
+4. **Nginx reverse proxy** står foran containeren og håndterer HTTPS.
+5. HTTPS bruker et **selvsignert sertifikat** (gir nettleseradvarsel i testmiljø).
+6. Nettsiden er tilgjengelig på `https://festival.lan` og `https://10.20.30.20`.
+
+Full fremgangsmåte står i `docs/serveroppsett.md`.
+
+---
+
+## DNS og domene
+
+Intern DNS kjører på Windows Server (10.20.30.10). Følgende navn peker på
+Ubuntu-webserveren:
+
+| Navn | Peker på |
+| --- | --- |
+| `festival.lan` | 10.20.30.20 |
+| `www.festival.lan` | 10.20.30.20 |
+| `festival.festival.local` | 10.20.30.20 |
+
+`festival.lan` er **kun internt** i festivalnettverket og er ikke et offentlig
+domene på internett.
+
+---
+
+## Testing (oppsummering)
+
+| Test | Resultat |
+| --- | --- |
+| `npm run build` | ✅ Bestått |
+| `npm run lint` | ✅ Bestått |
+| Visning av data fra `datasett.json` | ✅ Bestått |
+| Påmelding-prototype (manuell test) | ✅ Bestått |
+| Docker-container kjører på Ubuntu | ✅ Bestått |
+| `curl` mot webserver | ✅ Bestått |
+| Nginx reverse proxy | ✅ Bestått |
+| HTTPS på `festival.lan` | ✅ Bestått (selvsignert) |
+| `nslookup festival.lan` | ✅ Bestått |
+| Nettverkstester (ping) | ✅ Bestått |
+| SSH med nøkkel / passord avvist | ✅ Bestått |
+
+Detaljer i `docs/testing.md`.
+
+---
 
 ## Dokumentasjon
 
-Dokumentasjon ligger i `docs/`. Viktige filer:
+All dokumentasjon ligger i `docs/`:
 
-- `docs/dokumentasjon.md` – samlet prosjektdokumentasjon
-- `docs/arbeidslogg-08-06-2026.md` og `docs/arbeidslogg-09-06-2026.md` – arbeidslogger
-- `docs/testresultat-09-06-2026.md` – testresultat for webapplikasjonen
-- `docs/serveroppsett-09-06-2026.md` og `docs/testresultat-servere-09-06-2026.md` – server
+- `docs/dokumentasjon.md` – samlet hoveddokumentasjon
+- `docs/teknologivalg.md` – begrunnelse for teknologivalg
+- `docs/serveroppsett.md` – servere, Docker, Nginx, HTTPS
+- `docs/nettverksplan.md` – nettverk, IP-plan og UniFi
+- `docs/sikkerhet.md` – sikkerhetsvurdering
+- `docs/testing.md` – testresultater
+- `docs/arbeidslogg-08-06-2026.md`, `docs/arbeidslogg-09-06-2026.md` – arbeidslogger
+- `docs/serveroppsett-09-06-2026.md`, `docs/testresultat-servere-09-06-2026.md`,
+  `docs/testresultat-09-06-2026.md` – detaljerte dagsnotater
 
-Dokumentasjonen dekker krav fra oppgaven, valgt hovedretning, prosjektstruktur, teknologivalg, Docker, nettverksplan, serveroppsett, sikkerhet, testing, Git og videre arbeid.
+---
 
-## Nettverk
+## Kjente begrensninger
 
-```text
-Nettverk: 10.20.30.0/24
-Router / gateway: 10.20.30.1
-AP management: 10.20.30.2
-Switch management: 10.20.30.3
-Windows Server: 10.20.30.10
-Ubuntu Server: 10.20.30.20
-DHCP range: 10.20.30.50 - 10.20.30.240
-SSID: 2INF-Festival-KostiantynK
-Sikkerhet: WPA2
-```
+- **Påmelding** er en frontend-prototype. Skjemaet lagrer ingenting og sender
+  ingen data til en server – det finnes ingen backend.
+- **HTTPS** bruker et selvsignert sertifikat, så nettleseren viser en advarsel.
+- **`festival.lan`** er kun internt og fungerer ikke utenfor festivalnettverket.
+- **TP-Link-svitsjen** er ikke en UniFi-enhet, så UniFi viser ikke full
+  port-basert topologi.
+- VPN hjemmefra med kun WireGuard-konfig på laptopen var ikke nok til å nå
+  `10.20.30.0/24`; ruting på VPN-serversiden måtte også vært på plass.
 
-## Sikkerhet
-
-Viktige sikkerhetstiltak:
-
-- WPA2 på trådløst nettverk
-- faste IP-adresser på infrastruktur, DHCP-område skilt fra statiske adresser
-- SSH med nøkkel for `festivalsjef`, passord- og root-innlogging deaktivert
-- kun nødvendige porter åpnes (22, 80, evt. 443)
-- HTTPS bør brukes i produksjon
-- ingen passord eller hemmelige nøkler hardkodes i kildekoden
-
-## Git
-
-Prosjektet bruker Git lokalt. For å se commit-historikk:
-
-```bash
-git log --oneline
-```
-
-Ved innlevering lagres commit-loggen slik (gjøres helt til slutt):
-
-```bash
-git log --oneline --decorate --all > log.txt
-```
+---
 
 ## Videre arbeid
 
-- Deploye Docker-imaget på Ubuntu Server (10.20.30.20)
-- Verifisere tilgang via `http://festival.festival.local` og `http://10.20.30.20`
-- Vurdere HTTPS i produksjon
-- Generere `log.txt`
-- Pakke prosjektet som ZIP for innlevering
+- Legge til en ekte backend for påmelding (lagring og bekreftelse på e-post)
+- Bytte selvsignert sertifikat med et gyldig sertifikat
+- Vurdere en UniFi-svitsj for full port-basert topologi
+- Sette opp automatisk bygging/utrulling (CI/CD)

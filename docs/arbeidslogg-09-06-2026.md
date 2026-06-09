@@ -217,3 +217,86 @@ npm run lint: OK
 Deploy til Ubuntu Server (10.20.30.20) med Docker
 URL: http://festival.festival.local eller http://10.20.30.20
 ```
+
+---
+
+## Tillegg 2: påmelding, deployment og sluttføring (09.06.2026)
+
+Sent på dagen ble de siste delene av prosjektet fullført: ny
+påmeldingsfunksjon, bilder, opprydding i designet, deployment på Ubuntu Server
+og endelig dokumentasjon.
+
+### Webapplikasjon – nye endringer
+
+- Det kvadratiske ikonet «2i» i toppmenyen ble fjernet. Headeren har nå kun
+  tekstlogoen **2INF Festival**.
+- En tydelig CTA-knapp **«Meld meg på»** ble lagt til i header, hero-seksjonen
+  og praktisk info, og leder til en ny påmeldingsseksjon.
+- Det ble laget en ny seksjon **Påmelding** (`id="pamelding"`) som en
+  **frontend-prototype uten backend**. Skjemaet sender ingen data; etter
+  innsending vises bekreftelsen «Takk! Din påmelding er registrert i
+  prototypen.»
+- Skjemaet inneholder feltene: Navn, Klasse, E-post, Velg bedrift, Velg
+  workshop, Ønsket tidspunkt og Kommentar / behov.
+- Nedtrekksmenyene hentes fra `datasett.json`: bedrifter, workshops og
+  tidspunkt (basert på workshop-tidene). Nye hjelpefunksjoner ble lagt til i
+  `utils/dataHelpers.js` (`getCompanyOptions`, `getWorkshopOptions`,
+  `getAvailableTimeSlots`, `getWorkshopDetails`, `getCompanyDetails`).
+- Ved valg av workshop vises en oppsummering (tittel, bedrift, rom, tid, maks
+  deltakere, forkunnskaper). Ved valg av bedrift vises navn, bransje,
+  standnummer og nettside.
+- Det ble lagt til bilder i `app/public/images/`, brukt i seksjonene About,
+  Workshops, Praktisk info og Kontakt (object-cover, avrundede hjørner, myk
+  skygge, responsivt).
+- En fargevelger for tema ble først lagt til, men deretter **fjernet** etter
+  ønske. Nettsiden beholder den lyse, hvit-blå temaen.
+- `npm run build` og `npm run lint` ble kjørt på nytt – begge uten feil.
+
+### GitHub
+
+- Det ble opprettet et GitHub-repo og koden ble lastet opp:
+  `https://github.com/kharchenko7002/festival` (branch `main`).
+- `git push` fullførte etter innlogging i nettleseren.
+
+### Deployment på Ubuntu Server
+
+- Prosjektet ble kopiert til Ubuntu Server (10.20.30.20).
+- Docker-imaget ble bygget på serveren, og containeren kjører.
+- Nginx ble satt opp som **reverse proxy** foran containeren.
+- HTTPS ble satt opp med et **selvsignert sertifikat**.
+- Nettsiden er tilgjengelig på `https://festival.lan` og `https://10.20.30.20`.
+
+### DNS og UniFi
+
+- DNS-sonen ble utvidet slik at `festival.lan` og `www.festival.lan` peker på
+  10.20.30.20 (i tillegg til `festival.festival.local`).
+- UniFi-enhetene (USG 3P og U6 Lite) er adoptert og «Up to date», og enhetene
+  er navngitt manuelt i topologien.
+
+### Sluttdokumentasjon
+
+- README og dokumentasjonen i `docs/` ble oppdatert: `dokumentasjon.md`,
+  `teknologivalg.md`, `serveroppsett.md`, `nettverksplan.md`, `sikkerhet.md` og
+  `testing.md`.
+- `.gitignore` ble oppdatert slik at deploy-arkiver (`*.tar.gz`) ikke
+  versjonskontrolleres.
+
+### Status
+
+```text
+Webapplikasjon: ferdig (inkl. påmelding og bilder)
+Tema: lys hvit-blå (fargevelger fjernet)
+GitHub: kode pushet til main
+Deployment: Docker + Nginx + HTTPS på Ubuntu
+URL: https://festival.lan
+Dokumentasjon: oppdatert
+```
+
+### Ærlige begrensninger
+
+- Påmelding er en frontend-prototype uten lagring/backend.
+- HTTPS-sertifikatet er selvsignert (nettleseradvarsel).
+- `festival.lan` er kun internt, ikke et offentlig domene.
+- TP-Link-svitsjen gjør at UniFi ikke viser full port-basert topologi.
+- VPN hjemmefra med kun WireGuard på laptopen var ikke nok til å nå
+  `10.20.30.0/24`; ruting på VPN-serversiden måtte også vært satt opp.

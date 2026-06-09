@@ -27,6 +27,16 @@ function ContactSection() {
           />
         </Reveal>
 
+        {/* Networking image */}
+        <Reveal className="overflow-hidden rounded-3xl shadow-xl shadow-navy-900/10 ring-1 ring-slate-100">
+          <img
+            src="/images/networking.jpg"
+            alt="Mennesker som nettverker og snakker sammen på et arrangement"
+            loading="lazy"
+            className="h-56 w-full object-cover sm:h-72"
+          />
+        </Reveal>
+
         {/* General contact – final CTA card */}
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] bg-navy-800 p-8 text-white shadow-2xl shadow-navy-900/30 sm:p-12">

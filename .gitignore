@@ -1,2 +1,10 @@
 # Local design reference image, not part of the site
 bilde.png
+
+# Deploy-arkiver skal ikke versjonskontrolleres
+*.tar.gz
+2inf-festival-deploy.tar.gz
+
+# Avhengigheter og byggeutdata (også dekket av app/.gitignore)
+node_modules/
+dist/

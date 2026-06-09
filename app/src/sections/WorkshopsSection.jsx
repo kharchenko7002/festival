@@ -33,6 +33,16 @@ function WorkshopsSection() {
           />
         </Reveal>
 
+        {/* Wide banner image setting the scene for the workshops */}
+        <Reveal className="overflow-hidden rounded-3xl shadow-xl shadow-navy-900/10 ring-1 ring-brand-100">
+          <img
+            src="/images/server-infra.jpg"
+            alt="Servere og nettverksutstyr i et datarom"
+            loading="lazy"
+            className="h-52 w-full object-cover sm:h-64 lg:h-72"
+          />
+        </Reveal>
+
         <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {workshops.map((workshop, index) => (
             <Reveal

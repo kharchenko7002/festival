@@ -121,6 +121,26 @@ function AboutSection() {
           </Reveal>
         </div>
 
+        {/* Photo collage – students and workshops in action */}
+        <Reveal className="grid gap-4 sm:grid-cols-3">
+          <div className="overflow-hidden rounded-3xl shadow-xl shadow-navy-900/10 ring-1 ring-slate-100 sm:col-span-2">
+            <img
+              src="/images/students-tech.jpg"
+              alt="Elever som samarbeider om teknologi"
+              loading="lazy"
+              className="h-64 w-full object-cover sm:h-80"
+            />
+          </div>
+          <div className="overflow-hidden rounded-3xl shadow-xl shadow-navy-900/10 ring-1 ring-slate-100">
+            <img
+              src="/images/coding-workshop.jpg"
+              alt="Nærbilde av kode på en skjerm under en workshop"
+              loading="lazy"
+              className="h-64 w-full object-cover sm:h-80"
+            />
+          </div>
+        </Reveal>
+
         {/* Feature cards */}
         <div className="grid gap-6 md:grid-cols-3">
           {features.map((feature, index) => (

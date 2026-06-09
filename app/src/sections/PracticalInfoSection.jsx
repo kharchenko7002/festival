@@ -77,6 +77,16 @@ function PracticalInfoSection() {
               </div>
             </Reveal>
 
+            {/* Atmosphere image from a previous IT event */}
+            <Reveal className="overflow-hidden rounded-3xl shadow-2xl shadow-navy-900/40 ring-1 ring-white/10">
+              <img
+                src="/images/it-event.jpg"
+                alt="Publikum samlet under et IT-arrangement"
+                loading="lazy"
+                className="h-56 w-full object-cover sm:h-72"
+              />
+            </Reveal>
+
             <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {infoCards.map((card, index) => (
                 <Reveal as="li" key={card.title} delay={index * 80}>
