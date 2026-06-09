@@ -8,14 +8,23 @@ import {
   sortByStartTime,
 } from '../utils/dataHelpers.js'
 
+// Split a free-text prerequisite string into short chips
+function toChips(text) {
+  return text
+    .split(/,|\sog\s/i)
+    .map((part) => part.trim())
+    .filter(Boolean)
+}
+
 // Workshops section: practical sessions with company, room and prerequisites.
-// Company is resolved via holderBedriftId, room via romId.
+// Company is resolved via holderBedriftId, room via romId. Visually distinct
+// from the program: cards with a blue side rail and prerequisite chips.
 function WorkshopsSection() {
   const workshops = sortByStartTime(getWorkshops())
 
   return (
     <section id="workshops" className="bg-brand-50">
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 sm:px-6 lg:py-24">
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-24 sm:px-6 lg:py-28">
         <Reveal>
           <SectionTitle
             eyebrow="Workshops"
@@ -24,34 +33,38 @@ function WorkshopsSection() {
           />
         </Reveal>
 
-        <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {workshops.map((workshop) => (
-            <li
+        <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {workshops.map((workshop, index) => (
+            <Reveal
+              as="li"
               key={workshop.id}
-              className="flex flex-col gap-3 rounded-2xl border border-brand-100 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-accent-400 hover:shadow-xl"
+              delay={(index % 3) * 90}
+              className="card-lift group relative flex flex-col gap-4 overflow-hidden p-6 pl-7 ring-1 ring-brand-100"
             >
-              {/* Accent top stripe marks workshops apart from lectures */}
+              {/* Blue side rail marks workshops apart from lectures */}
               <span
                 aria-hidden="true"
-                className="h-1.5 w-12 rounded-full bg-gradient-to-r from-accent-500 to-brand-500"
+                className="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-brand-500 to-accent-400"
               />
 
               <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-accent-400/15 px-2.5 py-1 text-sm font-semibold text-accent-500">
+                <span className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white">
                   <span aria-hidden="true">🛠️</span>
                   {workshop.startTid}–{workshop.sluttTid}
                 </span>
                 <Badge variant="accent">Maks {workshop.maksPlasser}</Badge>
               </div>
 
-              <h3 className="text-base font-semibold text-slate-900">
+              <h3 className="text-lg font-semibold leading-snug text-navy-900">
                 {workshop.tittel}
               </h3>
 
-              <dl className="flex flex-col gap-1 text-sm text-slate-600">
+              <dl className="flex flex-col gap-1.5 text-sm text-slate-600">
                 <div className="flex items-center gap-2">
                   <dt className="text-slate-400">Bedrift:</dt>
-                  <dd>{getCompanyName(workshop.holderBedriftId)}</dd>
+                  <dd className="font-medium text-slate-700">
+                    {getCompanyName(workshop.holderBedriftId)}
+                  </dd>
                 </div>
                 <div className="flex items-center gap-2">
                   <dt className="text-slate-400">Rom:</dt>
@@ -59,11 +72,22 @@ function WorkshopsSection() {
                 </div>
               </dl>
 
-              <div className="mt-auto rounded-xl bg-brand-50 p-3 text-sm">
-                <p className="font-medium text-slate-700">Forkunnskaper</p>
-                <p className="text-slate-500">{workshop.forkunnskaper}</p>
+              <div className="mt-auto border-t border-slate-100 pt-4">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  Forkunnskaper
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {toChips(workshop.forkunnskaper).map((chip) => (
+                    <span
+                      key={chip}
+                      className="rounded-lg bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700 ring-1 ring-brand-100"
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </div>

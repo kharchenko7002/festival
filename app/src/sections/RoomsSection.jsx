@@ -8,8 +8,8 @@ function RoomsSection() {
   const buildings = groupRoomsByBuilding()
 
   return (
-    <section id="rom" className="bg-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6 lg:py-24">
+    <section id="rom" className="bg-slate-50">
+      <div className="mx-auto flex max-w-6xl flex-col gap-14 px-4 py-24 sm:px-6 lg:py-28">
         <Reveal>
           <SectionTitle
             eyebrow="Rom"
@@ -19,14 +19,17 @@ function RoomsSection() {
         </Reveal>
 
         {Object.entries(buildings).map(([building, rooms]) => (
-          <Reveal key={building} className="flex flex-col gap-5">
+          <Reveal key={building} className="flex flex-col gap-6">
             {/* Building header */}
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-100 text-lg text-brand-700">
+            <div className="flex items-center gap-3 border-b border-slate-200 pb-4">
+              <span
+                aria-hidden="true"
+                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-800 text-lg text-gold-400"
+              >
                 🏢
               </span>
               <div>
-                <h3 className="text-lg font-semibold text-slate-900">
+                <h3 className="text-xl font-semibold text-navy-900">
                   {building}
                 </h3>
                 <p className="text-sm text-slate-500">
@@ -37,13 +40,15 @@ function RoomsSection() {
 
             {/* Room cards as a simple map grid */}
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {rooms.map((room) => (
-                <li
+              {rooms.map((room, index) => (
+                <Reveal
+                  as="li"
                   key={room.id}
-                  className="flex flex-col gap-3 rounded-2xl border border-slate-100 bg-brand-50/60 p-5 transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:bg-white hover:shadow-lg"
+                  delay={(index % 3) * 80}
+                  className="card-lift flex flex-col gap-3 p-5 ring-1 ring-slate-100"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xl font-bold text-slate-900">
+                    <span className="text-xl font-bold text-navy-900">
                       {room.romnummer}
                     </span>
                     <Badge variant="brand">{room.kapasitet} plasser</Badge>
@@ -56,7 +61,7 @@ function RoomsSection() {
                       </Badge>
                     ))}
                   </div>
-                </li>
+                </Reveal>
               ))}
             </ul>
           </Reveal>

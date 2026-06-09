@@ -40,8 +40,8 @@ function ProgramSection() {
   }, [query, category, sortAsc])
 
   return (
-    <section id="program" className="bg-brand-50">
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 sm:px-6 lg:py-24">
+    <section id="program" className="bg-slate-50">
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-24 sm:px-6 lg:py-28">
         <Reveal>
           <SectionTitle
             eyebrow="Program"
@@ -51,7 +51,7 @@ function ProgramSection() {
         </Reveal>
 
         {/* Controls */}
-        <div className="grid gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm sm:grid-cols-2 sm:p-5 lg:grid-cols-[1fr_auto_auto] lg:items-end">
+        <Reveal className="grid gap-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-lg shadow-navy-900/5 sm:grid-cols-2 sm:p-6 lg:grid-cols-[1fr_auto_auto] lg:items-end">
           <SearchInput
             id="program-sok"
             label="Søk i program"
@@ -85,11 +85,11 @@ function ProgramSection() {
           <button
             type="button"
             onClick={() => setSortAsc((asc) => !asc)}
-            className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-400 hover:text-brand-700"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-400 hover:text-brand-700"
           >
-            Tid {sortAsc ? '↑' : '↓'}
+            Sorter tid {sortAsc ? '↑' : '↓'}
           </button>
-        </div>
+        </Reveal>
 
         {/* Result count */}
         <p className="text-sm text-slate-500" aria-live="polite">
@@ -98,32 +98,34 @@ function ProgramSection() {
 
         {/* Lecture cards */}
         {lectures.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
+          <p className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
             Ingen foredrag passer med søket ditt.
           </p>
         ) : (
-          <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {lectures.map((lecture) => (
               <li
                 key={lecture.id}
-                className="group flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-xl"
+                className="card-lift group flex flex-col gap-4 p-6 ring-1 ring-slate-100"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-brand-50 px-2.5 py-1 text-sm font-semibold text-brand-700">
+                  <span className="inline-flex items-center gap-1.5 rounded-xl bg-navy-800 px-3 py-1.5 text-sm font-semibold text-white">
                     <span aria-hidden="true">🕒</span>
                     {lecture.startTid}–{lecture.sluttTid}
                   </span>
                   <Badge variant="brand">{lecture.kategori}</Badge>
                 </div>
 
-                <h3 className="text-base font-semibold text-slate-900">
+                <h3 className="text-lg font-semibold leading-snug text-navy-900">
                   {lecture.tittel}
                 </h3>
 
-                <dl className="mt-auto flex flex-col gap-1 border-t border-slate-100 pt-3 text-sm text-slate-600">
+                <dl className="mt-auto flex flex-col gap-1.5 border-t border-slate-100 pt-4 text-sm text-slate-600">
                   <div className="flex items-center gap-2">
                     <dt className="text-slate-400">Bedrift:</dt>
-                    <dd>{getCompanyName(lecture.holderBedriftId)}</dd>
+                    <dd className="font-medium text-slate-700">
+                      {getCompanyName(lecture.holderBedriftId)}
+                    </dd>
                   </div>
                   <div className="flex items-center gap-2">
                     <dt className="text-slate-400">Rom:</dt>
