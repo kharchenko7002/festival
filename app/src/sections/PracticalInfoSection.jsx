@@ -1,4 +1,4 @@
-import SectionTitle from '../components/SectionTitle.jsx'
+import Reveal from '../components/Reveal.jsx'
 import { getFestival } from '../utils/dataHelpers.js'
 
 // Practical information for visitors: registration, Wi-Fi, meeting point,
@@ -40,30 +40,50 @@ function PracticalInfoSection() {
   ]
 
   return (
-    <section id="info" className="bg-slate-50">
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 sm:px-6">
-        <SectionTitle
-          eyebrow="Praktisk info"
-          title="Nyttig å vite før du kommer"
-          subtitle="Det viktigste du trenger å vite om registrering, nettverk, oppmøte og utstyr."
-        />
+    <section
+      id="info"
+      className="relative overflow-hidden bg-gradient-to-br from-navy-900 via-navy-800 to-brand-700 text-white"
+    >
+      {/* Decorative floating glow */}
+      <div
+        aria-hidden="true"
+        className="animate-float-slow pointer-events-none absolute -right-20 top-10 h-72 w-72 rounded-full bg-accent-400/15 blur-3xl"
+      />
+
+      <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 sm:px-6 lg:py-24">
+        <Reveal>
+          <div className="flex flex-col items-center gap-3 text-center">
+            <span className="text-sm font-semibold uppercase tracking-widest text-accent-300">
+              Praktisk info
+            </span>
+            <h2 className="text-3xl font-bold sm:text-4xl">
+              Nyttig å vite før du kommer
+            </h2>
+            <p className="max-w-2xl text-base leading-relaxed text-brand-100">
+              Det viktigste du trenger å vite om registrering, nettverk, oppmøte
+              og utstyr.
+            </p>
+          </div>
+        </Reveal>
 
         <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {infoCards.map((card) => (
-            <li
-              key={card.title}
-              className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-            >
-              <span className="text-3xl" aria-hidden="true">
-                {card.icon}
-              </span>
-              <h3 className="text-lg font-semibold text-slate-900">
-                {card.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-slate-600">
-                {card.text}
-              </p>
-            </li>
+          {infoCards.map((card, index) => (
+            <Reveal as="li" key={card.title} delay={index * 80}>
+              <div className="flex h-full flex-col gap-3 rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:bg-white/15">
+                <span
+                  aria-hidden="true"
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-2xl"
+                >
+                  {card.icon}
+                </span>
+                <h3 className="text-lg font-semibold text-white">
+                  {card.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-brand-100">
+                  {card.text}
+                </p>
+              </div>
+            </Reveal>
           ))}
         </ul>
       </div>

@@ -1,16 +1,28 @@
 @import "tailwindcss";
 
-/* Brand theme tokens for the 2INF Festival platform */
+/* Brand theme tokens for the 2INF Festival platform.
+   SaaS-inspired palette: white, bright blue and deep navy. */
 @theme {
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-accent-400: #22d3ee;
-  --color-accent-500: #06b6d4;
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+
+  /* Deep navy used for hero and call-to-action bands */
+  --color-navy-600: #1e3a8a;
+  --color-navy-700: #1b3270;
+  --color-navy-800: #122253;
+  --color-navy-900: #0b173d;
+
+  /* Light, airy accent (sky blue) for highlights and decoration */
+  --color-accent-300: #7dd3fc;
+  --color-accent-400: #38bdf8;
+  --color-accent-500: #0ea5e9;
+
   --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
 }
 
@@ -40,4 +52,98 @@ body {
   outline: 2px solid var(--color-brand-500);
   outline-offset: 2px;
   border-radius: 0.25rem;
+}
+
+/* --- Decorative utilities ------------------------------------------------- */
+
+/* Blue gradient applied to display text in hero headlines */
+.text-gradient {
+  background-image: linear-gradient(
+    120deg,
+    var(--color-brand-600),
+    var(--color-accent-500)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle dotted grid used as a light background texture in hero/CTA bands */
+.bg-dot-grid {
+  background-image: radial-gradient(
+    rgba(37, 99, 235, 0.12) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+
+/* --- Animations ----------------------------------------------------------
+   Lightweight, CSS-only motion. No animation libraries are used. */
+
+/* Scroll-reveal: elements start hidden and slide up into place.
+   The `.reveal-visible` class is toggled by the Reveal component. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Gentle floating motion for decorative hero elements */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 9s ease-in-out infinite;
+}
+
+/* One-shot fade-up used for hero content on page load */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+/* Respect users who prefer reduced motion: disable all custom motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-float,
+  .animate-float-slow,
+  .animate-fade-up {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

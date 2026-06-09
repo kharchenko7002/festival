@@ -15,7 +15,7 @@ function App() {
   const festival = getFestival()
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col bg-white">
       {/* Accessibility: let keyboard users jump past the navigation */}
       <a
         href="#hovedinnhold"

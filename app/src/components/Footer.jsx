@@ -4,7 +4,7 @@ function Footer({ festival }) {
   const navn = festival?.navn ?? '2INF Festival'
 
   return (
-    <footer className="border-t border-slate-800 bg-slate-900 text-slate-300">
+    <footer className="border-t border-navy-800 bg-navy-900 text-slate-300">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
           <p className="text-lg font-bold text-white">{navn}</p>
@@ -26,7 +26,7 @@ function Footer({ festival }) {
         </nav>
       </div>
 
-      <div className="border-t border-slate-800">
+      <div className="border-t border-navy-800">
         <p className="mx-auto max-w-6xl px-4 py-4 text-center text-xs text-slate-500 sm:px-6">
           © {year} {navn} · Laget av elever ved 2INF
         </p>

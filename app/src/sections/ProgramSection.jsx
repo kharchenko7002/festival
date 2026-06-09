@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import SectionTitle from '../components/SectionTitle.jsx'
 import SearchInput from '../components/SearchInput.jsx'
 import Badge from '../components/Badge.jsx'
+import Reveal from '../components/Reveal.jsx'
 import {
   getLectures,
   getLectureCategories,
@@ -39,16 +40,18 @@ function ProgramSection() {
   }, [query, category, sortAsc])
 
   return (
-    <section id="program" className="bg-slate-50">
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 sm:px-6">
-        <SectionTitle
-          eyebrow="Program"
-          title="Foredrag gjennom dagen"
-          subtitle="Søk, filtrer på kategori og sorter etter starttidspunkt for å finne foredragene som passer deg."
-        />
+    <section id="program" className="bg-brand-50">
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-20 sm:px-6 lg:py-24">
+        <Reveal>
+          <SectionTitle
+            eyebrow="Program"
+            title="Foredrag gjennom dagen"
+            subtitle="Søk, filtrer på kategori og sorter etter starttidspunkt for å finne foredragene som passer deg."
+          />
+        </Reveal>
 
         {/* Controls */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto] lg:items-end">
+        <div className="grid gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm sm:grid-cols-2 sm:p-5 lg:grid-cols-[1fr_auto_auto] lg:items-end">
           <SearchInput
             id="program-sok"
             label="Søk i program"
@@ -99,14 +102,15 @@ function ProgramSection() {
             Ingen foredrag passer med søket ditt.
           </p>
         ) : (
-          <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {lectures.map((lecture) => (
               <li
                 key={lecture.id}
-                className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-brand-200 hover:shadow-md"
+                className="group flex flex-col gap-3 overflow-hidden rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-xl"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold text-brand-700">
+                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-brand-50 px-2.5 py-1 text-sm font-semibold text-brand-700">
+                    <span aria-hidden="true">🕒</span>
                     {lecture.startTid}–{lecture.sluttTid}
                   </span>
                   <Badge variant="brand">{lecture.kategori}</Badge>
@@ -116,7 +120,7 @@ function ProgramSection() {
                   {lecture.tittel}
                 </h3>
 
-                <dl className="mt-auto flex flex-col gap-1 text-sm text-slate-600">
+                <dl className="mt-auto flex flex-col gap-1 border-t border-slate-100 pt-3 text-sm text-slate-600">
                   <div className="flex items-center gap-2">
                     <dt className="text-slate-400">Bedrift:</dt>
                     <dd>{getCompanyName(lecture.holderBedriftId)}</dd>
