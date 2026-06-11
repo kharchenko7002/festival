@@ -87,13 +87,20 @@ Nettsiden kjører som en Docker-container på Ubuntu Server:
 
 1. Prosjektet er kopiert til serveren.
 2. Imaget er bygget på serveren fra `Dockerfile` (to-trinns bygg: React bygges
-   med Node, og `dist/` serveres av Nginx i imaget).
-3. Containeren kjøres og lytter på port 80 internt.
+   med Node i stage 1, og en **Express-server** i stage 2 serverer den bygde
+   `dist/`-mappen sammen med `/api/*`-rutene).
+3. Containeren kjøres og **Express lytter på port 80 internt**. Dermed virker
+   den eksisterende kjørekommandoen uendret, og Nginx-oppsettet trenger ingen
+   endring.
 
 ```bash
 docker build -t 2inf-festival .
-docker run -d -p 8080:80 --name 2inf-festival --restart unless-stopped 2inf-festival
+docker run -d --name 2inf-festival-web -p 8080:80 --restart unless-stopped 2inf-festival
 ```
+
+Containeren er nå en **fullstack-løsning** (frontend + backend i samme image).
+Programendringer fra festivalsjefen lagres server-side i
+`server/storage/program-overrides.json` inne i containeren.
 
 ---
 
@@ -109,11 +116,13 @@ Oppsettet fungerer slik:
 - **Port 80 (HTTP) videresender automatisk til HTTPS** (HTTP → 301 → HTTPS),
   slik at all trafikk blir kryptert.
 - Nginx sender forespørslene videre til containeren på `http://127.0.0.1:8080`.
+  Både nettsiden og `/api/*` går samme vei – Express i containeren håndterer
+  begge deler. Nginx-konfigurasjonen trenger derfor ingen endring.
 
 Trafikkflyt:
 
 ```text
-Klient  ->  https://festival.lan (443)  ->  Nginx (Ubuntu, HTTPS)  ->  Docker-container (127.0.0.1:8080 -> 80)
+Klient  ->  https://festival.lan (443)  ->  Nginx (Ubuntu, HTTPS)  ->  Express i container (127.0.0.1:8080 -> 80)
 Klient  ->  http://festival.lan  (80)   ->  Nginx 301-redirect      ->  https://festival.lan (443)
 ```
 

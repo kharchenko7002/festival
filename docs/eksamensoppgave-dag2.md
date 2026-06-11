@@ -75,10 +75,10 @@ Docker-test fra prosjektroten: `docker build -t 2inf-festival .` og
 
 ---
 
-## 6. Festivalsjef-funksjon (romfordeling)
+## 6. Festivalsjef-funksjon (romfordeling) med backend
 
-Det er lagt til en ny seksjon **«Festivalsjef»** (`FestivalManagerSection.jsx`).
-Festivalsjefen kan:
+Seksjonen **«Festivalsjef»** (`FestivalManagerSection.jsx`) krever nå
+innlogging. En innlogget festivalsjef kan:
 
 1. Velge en **bedrift som har foredrag**.
 2. Velge et **foredrag** fra bedriften.
@@ -86,32 +86,60 @@ Festivalsjefen kan:
 4. Velge **tidspunkt** (tidsluke fra programmet).
 5. **Lagre endringen** og se en oppdatert programoversikt.
 
-Endringene lagres i `localStorage` under nøkkelen `festivalProgramOverrides` og
-legges «oppå» originaldataene fra `datasett.json` (som ikke endres). Logikken
-ligger i hjelpefunksjonene `loadProgramOverrides()`, `saveProgramOverride()` og
-`mergeProgramWithOverrides()` i `dataHelpers.js`.
+Endringene lagres ikke lenger bare i nettleseren, men **server-side** via et
+lite **Express-backend** (`server/`). Endringene legges «oppå» originaldataene
+fra `datasett.json` (som ikke endres).
+
+### Backend (Express)
+
+Backenden serverer den bygde React-appen og et lite API:
+
+| Metode | Rute | Beskrivelse |
+| --- | --- | --- |
+| `GET` | `/api/health` | Helsesjekk (`{ "status": "ok" }`) |
+| `POST` | `/api/admin/login` | Demo-innlogging, returnerer token |
+| `GET` | `/api/program/overrides` | Henter lagrede endringer |
+| `POST` | `/api/program/overrides` | Lagrer en endring (token + validering) |
+| `DELETE` | `/api/program/overrides` | Nullstiller alle endringer (token) |
+
+Endringene lagres i `server/storage/program-overrides.json`. Backenden
+validerer at `lectureId` finnes i `datasett.json`, at rommet er Auditorium A
+eller B, og at tidspunktet er satt.
+
+### Innlogging (demo)
+
+Innloggingen er en **demo/prototype** for eksamen. Faste demo-credentials er
+`festivalsjef / 2inf2026`. Ved riktig innlogging får klienten et token som
+sendes som `Authorization: Bearer <token>` på beskyttede ruter. Er man ikke
+innlogget, vises kortet «Kun for festivalsjef» med et innloggingsskjema, og
+endringsskjemaet er skjult. Dette er **ikke** produksjonssikkerhet – se
+`docs/sikkerhet.md`.
 
 ---
 
 ## 7. Programmet oppdateres
 
-`ProgramSection.jsx` viser nå programmet med festivalsjefens endringer flettet
-inn. Hvert programkort viser minst **tidspunkt, rom og bedrift** (i tillegg til
-tittel, kategori og maks plasser). Endrede foredrag merkes med «Endret».
+`ProgramSection.jsx` henter endringene fra backenden
+(`GET /api/program/overrides`) og fletter dem inn i programmet. Hvert
+programkort viser minst **tidspunkt, rom og bedrift** (i tillegg til tittel,
+kategori og maks plasser). Endrede foredrag merkes med «Endret».
 
 Når festivalsjefen lagrer, sendes en hendelse (`festival:program-overrides`)
-som program-seksjonen lytter på, slik at **programmet oppdateres umiddelbart**
-uten at man må redigere JSON. Søk, kategorifilter og sortering fungerer som før.
+som program-seksjonen lytter på, slik at den **henter endringene på nytt** og
+oppdateres umiddelbart. Søk, kategorifilter og sortering fungerer som før. Hvis
+backenden ikke svarer, vises originalprogrammet med en liten advarsel:
+«Programmet vises uten serverendringer fordi backend ikke svarer.»
 
 ---
 
 ## 8. Konfliktkontroll – ingen dobbeltbooking
 
-Funksjonen `hasRoomTimeConflict()` hindrer at to bedrifter får foredrag i
-**samme rom på samme tidspunkt**.
+Konfliktkontrollen hindrer at festivalsjefen plasserer to foredrag i **samme rom
+på samme tidspunkt**. Den kjøres **både på backend og frontend**, men
+**backenden er hovedkontrollen** fordi frontend kan manipuleres.
 
-**Regel:** Hvis et annet foredrag allerede har samme rom og samme tidspunkt,
-blokkeres lagringen, og feilmeldingen vises:
+**Regel:** Hvis festivalsjefen allerede har tildelt et annet foredrag samme rom
+og samme tidspunkt, svarer backenden med **HTTP 409** og meldingen:
 
 > «Dette tidspunktet er allerede opptatt i valgt rom.»
 
@@ -119,7 +147,14 @@ blokkeres lagringen, og feilmeldingen vises:
 - Forskjellig tidspunkt i **samme rom** er tillatt.
 - Gjelder både Auditorium A og Auditorium B.
 
-Kontrollen kjøres **før lagring**, og endringen lagres ikke ved konflikt.
+Endringen lagres ikke ved konflikt.
+
+**Merk om datasettet:** `datasett.json` plasserer allerede flere foredrag i
+samme rom til samme tid (importerte data vi ikke kan endre). Kontrollen gjelder
+derfor festivalsjefens egne tildelinger (overstyringene), slik at festivalsjefen
+ikke selv lager nye dobbeltbookinger. Logikken ligger i `hasConflict()` i
+`server/dataStore.js` (autoritativ) og speiles av `hasRoomTimeConflict()` i
+`app/src/utils/dataHelpers.js`.
 
 ---
 
@@ -144,22 +179,25 @@ et eksternt kart. Valgt sted fremheves visuelt.
 
 ## 10. Begrensninger
 
-- **Festivalsjef-funksjonen er en frontend-only prototype.** Det finnes ingen
-  backend.
-- **Endringene lagres kun i `localStorage`** i nettleseren. De er knyttet til
-  den enkelte nettleseren og deles ikke mellom enheter.
+- **Innloggingen er en demo/prototype.** Faste demo-credentials, token i
+  minnet og ingen passordhashing.
+- **Lagringen er en JSON-fil**, ikke en ekte database. Det holder for en
+  prototype, men skalerer ikke og har ikke transaksjoner/backup.
 - **Selvsignert SSL** gir en nettleseradvarsel i testmiljøet.
 - **`festival.lan` er et internt domene** og fungerer bare i festivalnettverket.
 - **TP-Link-svitsjen** er ikke en UniFi-enhet, så UniFi viser ikke full
   portbasert topologi.
 
+Backenden er likevel et **klart steg opp fra ren localStorage**: endringene
+lagres på serveren, deles mellom besøkende, og valideres server-side.
+
 ---
 
 ## 11. Forbedringer i produksjon
 
-- **Backend + database** for festivalsjef-endringene, slik at programmet er
-  felles for alle og lagres trygt.
-- **Autentisering** slik at bare festivalsjefen kan endre programmet.
+- **Ekte database** (med backup) i stedet for en JSON-fil.
+- **Ekte autentisering**: passordhashing (f.eks. bcrypt), trygge
+  sessions/JWT, og rollebasert tilgangskontroll.
 - **Gyldig sertifikat** (Let's Encrypt) med offentlig domene, uten advarsel.
 - **`/23` og VLAN** for å dekke et større antall besøkende og enheter.
 - **UniFi-svitsj** for full portbasert topologi.

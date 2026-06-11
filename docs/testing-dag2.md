@@ -12,6 +12,26 @@ serveren / klienten.
 | --- | --- | --- | --- |
 | `npm run build` | Bygger uten feil, lager `dist/` | ✅ Bestått | Kjørt i `app/` |
 | `npm run lint` | Ingen ESLint-feil | ✅ Bestått | Kjørt i `app/` |
+| `docker build -t 2inf-festival .` | Imaget bygges (fullstack) | ⚠️ Ikke testet | Docker Desktop var ikke startet i utviklingsmiljøet. Må testes på server |
+
+---
+
+## 1b. Backend-API (testet med curl)
+
+API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
+
+| Test | Forventet resultat | Resultat | Kommentar |
+| --- | --- | --- | --- |
+| `GET /api/health` | `{"status":"ok"}` | ✅ Bestått | curl |
+| Innlogging riktige credentials | `200` + token | ✅ Bestått | curl (`festivalsjef / 2inf2026`) |
+| Innlogging feil passord | `401` | ✅ Bestått | curl |
+| Lagre override uten token | `401` | ✅ Bestått | curl |
+| Lagre override med token | `200` + oppdaterte endringer | ✅ Bestått | curl |
+| Lagre i opptatt rom/tid | `409` + feilmelding | ✅ Bestått | curl |
+| Ugyldig rom (ikke A/B) | `400` | ✅ Bestått | curl |
+| `DELETE /api/program/overrides` | `200`, endringer nullstilt | ✅ Bestått | curl |
+| Endringer lagres i JSON-fil | `program-overrides.json` oppdateres | ✅ Bestått | Verifisert på disk |
+| Express serverer React-bygget | `GET /` svarer 200 (HTML) | ✅ Bestått | curl |
 
 ---
 
@@ -32,9 +52,11 @@ serveren / klienten.
 | --- | --- | --- | --- |
 | Velge bedrift | Bedrifter med foredrag vises i nedtrekksliste | ✅ Bestått | Manuell test |
 | Velge foredrag | Foredrag for valgt bedrift vises | ✅ Bestått | Manuell test |
+| Innlogging kreves | Skjema skjult til man logger inn («Kun for festivalsjef») | ✅ Bestått | Manuell test |
+| Logg inn / logg ut | Innlogging viser skjema, utlogging skjuler det | ✅ Bestått | Manuell test |
 | Velge Auditorium A | Kan velges som rom | ✅ Bestått | Manuell test |
 | Velge Auditorium B | Kan velges som rom | ✅ Bestått | Manuell test |
-| Lagre endring | Endring lagres i localStorage | ✅ Bestått | Manuell test |
+| Lagre endring | Endring lagres server-side via API | ✅ Bestått | Manuell test |
 | Program oppdateres etter lagring | Program viser ny rom/tid + «Endret» | ✅ Bestått | Manuell test |
 | Tilbakestill endringer | Programmet går tilbake til original | ✅ Bestått | Manuell test |
 
@@ -44,9 +66,9 @@ serveren / klienten.
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
-| Samme rom + samme tidspunkt | Blokkeres med «Dette tidspunktet er allerede opptatt i valgt rom.» | ✅ Bestått | Manuell test |
-| Samme tidspunkt, forskjellig rom (A vs B) | Begge tillates | ✅ Bestått | Manuell test |
-| Forskjellig tidspunkt, samme rom | Begge tillates | ✅ Bestått | Manuell test |
+| Samme rom + samme tidspunkt | Backend svarer `409` + «Dette tidspunktet er allerede opptatt i valgt rom.» | ✅ Bestått | curl + manuell test |
+| Samme tidspunkt, forskjellig rom (A vs B) | Begge tillates | ✅ Bestått | curl + manuell test |
+| Forskjellig tidspunkt, samme rom | Begge tillates | ✅ Bestått | curl + manuell test |
 
 ---
 
@@ -87,6 +109,9 @@ serveren / klienten.
 ## 8. Oppsummering
 
 Alle automatiske tester (`npm run build`, `npm run lint`) er kjørt og bestått.
-De funksjonelle testene av festivalsjef-funksjonen, konfliktkontrollen og
-finn-fram-funksjonen er bekreftet manuelt i nettleseren. Server-, HTTPS- og
-nettverkstestene er utført manuelt mot infrastrukturen.
+Backend-API-et er testet med `curl` (helsesjekk, innlogging, lagring,
+dobbeltbooking, validering og nullstilling). De funksjonelle testene av
+festivalsjef-funksjonen, konfliktkontrollen og finn-fram-funksjonen er bekreftet
+manuelt i nettleseren. Server-, HTTPS- og nettverkstestene er utført manuelt mot
+infrastrukturen. `docker build` er **ikke** testet i utviklingsmiljøet fordi
+Docker Desktop ikke var startet, og bør verifiseres på serveren før innlevering.
