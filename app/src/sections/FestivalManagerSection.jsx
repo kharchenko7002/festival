@@ -9,6 +9,7 @@ import {
   getProgramTimeSlots,
   getCompanyName,
   mergeProgramWithOverrides,
+  hasRoomTimeConflict,
   saveProgramOverride,
   clearProgramOverrides,
   loadProgramOverrides,
@@ -96,6 +97,16 @@ function FestivalManagerSection() {
 
     const slot = timeSlots.find((item) => item.startTid === tidspunkt)
     if (!slot) return
+
+    // Prevent double-booking: another lecture must not already use this room
+    // at this time. The selected lecture itself is excluded from the check.
+    if (hasRoomTimeConflict(rom, slot.startTid, lectureId, overrides)) {
+      setFeedback({
+        type: 'error',
+        text: 'Dette tidspunktet er allerede opptatt i valgt rom.',
+      })
+      return
+    }
 
     saveProgramOverride(lectureId, {
       rom,
@@ -235,7 +246,9 @@ function FestivalManagerSection() {
                   className={`rounded-xl px-4 py-3 text-sm font-medium ${
                     feedback.type === 'success'
                       ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100'
-                      : 'bg-slate-100 text-slate-600 ring-1 ring-slate-200'
+                      : feedback.type === 'error'
+                        ? 'bg-red-50 text-red-700 ring-1 ring-red-100'
+                        : 'bg-slate-100 text-slate-600 ring-1 ring-slate-200'
                   }`}
                 >
                   {feedback.text}

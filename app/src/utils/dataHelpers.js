@@ -228,3 +228,21 @@ export const mergeProgramWithOverrides = (
       endret: true,
     }
   })
+
+// True if another lecture (different id) already occupies the given room at
+// the given start time, based on the program with overrides applied. Used by
+// the festival manager to prevent double-booking of Auditorium A / B.
+// Same time + same room = conflict. Same time in a different room is allowed,
+// and a different time in the same room is allowed.
+export const hasRoomTimeConflict = (
+  rom,
+  startTid,
+  excludeLectureId,
+  overrides = loadProgramOverrides(),
+) =>
+  mergeProgramWithOverrides(overrides).some(
+    (lecture) =>
+      lecture.id !== Number(excludeLectureId) &&
+      lecture.rom === rom &&
+      lecture.startTid === startTid,
+  )
