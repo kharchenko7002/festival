@@ -74,20 +74,29 @@ ikke finnes på internett.
 
 ## 8. Webapplikasjon og påmelding
 
-Påmeldingsskjemaet er en **frontend-prototype uten backend**. Det er et bevisst
-sikkerhetspoeng:
+Påmeldingsskjemaet sender nå data til backenden og lagrer informasjonen
+server-side. Sikkerhetstiltakene:
 
-- Skjemaet **lagrer ingenting** og **sender ingen data** til en server.
-- Det finnes ingen database, så det oppbevares ingen personopplysninger.
-- Dermed kan det heller ikke lekke sensitive data fra påmeldingen.
+- **Serversidevalidering**: backenden validerer alle felter (navn, klasse,
+  e-post, bedrift, workshop, tidspunkt) uavhengig av frontenden. Frontend kan
+  manipuleres; backenden er den autoritative kontrollen.
+- **Ingen hemmeligheter i frontend**: SMTP-passord og andre credentials leses
+  kun av serveren via miljøvariabler (`.env`). Frontend sender aldri e-post
+  direkte.
+- **`.env` er i `.gitignore`**: reelle passord og API-nøkler lagres ikke i
+  versjonskontroll. `.env.example` viser hvilke variabler som trengs.
+- **Personopplysninger**: påmeldinger inneholder navn, klasse og e-post.
+  Disse lagres i `server/storage/registrations.json`. I produksjon krever
+  dette GDPR-vurdering, begrenset tilgang og definerte slettingsrutiner.
 
 Andre webtiltak:
 
 - All festivaldata ligger i `datasett.json` og inneholder ikke hemmeligheter.
-- Ingen passord eller hemmelige nøkler er hardkodet i kildekoden bortsett fra
-  demo-innloggingen (se under), som bevisst er en prototype.
+- Ingen passord eller hemmelige nøkler er hardkodet i kildekoden.
 - Samtykke til informasjonskapsler håndteres lokalt i nettleseren
   (`localStorage`), uten sporing.
+- Demo-innloggingen for festivalsjef viser ikke lenger synlige demo-credentials
+  på nettsiden. Credentials forblir i backend og dokumentasjon for testing.
 
 ## 8b. Festivalsjef-backend og innlogging (demo)
 
@@ -125,7 +134,8 @@ hver enkelt nettleser.
 | Selvsignert HTTPS | Nettleseradvarsel | Gyldig sertifikat (f.eks. Let's Encrypt med offentlig domene) |
 | WPA2 | Eldre enn WPA3 | WPA3 der klientene støtter det |
 | Intern DNS (`festival.lan`) | Kun internt | Offentlig domene hvis tjenesten skal nås utenfra |
-| Frontend-prototype for påmelding | Lagrer ingenting | Sikker backend med validering, database og GDPR-rutiner |
+| Påmelding med backend (JSON-fil) | Enkel lagring, ingen database/backup | Ekte database, rate limiting, GDPR-rutiner, kryptering av persondata |
+| SMTP-credentials i miljøvariabler | Ikke i koden, men .env på disk i plaintext | Hemmelighetshåndtering via vault/secrets manager |
 | Demo-innlogging for festivalsjef | Faste credentials, token i minnet, ingen hashing | Ekte autentisering, passordhashing, JWT/sessions, rollestyring |
 | JSON-fil-lagring for programendringer | Ingen database/backup | Ekte database med backup og transaksjoner |
 | TP-Link-svitsj | Begrenset innsyn i UniFi | UniFi-svitsj for bedre overvåking |
@@ -133,11 +143,30 @@ hver enkelt nettleser.
 
 ---
 
-## 10. Oppsummering
+## 10. GDPR og personvern (påmeldinger)
+
+Påmeldingsskjemaet samler inn navn, klasse og e-post. Dette er
+personopplysninger etter personopplysningsloven og GDPR.
+
+I et prototypemiljø er dette akseptabelt med bevisst lagring og begrenset
+tilgang. I produksjon må følgende vurderes:
+
+- **Kun nødvendige opplysninger samles inn** (dataminimering).
+- **Administratortilgang** er begrenset til festivalsjef via innlogging.
+- **Slettingsrutiner**: påmeldinger bør slettes etter at festivalen er over.
+- **Informasjon til de registrerte**: brukerne bør informeres om at
+  opplysningene lagres og hvem som har tilgang.
+- **Databehandleravtale** hvis data lagres hos ekstern skyleverandør.
+
+---
+
+## 11. Oppsummering
 
 Sikkerheten er ivaretatt på flere nivåer: kryptert Wi-Fi, ryddig IP-plan med
 skille mellom statiske og dynamiske adresser, nøkkelbasert SSH uten root- og
-passordinnlogging, isolert Docker-container, intern DNS og HTTPS. De viktigste
-begrensningene – selvsignert sertifikat, internt domene og påmelding uten
-backend – er bevisste valg for et lukket testmiljø, og er dokumentert ærlig med
-forslag til forbedringer for en ekte produksjon.
+passordinnlogging, isolert Docker-container, intern DNS og HTTPS. Påmelding
+bruker nå backend med serversidevalidering; SMTP-credentials leses kun fra
+miljøvariabler og lagres aldri i git. De viktigste begrensningene – selvsignert
+sertifikat, internt domene, demo-innlogging og JSON-fillagring – er bevisste
+valg for et lukket testmiljø, og er dokumentert ærlig med forslag til
+forbedringer for en ekte produksjon.

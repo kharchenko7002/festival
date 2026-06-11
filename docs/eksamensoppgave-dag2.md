@@ -29,6 +29,9 @@ dokumenteres også nettverk, server og sikkerhet der det er relevant.
 | 8 | Interaktiv finn-fram-funksjon | ✅ | `sections/FinnFramSection.jsx` |
 | 9 | Eget adminpanel på `/admin` | ✅ | `pages/AdminPage.jsx` |
 | 10 | Festivalsjef kan styre ledige plasser | ✅ | `admin/ProgramEditor.jsx` + `server/index.js` |
+| 11 | Påmelding lagres på server | ✅ | `server/registrations.js` + `POST /api/registrations` |
+| 12 | E-postkvittering ved påmelding | ✅ | `server/mailer.js` (Nodemailer + SMTP env vars) |
+| 13 | Festivalsjef ser alle påmeldinger | ✅ | `admin/RegistrationsList.jsx` + `GET /api/admin/registrations` |
 
 ---
 
@@ -107,10 +110,16 @@ Backenden serverer den bygde React-appen og et lite API:
 | `GET` | `/api/program/overrides` | Henter lagrede endringer |
 | `POST` | `/api/program/overrides` | Lagrer en endring (token + validering) |
 | `DELETE` | `/api/program/overrides` | Nullstiller alle endringer (token) |
+| `POST` | `/api/registrations` | Registrerer påmelding (offentlig) |
+| `GET` | `/api/admin/registrations` | Lister alle påmeldinger (token) |
+| `DELETE` | `/api/admin/registrations/:id` | Sletter én påmelding (token) |
+| `DELETE` | `/api/admin/registrations` | Sletter alle påmeldinger (token) |
 
-Endringene lagres i `server/storage/program-overrides.json`. Backenden
-validerer at `lectureId` finnes i `datasett.json`, at rommet er Auditorium A
-eller B, og at tidspunktet er satt.
+Programendringer lagres i `server/storage/program-overrides.json`.
+Påmeldinger lagres i `server/storage/registrations.json`. Begge lages
+automatisk ved første kjøring. Backenden validerer feltene, sjekker at
+`bedriftId` og `workshopId` finnes i `datasett.json`, og prøver å sende
+en kvitteringsepost via SMTP (Nodemailer).
 
 ### Innlogging (demo)
 
@@ -187,27 +196,73 @@ et eksternt kart. Valgt sted fremheves visuelt.
 
 ---
 
-## 10. Begrensninger
+## 10. Påmelding med backend og e-postkvittering
+
+Påmeldingsskjemaet («Meld deg på») er nå koblet til backenden. Når en
+besøkende sender skjemaet:
+
+1. Frontenden sender `POST /api/registrations` med navn, klasse, e-post,
+   bedrift, workshop, ønsket tidspunkt og eventuell kommentar.
+2. Backenden validerer alle felter og sjekker at bedrift og workshop finnes
+   i `datasett.json`.
+3. Påmeldingen lagres i `server/storage/registrations.json` med et unikt id
+   og timestamp.
+4. Backenden prøver å sende en kvitteringsepost til brukerens e-postadresse
+   via Nodemailer (SMTP).
+
+**Hvis SMTP er konfigurert:**
+> «Påmeldingen er lagret, og kvittering er sendt til e-posten din.»
+
+**Hvis SMTP ikke er konfigurert:**
+> «Påmeldingen er lagret. E-postkvittering er ikke konfigurert i testmiljøet.»
+
+Påmeldingen lagres uansett – SMTP er valgfritt. Credentials leses fra
+miljøvariabler (se `.env.example`), aldri hardkodet i koden.
+
+### Adminoversikt for påmeldinger
+
+Festivalsjef kan nå se alle påmeldinger i en egen fane («Påmeldinger») i
+adminpanelet (`/admin`). Oversikten viser:
+
+- Tidspunkt for påmelding
+- Navn, klasse, e-post
+- Valgt bedrift og workshop
+- Ønsket tidspunkt
+- Kommentar/behov
+- Om kvitteringsepost ble sendt
+
+Festivalsjef kan søke/filtrere og slette enkeltpåmeldinger.
+
+---
+
+## 11. Begrensninger
 
 - **Innloggingen er en demo/prototype.** Faste demo-credentials, token i
   minnet og ingen passordhashing.
-- **Lagringen er en JSON-fil**, ikke en ekte database. Det holder for en
+- **Lagringen er JSON-filer**, ikke en ekte database. Det holder for en
   prototype, men skalerer ikke og har ikke transaksjoner/backup.
 - **Selvsignert SSL** gir en nettleseradvarsel i testmiljøet.
 - **`festival.lan` er et internt domene** og fungerer bare i festivalnettverket.
 - **TP-Link-svitsjen** er ikke en UniFi-enhet, så UniFi viser ikke full
   portbasert topologi.
+- **Påmeldinger inneholder personopplysninger** (navn, klasse, e-post).
+  Produksjon krever GDPR-vurdering, begrenset tilgang og slettingsrutiner.
 
-Backenden er likevel et **klart steg opp fra ren localStorage**: endringene
-lagres på serveren, deles mellom besøkende, og valideres server-side.
+Backenden er et **klart steg opp fra ren localStorage**: påmeldinger og
+programendringer lagres på serveren, valideres server-side og deles mellom
+besøkende.
 
 ---
 
-## 11. Forbedringer i produksjon
+## 12. Forbedringer i produksjon
 
-- **Ekte database** (med backup) i stedet for en JSON-fil.
+- **Ekte database** (med backup) i stedet for JSON-filer.
 - **Ekte autentisering**: passordhashing (f.eks. bcrypt), trygge
   sessions/JWT, og rollebasert tilgangskontroll.
 - **Gyldig sertifikat** (Let's Encrypt) med offentlig domene, uten advarsel.
 - **`/23` og VLAN** for å dekke et større antall besøkende og enheter.
 - **UniFi-svitsj** for full portbasert topologi.
+- **Rate limiting og CSRF-beskyttelse** på påmeldingsruten.
+- **Ekte e-postleverandør** med dkim-signering for bedre leveringsrate.
+- **GDPR/personvern**: databehandleravtale, tydelig slettingsrutine, kun
+  nødvendige opplysninger samles inn.

@@ -82,8 +82,24 @@ Test at backenden svarer:
 curl http://localhost:3001/api/health      # forventet: {"status":"ok"}
 ```
 
-Programendringene lagres i `server/storage/program-overrides.json` (lages
-automatisk ved første kjøring). Demo-innlogging: `festivalsjef / 2inf2026`.
+Programendringer lagres i `server/storage/program-overrides.json` og
+påmeldinger i `server/storage/registrations.json`. Begge lages automatisk
+ved første kjøring. Demo-innlogging: `festivalsjef / 2inf2026`.
+
+### E-postkvittering (valgfritt)
+
+For å aktivere e-postkvittering lokalt: kopier `.env.example` til `.env` og
+fyll inn reelle SMTP-verdier:
+
+```bash
+cp .env.example .env
+# rediger .env med din e-post og app-passord
+```
+
+Start deretter backenden på vanlig måte. Uten `.env` kjører backenden fint,
+men e-post sendes ikke – og påmeldingen lagres uansett.
+
+**Viktig:** `.env` er i `.gitignore` og skal aldri committes.
 
 ---
 
@@ -138,12 +154,21 @@ containeren kjører på serveren (bak Nginx).
 | Filer / mappe | Innhold |
 | --- | --- |
 | `app/src/data/datasett.json` | **All festivaldata** (bedrifter, foredrag, rom, workshops, lærere, elever). Endre innhold her. |
-| `app/src/sections/` | Seksjonene på siden (Hero, Program, Festivalsjef, Finn fram osv.) |
+| `app/src/sections/` | Seksjonene på siden (Hero, Program, Festivalsjef, Finn fram, Påmelding osv.) |
 | `app/src/components/` | Gjenbrukbare komponenter (Header, Footer, Badge, SectionTitle …) |
+| `app/src/admin/` | Admin-komponenter: login, programeditor, påmeldingsliste |
 | `app/src/utils/dataHelpers.js` | Hjelpefunksjoner som leser data fra `datasett.json` |
+| `app/src/utils/apiClient.js` | Fetch-wrapper for alle API-kall (overrides + registrations) |
 | `app/src/App.jsx` | Setter sammen seksjonene i visningsrekkefølge |
 | `app/src/index.css` | Tailwind-import og felles stilklasser |
-| `Dockerfile` | To-trinns Docker-bygg (Node bygger, Nginx serverer) |
+| `server/index.js` | Express-server: API-ruter og statisk serving |
+| `server/dataStore.js` | Lagring av programendringer (program-overrides.json) |
+| `server/registrations.js` | Lagring og validering av påmeldinger (registrations.json) |
+| `server/mailer.js` | E-postkvittering via Nodemailer + SMTP env vars |
+| `server/auth.js` | Demo-innlogging og token-sjekk |
+| `server/storage/` | Runtime JSON-filer (ignorert av git) |
+| `.env.example` | Eksempel på miljøvariabler (SMTP, admin) |
+| `Dockerfile` | To-trinns Docker-bygg (bygger React, serverer med Node/Express) |
 | `docs/` | All dokumentasjon |
 
 ---
