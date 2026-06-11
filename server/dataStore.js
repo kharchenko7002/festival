@@ -79,23 +79,38 @@ function mergeProgram(overrides = loadOverrides()) {
   })
 }
 
-// True if the festival manager has already assigned another lecture to the
-// same room at the same start time. The check is scoped to the manager's own
-// assignments (the overrides), which is the schedule the festival manager
-// controls. Same time in a different room, or a different time in the same
-// room, is allowed.
+// True if assigning lectureId to the given rom+startTid would create a
+// double-booking. Checks the full merged program (original datasett.json data
+// with overrides applied) so that original-data conflicts and override-created
+// conflicts are both caught.
 //
-// Note: the imported datasett.json already places several lectures in the same
-// room/time (data we are not allowed to change). The conflict rule therefore
-// guards against the festival manager creating new double-bookings, rather
-// than re-validating the pre-existing seed program.
+// Algorithm: build the program as it would look with the proposed override
+// applied, then count how many lectures land in the same room at the same
+// start time. More than one means conflict.
 function hasConflict(rom, startTid, lectureId, overrides = loadOverrides()) {
-  return Object.entries(overrides).some(
-    ([id, override]) =>
-      Number(id) !== Number(lectureId) &&
-      override.rom === rom &&
-      override.startTid === startTid,
+  const normalizedRom = String(rom || '').trim()
+  const normalizedTime = String(startTid || '').trim()
+  if (!normalizedRom || !normalizedTime) return false
+
+  // Simulate saving the proposed override without sluttTid (not needed for
+  // conflict detection; mergeProgram falls back to the lecture's own sluttTid).
+  const testOverrides = {
+    ...overrides,
+    [Number(lectureId)]: {
+      ...(overrides[Number(lectureId)] || {}),
+      rom: normalizedRom,
+      startTid: normalizedTime,
+    },
+  }
+  const merged = mergeProgram(testOverrides)
+
+  // If more than one lecture occupies the same room+time, that is a conflict.
+  const inSlot = merged.filter(
+    (l) =>
+      String(l.rom || '').trim() === normalizedRom &&
+      String(l.startTid || '').trim() === normalizedTime,
   )
+  return inSlot.length > 1
 }
 
 module.exports = {

@@ -204,18 +204,62 @@ export const mergeProgramWithOverrides = (overrides = {}) =>
   })
 
 // Frontend mirror of the backend conflict check (the backend is authoritative).
-// True if another of the festival manager's overrides already uses the given
-// room at the given start time. Same time in a different room, or a different
-// time in the same room, is allowed.
+// Checks the full merged program (original data + overrides) to detect
+// double-booking. Returns true if assigning excludeLectureId to the given
+// rom+startTid would place two or more lectures in the same slot.
 export const hasRoomTimeConflict = (
   rom,
   startTid,
   excludeLectureId,
   overrides = {},
-) =>
-  Object.entries(overrides).some(
-    ([id, override]) =>
-      Number(id) !== Number(excludeLectureId) &&
-      override.rom === rom &&
-      override.startTid === startTid,
+) => {
+  const normalizedRom = String(rom || '').trim()
+  const normalizedTime = String(startTid || '').trim()
+  if (!normalizedRom || !normalizedTime) return false
+
+  const testOverrides = {
+    ...overrides,
+    [Number(excludeLectureId)]: {
+      ...(overrides[Number(excludeLectureId)] || {}),
+      rom: normalizedRom,
+      startTid: normalizedTime,
+    },
+  }
+  const merged = mergeProgramWithOverrides(testOverrides)
+  const inSlot = merged.filter(
+    (l) =>
+      String(l.rom || '').trim() === normalizedRom &&
+      String(l.startTid || '').trim() === normalizedTime,
   )
+  return inSlot.length > 1
+}
+
+// Deduplicate merged program so each room+time slot shows at most one lecture.
+// Overridden lectures (endret=true) win over unmodified originals.
+// Among ties, the lecture with the lower id wins.
+// Used by ProgramSection so the public view never shows double-bookings.
+export const deduplicateByRoomTime = (mergedProgram) => {
+  const seen = new Map()
+  // Sort: non-overridden first so that overridden entries overwrite them.
+  const sorted = [...mergedProgram].sort((a, b) => {
+    if (a.endret === b.endret) return a.id - b.id
+    return a.endret ? 1 : -1
+  })
+  for (const lecture of sorted) {
+    const key = `${String(lecture.rom || '').trim()}|${String(lecture.startTid || '').trim()}`
+    seen.set(key, lecture)
+  }
+  return [...seen.values()].sort((a, b) => a.id - b.id)
+}
+
+// Returns true if the merged program has any room+time slot occupied by more
+// than one lecture (used to show a conflict warning in admin views).
+export const hasProgramConflicts = (mergedProgram) => {
+  const seen = new Set()
+  for (const lecture of mergedProgram) {
+    const key = `${String(lecture.rom || '').trim()}|${String(lecture.startTid || '').trim()}`
+    if (seen.has(key)) return true
+    seen.add(key)
+  }
+  return false
+}

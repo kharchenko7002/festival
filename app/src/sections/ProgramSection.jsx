@@ -8,6 +8,8 @@ import {
   getCompanyName,
   sortByStartTime,
   mergeProgramWithOverrides,
+  deduplicateByRoomTime,
+  hasProgramConflicts,
 } from '../utils/dataHelpers.js'
 import { apiGetOverrides, OVERRIDES_EVENT } from '../utils/apiClient.js'
 
@@ -49,10 +51,17 @@ function ProgramSection() {
   const categories = getLectureCategories()
 
   // The program with overrides applied (original data + manager's changes).
-  const program = useMemo(
+  const rawProgram = useMemo(
     () => mergeProgramWithOverrides(overrides),
     [overrides],
   )
+
+  // Deduplicated program: each room+time slot shows at most one lecture so the
+  // public schedule never displays double-bookings.
+  const program = useMemo(() => deduplicateByRoomTime(rawProgram), [rawProgram])
+
+  // True when the underlying data has unresolved room+time conflicts.
+  const hasConflicts = useMemo(() => hasProgramConflicts(rawProgram), [rawProgram])
 
   // Filter by search text + category, then sort by start time
   const lectures = useMemo(() => {
@@ -89,6 +98,14 @@ function ProgramSection() {
           <Reveal>
             <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700 ring-1 ring-amber-100">
               Programmet vises uten serverendringer fordi backend ikke svarer.
+            </p>
+          </Reveal>
+        )}
+
+        {hasConflicts && (
+          <Reveal>
+            <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700 ring-1 ring-amber-100">
+              Noen foredrag har overlappende rom og tidspunkt i de underliggende dataene. Festivalsjef bør bruke adminpanelet for å tildele unike rom og tidspunkt til alle foredrag.
             </p>
           </Reveal>
         )}
