@@ -100,14 +100,62 @@ docker run -d -p 8080:80 --name 2inf-festival --restart unless-stopped 2inf-fest
 ## 6. Nginx reverse proxy
 
 På Ubuntu Server står en Nginx reverse proxy **foran** Docker-containeren.
-Nginx tar imot trafikk på `festival.lan` (port 80/443) og sender den videre til
-containeren. Reverse proxyen håndterer også HTTPS, slik at selve containeren kan
-holde seg enkel.
+Oppsettet fungerer slik:
+
+- **Docker-containeren** eksponeres på **port 8080** på serveren
+  (`docker run -p 8080:80`, der host-port 8080 mapper til containerens port 80).
+  Containeren er dermed bare tilgjengelig internt og holder seg enkel.
+- **Nginx lytter på port 443** (HTTPS) og er standardinngangen til nettsiden.
+- **Port 80 (HTTP) videresender automatisk til HTTPS** (HTTP → 301 → HTTPS),
+  slik at all trafikk blir kryptert.
+- Nginx sender forespørslene videre til containeren på `http://127.0.0.1:8080`.
 
 Trafikkflyt:
 
 ```text
-Klient  ->  https://festival.lan  ->  Nginx (Ubuntu, HTTPS)  ->  Docker-container (port 80)
+Klient  ->  https://festival.lan (443)  ->  Nginx (Ubuntu, HTTPS)  ->  Docker-container (127.0.0.1:8080 -> 80)
+Klient  ->  http://festival.lan  (80)   ->  Nginx 301-redirect      ->  https://festival.lan (443)
+```
+
+Eksempel på hvordan Nginx-konfigurasjonen er bygd opp (forenklet – den
+eksisterende konfigurasjonen på serveren fungerer og endres ikke):
+
+```nginx
+# Port 80: videresend alt til HTTPS
+server {
+    listen 80;
+    server_name festival.lan www.festival.lan;
+    return 301 https://$host$request_uri;
+}
+
+# Port 443: HTTPS-inngang + reverse proxy til Docker-containeren
+server {
+    listen 443 ssl;
+    server_name festival.lan www.festival.lan;
+
+    ssl_certificate     /etc/nginx/ssl/festival.lan.crt;   # selvsignert
+    ssl_certificate_key /etc/nginx/ssl/festival.lan.key;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;                  # Docker-containeren
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### Testkommandoer
+
+Etter endringer i Nginx bør oppsettet kontrolleres. Disse kommandoene ble brukt
+under testing på serveren:
+
+```bash
+sudo nginx -t                       # sjekk at konfigurasjonen er gyldig
+curl -k -I https://localhost        # HTTPS lokalt på serveren (-k godtar selvsignert)
+curl -k -I https://festival.lan     # HTTPS via internt domenenavn
+curl -I http://festival.lan         # HTTP skal svare 301 -> https://festival.lan
 ```
 
 ---
@@ -117,9 +165,20 @@ Klient  ->  https://festival.lan  ->  Nginx (Ubuntu, HTTPS)  ->  Docker-containe
 HTTPS er satt opp i Nginx med et **selvsignert sertifikat**. Dette krypterer
 trafikken mellom klient og server i testmiljøet.
 
+Sertifikatet er selvsignert fordi **`festival.lan` er et internt domene** som
+bare finnes i festivalnettverket. En offentlig sertifikatutsteder kan ikke
+utstede sertifikat for et navn som ikke eksisterer på internett.
+
 Siden sertifikatet er selvsignert, viser nettleseren en advarsel om at
 sertifikatet ikke er utstedt av en kjent sertifikatutsteder. I et lukket
-testmiljø er dette akseptabelt. I produksjon bør et gyldig sertifikat brukes.
+testmiljø er dette akseptabelt. **I produksjon ville man brukt et offentlig
+domene og et gyldig sertifikat fra Let's Encrypt** (automatisk fornyet), slik at
+advarselen forsvinner.
+
+Nettsiden er tilgjengelig på:
+
+- **`https://festival.lan`** – hovedadresse (anbefalt)
+- **`https://10.20.30.20`** – direkte på serverens IP
 
 ---
 

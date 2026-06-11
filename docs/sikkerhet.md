@@ -58,12 +58,19 @@ internett, og tjenesten er kun tilgjengelig i festivalnettverket.
 ## 7. HTTPS med selvsignert sertifikat
 
 Trafikken til nettsiden er kryptert med **HTTPS** via Nginx reverse proxy.
-Sertifikatet er **selvsignert**.
+Nginx **lytter på port 443**, og **port 80 videresender automatisk til HTTPS**,
+slik at ingen trafikk går ukryptert. Selve Docker-containeren kjører bak proxyen
+på intern port 8080 og er ikke direkte eksponert.
+
+Sertifikatet er **selvsignert** fordi `festival.lan` er et internt domene som
+ikke finnes på internett.
 
 - **Fordel:** trafikken mellom klient og server er kryptert, så innhold ikke
   kan leses i klartekst på nettverket.
 - **Begrensning:** nettleseren viser en advarsel fordi sertifikatet ikke er
   utstedt av en kjent sertifikatutsteder. Brukeren må godta advarselen.
+- **I produksjon:** med et offentlig domene ville man brukt et gyldig
+  sertifikat fra **Let's Encrypt**, som fornyes automatisk og fjerner advarselen.
 
 ## 8. Webapplikasjon og påmelding
 

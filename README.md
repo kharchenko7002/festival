@@ -145,9 +145,13 @@ Nettsiden er deployet på **Ubuntu Server (10.20.30.20)**:
 
 1. Prosjektet er kopiert til serveren.
 2. Docker-imaget er bygget på serveren.
-3. Containeren kjører og serverer den bygde appen på port 80 internt.
-4. **Nginx reverse proxy** står foran containeren og håndterer HTTPS.
-5. HTTPS bruker et **selvsignert sertifikat** (gir nettleseradvarsel i testmiljø).
+3. Containeren kjører og eksponeres internt på **port 8080** (`-p 8080:80`).
+4. **Nginx reverse proxy** står foran containeren og **lytter på port 443**.
+   Port 80 videresender automatisk til HTTPS, og Nginx proxyer videre til
+   containeren på `127.0.0.1:8080`.
+5. HTTPS bruker et **selvsignert sertifikat** (gir nettleseradvarsel i testmiljø,
+   fordi `festival.lan` er et internt domene). I produksjon ville man brukt et
+   offentlig domene med Let's Encrypt.
 6. Nettsiden er tilgjengelig på `https://festival.lan` og `https://10.20.30.20`.
 
 Full fremgangsmåte står i `docs/serveroppsett.md`.
