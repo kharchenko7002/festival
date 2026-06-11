@@ -7,13 +7,12 @@ import {
   getWorkshopDetails,
   getCompanyDetails,
 } from '../utils/dataHelpers.js'
+import { apiSubmitRegistration } from '../utils/apiClient.js'
 
-// Shared styling for the form controls so every field looks consistent.
 const fieldClass =
   'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-sm transition placeholder:text-slate-400 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200'
 const labelClass = 'mb-1.5 block text-sm font-semibold text-slate-700'
 
-// The empty form state, reused when the visitor wants to register again.
 const emptyForm = {
   navn: '',
   klasse: '',
@@ -24,43 +23,60 @@ const emptyForm = {
   kommentar: '',
 }
 
-// Front-end-only registration ("Påmelding") section.
-// This is a prototype: nothing is sent to a server. On submit we simply show
-// a confirmation message. The dropdowns are populated from the festival data.
 function PamendingSection() {
   const [form, setForm] = useState(emptyForm)
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState(null) // null | 'loading' | 'success' | 'error'
+  const [resultMessage, setResultMessage] = useState('')
+  const [emailSent, setEmailSent] = useState(null)
 
-  // Dropdown options sourced from datasett.json via the data helpers
   const companyOptions = getCompanyOptions()
   const workshopOptions = getWorkshopOptions()
   const timeSlots = getAvailableTimeSlots()
 
-  // Live summaries for the current selection (null when nothing is chosen)
   const workshopDetails = form.workshop ? getWorkshopDetails(form.workshop) : null
   const companyDetails = form.bedrift ? getCompanyDetails(form.bedrift) : null
 
-  // Update a single field by name
   const handleChange = (event) => {
     const { name, value } = event.target
     setForm((current) => ({ ...current, [name]: value }))
   }
 
-  // Prototype submit: no network request, just show the confirmation
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    setSubmitted(true)
+    setStatus('loading')
+    setResultMessage('')
+
+    try {
+      const payload = {
+        navn: form.navn,
+        klasse: form.klasse,
+        epost: form.epost,
+        bedriftId: form.bedrift,
+        workshopId: form.workshop,
+        tidspunkt: form.tidspunkt,
+        kommentar: form.kommentar,
+      }
+      const data = await apiSubmitRegistration(payload)
+      setEmailSent(data.emailSent)
+      setResultMessage(data.message)
+      setStatus('success')
+    } catch (err) {
+      setResultMessage(
+        err?.message || 'Kunne ikke lagre påmeldingen. Prøv igjen.',
+      )
+      setStatus('error')
+    }
   }
 
-  // Reset the form so the visitor can register another person
   const handleReset = () => {
     setForm(emptyForm)
-    setSubmitted(false)
+    setStatus(null)
+    setResultMessage('')
+    setEmailSent(null)
   }
 
   return (
     <section id="pamelding" className="relative overflow-hidden bg-navy-800 text-white">
-      {/* Decorative texture + floating glow, matching the other navy blocks */}
       <div
         aria-hidden="true"
         className="bg-dot-grid pointer-events-none absolute inset-0 opacity-70"
@@ -75,7 +91,6 @@ function PamendingSection() {
       />
 
       <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
-        {/* Heading + short explanation */}
         <Reveal>
           <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-300 ring-1 ring-white/15">
@@ -87,17 +102,14 @@ function PamendingSection() {
             </h2>
             <p className="text-base leading-relaxed text-brand-100 sm:text-lg">
               Sikre deg plass på foredrag og workshops. Fyll ut skjemaet under,
-              så er du klar for festivaldagen. Dette er en prototype – ingen data
-              sendes til en server.
+              så er du klar for festivaldagen.
             </p>
           </div>
         </Reveal>
 
-        {/* White card holding the form */}
         <Reveal delay={120}>
           <div className="mx-auto mt-12 max-w-3xl rounded-3xl bg-white p-6 text-slate-800 shadow-2xl shadow-navy-900/40 sm:p-10">
-            {submitted ? (
-              // Confirmation shown after a prototype submit
+            {status === 'success' ? (
               <div className="flex flex-col items-center gap-5 py-8 text-center">
                 <span
                   aria-hidden="true"
@@ -106,12 +118,16 @@ function PamendingSection() {
                   ✓
                 </span>
                 <h3 className="text-2xl font-bold text-navy-900">
-                  Takk! Din påmelding er registrert i prototypen.
+                  Takk! Du er påmeldt.
                 </h3>
                 <p className="max-w-md text-sm leading-relaxed text-slate-600">
-                  Dette er kun en demonstrasjon, så ingenting er lagret eller
-                  sendt videre. Du kan melde på en til om du ønsker.
+                  {resultMessage}
                 </p>
+                {emailSent === false && (
+                  <p className="max-w-md text-xs text-slate-400">
+                    (Påmeldingen er lagret på serveren selv om kvitteringse-posten ikke ble sendt.)
+                  </p>
+                )}
                 <button type="button" onClick={handleReset} className="btn-blue mt-2">
                   Meld på en til
                 </button>
@@ -250,7 +266,7 @@ function PamendingSection() {
                   </div>
                 </div>
 
-                {/* Live summaries based on the current selection */}
+                {/* Live summaries */}
                 {(workshopDetails || companyDetails) && (
                   <div className="grid gap-4 sm:grid-cols-2">
                     {workshopDetails && (
@@ -334,8 +350,21 @@ function PamendingSection() {
                   </div>
                 )}
 
-                <button type="submit" className="btn-blue w-full sm:w-fit sm:self-start">
-                  Send påmelding
+                {status === 'error' && (
+                  <p
+                    role="alert"
+                    className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700 ring-1 ring-red-100"
+                  >
+                    {resultMessage}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="btn-blue w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit sm:self-start"
+                >
+                  {status === 'loading' ? 'Sender …' : 'Send påmelding'}
                 </button>
               </form>
             )}

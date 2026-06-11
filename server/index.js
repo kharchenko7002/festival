@@ -1,6 +1,7 @@
 // Express server for 2INF Festival.
 // Serves the React production build (app/dist) and exposes a small API that
-// lets the festival manager store program changes server-side in a JSON file.
+// lets the festival manager store program changes server-side in a JSON file
+// and allows students to register for workshops (påmelding).
 const path = require('path')
 const express = require('express')
 const { checkCredentials, issueToken, requireAuth } = require('./auth')
@@ -13,6 +14,16 @@ const {
   hasConflict,
   ensureStorage,
 } = require('./dataStore')
+const {
+  ensureRegistrationsFile,
+  loadRegistrations,
+  createRegistration,
+  appendRegistration,
+  markEmailSent,
+  deleteRegistration,
+  clearRegistrations,
+} = require('./registrations')
+const { sendReceiptEmail } = require('./mailer')
 
 const app = express()
 const PORT = process.env.PORT || 80
@@ -102,6 +113,60 @@ app.delete('/api/program/overrides', requireAuth, (req, res) => {
   res.json({})
 })
 
+// --- Registration (påmelding) routes --------------------------------------
+
+// Public: submit a new registration. Saves to disk and sends a receipt email.
+app.post('/api/registrations', async (req, res) => {
+  const { navn, klasse, epost, bedriftId, workshopId, tidspunkt, kommentar } =
+    req.body || {}
+
+  const result = createRegistration({
+    navn,
+    klasse,
+    epost,
+    bedriftId,
+    workshopId,
+    tidspunkt,
+    kommentar,
+  })
+
+  if (!result.ok) {
+    return res.status(400).json({ message: result.error })
+  }
+
+  const saved = appendRegistration(result.registration)
+
+  const { sent } = await sendReceiptEmail(saved)
+  markEmailSent(saved.id, sent)
+  saved.emailSent = sent
+
+  const message = sent
+    ? 'Påmeldingen er lagret, og kvittering er sendt til e-posten din.'
+    : 'Påmeldingen er lagret. E-postkvittering er ikke konfigurert i testmiljøet.'
+
+  res.status(201).json({ registration: saved, emailSent: sent, message })
+})
+
+// Protected: list all registrations for the festival manager.
+app.get('/api/admin/registrations', requireAuth, (req, res) => {
+  const list = loadRegistrations()
+  // Newest first
+  res.json([...list].reverse())
+})
+
+// Protected: delete a single registration.
+app.delete('/api/admin/registrations/:id', requireAuth, (req, res) => {
+  const found = deleteRegistration(req.params.id)
+  if (!found) return res.status(404).json({ message: 'Påmelding ikke funnet.' })
+  res.json({ message: 'Påmelding slettet.' })
+})
+
+// Protected: clear all registrations.
+app.delete('/api/admin/registrations', requireAuth, (req, res) => {
+  clearRegistrations()
+  res.json({ message: 'Alle påmeldinger er slettet.' })
+})
+
 // --- Static React build + SPA fallback ------------------------------------
 
 app.use(express.static(STATIC_DIR))
@@ -117,6 +182,7 @@ app.use((req, res) => {
 })
 
 ensureStorage()
+ensureRegistrationsFile()
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`2INF Festival server lytter på port ${PORT}`)

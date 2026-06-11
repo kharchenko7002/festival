@@ -66,3 +66,17 @@ export const apiSaveOverride = (override) =>
 
 export const apiResetOverrides = () =>
   request('/program/overrides', { method: 'DELETE', auth: true })
+
+// --- Registration (påmelding) endpoints ------------------------------------
+
+export const apiSubmitRegistration = (formData) =>
+  request('/registrations', { method: 'POST', body: formData })
+
+export const apiGetRegistrations = () =>
+  request('/admin/registrations', { auth: true })
+
+export const apiDeleteRegistration = (id) =>
+  request(`/admin/registrations/${id}`, { method: 'DELETE', auth: true })
+
+export const apiClearRegistrations = () =>
+  request('/admin/registrations', { method: 'DELETE', auth: true })
