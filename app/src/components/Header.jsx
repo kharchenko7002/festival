@@ -8,6 +8,7 @@ const navLinks = [
   { label: 'Bedrifter', href: '#bedrifter' },
   { label: 'Workshops', href: '#workshops' },
   { label: 'Rom', href: '#rom' },
+  { label: 'Finn fram', href: '#finn-fram' },
   { label: 'Info', href: '#info' },
   { label: 'Påmelding', href: '#pamelding' },
   { label: 'Kontakt', href: '#kontakt' },
