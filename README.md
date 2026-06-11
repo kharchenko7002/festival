@@ -39,7 +39,11 @@ eksamen er tverrfaglig, dokumenteres også drift, nettverk og sikkerhet.
 
 - Responsiv landingsside (mobil og PC) i en lys, hvit-blå SaaS-stil
 - Header med tekstlogo «2INF Festival» og CTA-knapp **«Meld meg på»**
-- **Program** med søk, kategorifilter og sortering etter starttid
+- **Program** med søk, kategorifilter og sortering etter starttid – viser
+  tidspunkt, rom og bedrift, og oppdateres med festivalsjefens endringer
+- **Festivalsjef** – tildel foredrag til Auditorium A/B og tidspunkt, med
+  kontroll mot dobbeltbooking (frontend-prototype, lagres i `localStorage`)
+- **Finn fram** – interaktiv veiviser til rom, toaletter, spiseområde og mer
 - **Bedrifter** med søk på navn og bransje
 - **Workshops** som kobler `holderBedriftId → bedrifter.id` og `romId → rom.id`
 - **Rom** gruppert etter bygning, med kapasitet og utstyr
@@ -83,8 +87,9 @@ Begrunnelse for valgene står i `docs/teknologivalg.md`.
 │   ├── src/
 │   │   ├── components/       (Header, Footer, SectionTitle, StatCard,
 │   │   │                      SearchInput, Badge, Reveal, CookieConsent)
-│   │   ├── sections/         (Hero, About, Program, Companies, Workshops,
-│   │   │                      Rooms, PracticalInfo, Pamending, Contact)
+│   │   ├── sections/         (Hero, About, Program, FestivalManager,
+│   │   │                      Companies, Workshops, Rooms, FinnFram,
+│   │   │                      PracticalInfo, Pamending, Contact)
 │   │   ├── utils/            (dataHelpers.js)
 │   │   ├── data/
 │   │   │   └── datasett.json
@@ -200,9 +205,13 @@ All dokumentasjon ligger i `docs/`:
 
 - `docs/dokumentasjon.md` – samlet hoveddokumentasjon
 - `docs/teknologivalg.md` – begrunnelse for teknologivalg
-- `docs/serveroppsett.md` – servere, Docker, Nginx, HTTPS
+- `docs/serveroppsett.md` – servere, Docker, Nginx, HTTPS (port 443)
 - `docs/nettverksplan.md` – nettverk, IP-plan og UniFi
+- `docs/nettverksvurdering-24.md` – vurdering av `/24`-kapasitet (dag 2)
 - `docs/sikkerhet.md` – sikkerhetsvurdering
+- `docs/lokal-utvikling.md` – veiledning for lokal utvikling (dag 2)
+- `docs/eksamensoppgave-dag2.md` – løsning av eksamenskravene dag 2
+- `docs/testing-dag2.md` – testresultater dag 2
 - `docs/testing.md` – testresultater
 - `docs/arbeidslogg-08-06-2026.md`, `docs/arbeidslogg-09-06-2026.md` – arbeidslogger
 - `docs/serveroppsett-09-06-2026.md`, `docs/testresultat-servere-09-06-2026.md`,
@@ -214,6 +223,9 @@ All dokumentasjon ligger i `docs/`:
 
 - **Påmelding** er en frontend-prototype. Skjemaet lagrer ingenting og sender
   ingen data til en server – det finnes ingen backend.
+- **Festivalsjef** er også en frontend-prototype. Endringene lagres kun i
+  nettleserens `localStorage` (per enhet), ikke i en felles database. I
+  produksjon trengs backend, database og autentisering.
 - **HTTPS** bruker et selvsignert sertifikat, så nettleseren viser en advarsel.
 - **`festival.lan`** er kun internt og fungerer ikke utenfor festivalnettverket.
 - **TP-Link-svitsjen** er ikke en UniFi-enhet, så UniFi viser ikke full
