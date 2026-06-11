@@ -46,8 +46,10 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 | `POST /api/registrations` uten felter | `400` + «Navn er påkrevd.» | ✅ Bestått | curl |
 | `POST /api/registrations` ugyldig e-post | `400` + «E-postadressen ser ikke riktig ut.» | ✅ Bestått | curl |
 | `POST /api/registrations` ugyldig bedriftId | `400` + «Ukjent bedrift.» | ✅ Bestått | curl |
-| `POST /api/registrations` gyldig payload | `201` + registration-objekt + `emailSent: false` | ✅ Bestått | curl (SMTP ikke konfigurert) |
-| `message` uten SMTP | `«Påmeldingen er lagret. E-postkvittering er ikke konfigurert i testmiljøet.»` | ✅ Bestått | curl |
+| `POST /api/registrations` med `wantsEmailReceipt: false` | `201` + `emailSent: false` + melding om ikke valgt kvittering | ✅ Bestått | curl |
+| `POST /api/registrations` med `wantsEmailReceipt: true`, SMTP av | `201` + `emailSent: false` + «ikke konfigurert»-melding | ✅ Bestått | curl |
+| `message` uten SMTP, receipt=true | `«Påmeldingen er lagret. E-postkvittering er ikke konfigurert i testmiljøet.»` | ✅ Bestått | curl |
+| `message` receipt=false | `«Påmeldingen er lagret. Du valgte å ikke motta kvittering på e-post.»` | ✅ Bestått | curl |
 | Påmelding lagres i JSON-fil | `registrations.json` oppdateres | ✅ Bestått | Verifisert på disk |
 | `GET /api/admin/registrations` uten token | `401` | ✅ Bestått | curl |
 | `GET /api/admin/registrations` med token | `200` + liste med påmeldinger (nyeste først) | ✅ Bestått | curl |
@@ -62,7 +64,7 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
 | `/admin` åpnes direkte i nettleser | Innloggingsskjema vises | ✅ Bestått | Manuell test |
-| Demo-tekst «Demo: festivalsjef / 2inf2026» | Skal IKKE vises på siden | ✅ Bestått | Fjernet fra AdminLogin |
+| Demo-tekst «Demo: festivalsjef / 2inf2026» | Skal IKKE vises på siden | ✅ Bestått | Fjernet fra FestivalManagerSection og AdminLogin |
 | Innlogging med riktig passord | Dashboard vises med faner | ✅ Bestått | Manuell test |
 | Innlogging med feil passord | «Feil brukernavn eller passord.» vises | ✅ Bestått | Manuell test |
 | «Tilbake til forsiden» | Navigerer til `/` | ✅ Bestått | Manuell test |
@@ -110,11 +112,20 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 
 ## 5. Konfliktkontroll (dobbeltbooking)
 
+Konfliktkontrollen sjekker nå det **fullt sammenslåtte programmet** (original
+`datasett.json` + lagrede overrides), ikke bare overrides mot overrides.
+Det betyr at admin ikke kan flytte et foredrag til et rom+tidspunkt som allerede
+er opptatt av et annet foredrag – verken et originalt eller et overstyrt.
+
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
-| Samme rom + samme tidspunkt | Backend svarer `409` + «Dette tidspunktet er allerede opptatt i valgt rom.» | ✅ Bestått | curl + manuell test |
-| Samme tidspunkt, forskjellig rom (A vs B) | Begge tillates | ✅ Bestått | curl + manuell test |
-| Forskjellig tidspunkt, samme rom | Begge tillates | ✅ Bestått | curl + manuell test |
+| Override A: 09:00 Auditorium A → OK. Override B: 09:00 Auditorium A (annet foredrag) | Backend svarer `409` + «Dette tidspunktet er allerede opptatt i valgt rom.» | ✅ Bestått | curl: POST /api/program/overrides med token |
+| Override til 09:00 Auditorium A når originalt foredrag allerede er der | `409` – originaldata tas med i sjekken | ✅ Bestått | curl + manuell test |
+| Samme tidspunkt, forskjellig rom (A vs B) | Begge tillates – `200` | ✅ Bestått | curl + manuell test |
+| Forskjellig tidspunkt, samme rom | Begge tillates – `200` | ✅ Bestått | curl + manuell test |
+| Frontend viser feil før lagring | «Dette tidspunktet er allerede opptatt i valgt rom.» | ✅ Bestått | Manuell test i ProgramEditor |
+| Program viser ikke to foredrag i samme rom på samme tidspunkt | Deduplisert visning i ProgramSection | ✅ Bestått | Manuell test |
+| ProgramSection viser advarsel ved uløste konflikter i grunndata | Advarsel: «Noen foredrag har overlappende rom og tidspunkt…» | ✅ Bestått | Manuell test (originale data har konflikter) |
 
 ---
 
@@ -170,8 +181,12 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 | --- | --- | --- | --- |
 | Sende tomt skjema | Submit-knappen er aktiv, backend gir 400 | ✅ Bestått | Manuell test |
 | Ugyldig e-post | Backend svarer «E-postadressen ser ikke riktig ut.» | ✅ Bestått | Manuell test |
-| Gyldig innsending (SMTP av) | Suksessmelding + «E-postkvittering er ikke konfigurert» | ✅ Bestått | Manuell test |
-| «Meld på en til»-knappen | Skjema nullstilles | ✅ Bestått | Manuell test |
+| Checkbox «Jeg ønsker kvittering på e-post» vises i skjemaet | Checkbox finnes, avhuket = false som standard | ✅ Bestått | Manuell test |
+| Innsending uten checkbox (SMTP av) | «Påmeldingen er lagret. Du valgte å ikke motta kvittering på e-post.» | ✅ Bestått | curl + manuell test |
+| Innsending med checkbox, SMTP ikke konfigurert | «Påmeldingen er lagret. E-postkvittering er ikke konfigurert i testmiljøet.» | ✅ Bestått | curl |
+| wantsEmailReceipt=false → ingen e-postforsøk | Backend logger ikke SMTP-feil, emailSent=false | ✅ Bestått | curl (verifisert i response) |
+| wantsEmailReceipt=true, SMTP konfigurert | «Påmeldingen er lagret, og kvittering er sendt til e-posten din.» | ⚠️ Ikke testet | Krever ekte SMTP-konfigurasjon |
+| «Meld på en til»-knappen | Skjema nullstilles inkl. checkbox | ✅ Bestått | Manuell test |
 | Valg av bedrift viser info-kort | Bransje og standnummer vises | ✅ Bestått | Manuell test |
 | Valg av workshop viser info-kort | Tittel, rom, tid, maks, forkunnskaper vises | ✅ Bestått | Manuell test |
 | Loading state mens sending pågår | Knapp viser «Sender …» og er deaktivert | ✅ Bestått | Manuell test |
@@ -182,8 +197,13 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 
 Alle automatiske tester (`npm run build`, `npm run lint`) er kjørt og bestått
 etter alle endringer. Backend-API-et er testet med `curl`, inkludert
-påmeldingsruter, validering, listing, sletting og autentisering.
-De funksjonelle testene av adminpanelet, programseksjonen, ledige plasser,
-konfliktkontrollen, finn-fram og påmeldingsskjemaet er bekreftet manuelt.
-`docker build` er **ikke** testet i utviklingsmiljøet fordi Docker Desktop ikke
-var tilgjengelig, og bør verifiseres på serveren før innlevering.
+påmeldingsruter med `wantsEmailReceipt`-felt, validering, listing, sletting og
+autentisering. Konfliktkontrollen sjekker nå fullt merged program.
+
+Manuelt verifisert: adminpanel, programseksjon med deduplisering, dobbeltbooking-
+blokkering, checkbox for e-postkvittering, korrekte statusmeldinger, demo-tekst
+fjernet, finn-fram og søk/filtrering i program.
+
+`docker build` bør verifiseres på server (Docker Desktop ikke tilgjengelig i
+utviklingsmiljøet). E-postkvittering med SMTP er ikke testet uten ekte
+SMTP-konfigurasjon.

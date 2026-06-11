@@ -72,9 +72,9 @@ ikke finnes på internett.
 - **I produksjon:** med et offentlig domene ville man brukt et gyldig
   sertifikat fra **Let's Encrypt**, som fornyes automatisk og fjerner advarselen.
 
-## 8. Webapplikasjon og påmelding
+## 8. Webapplikasjon, påmelding og personvern
 
-Påmeldingsskjemaet sender nå data til backenden og lagrer informasjonen
+Påmeldingsskjemaet sender data til backenden og lagrer informasjonen
 server-side. Sikkerhetstiltakene:
 
 - **Serversidevalidering**: backenden validerer alle felter (navn, klasse,
@@ -85,9 +85,15 @@ server-side. Sikkerhetstiltakene:
   direkte.
 - **`.env` er i `.gitignore`**: reelle passord og API-nøkler lagres ikke i
   versjonskontroll. `.env.example` viser hvilke variabler som trengs.
+- **Aktivt samtykke til e-postkvittering**: e-post sendes bare hvis brukeren
+  aktivt huker av «Jeg ønsker kvittering på e-post» i skjemaet. Uten hakemerke
+  lagres påmeldingen, men ingen e-post sendes. Feltet `wantsEmailReceipt`
+  lagres i registreringsobjektet.
 - **Personopplysninger**: påmeldinger inneholder navn, klasse og e-post.
-  Disse lagres i `server/storage/registrations.json`. I produksjon krever
-  dette GDPR-vurdering, begrenset tilgang og definerte slettingsrutiner.
+  Disse lagres i `server/storage/registrations.json`. Bare festivalsjef/admin
+  har tilgang via autentisert API-rute (`GET /api/admin/registrations`).
+  I produksjon krever dette GDPR-vurdering, begrenset tilgang, loggføring
+  og definerte slettingsrutiner.
 
 Andre webtiltak:
 
@@ -95,8 +101,18 @@ Andre webtiltak:
 - Ingen passord eller hemmelige nøkler er hardkodet i kildekoden.
 - Samtykke til informasjonskapsler håndteres lokalt i nettleseren
   (`localStorage`), uten sporing.
-- Demo-innloggingen for festivalsjef viser ikke lenger synlige demo-credentials
-  på nettsiden. Credentials forblir i backend og dokumentasjon for testing.
+- Synlige demo-credentials er fjernet fra nettsidegrensesnittet.
+  Credentials finnes bare i backend og i denne dokumentasjonen for testing.
+
+**Produksjonstiltak som bør på plass:**
+
+- Ekte autentisering med passordhashing (bcrypt) og sessions/JWT.
+- Rollebasert tilgangskontroll.
+- Ekte database i stedet for JSON-fil.
+- Logging og backup av påmeldinger.
+- Definerte rutiner for GDPR-sletting, lagringstid og tilgangsstyring.
+- Rate limiting på offentlige API-endepunkter.
+- Gyldig HTTPS-sertifikat (Let's Encrypt).
 
 ## 8b. Festivalsjef-backend og innlogging (demo)
 

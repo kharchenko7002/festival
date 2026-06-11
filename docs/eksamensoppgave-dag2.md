@@ -25,13 +25,15 @@ dokumenteres også nettverk, server og sikkerhet der det er relevant.
 | 4 | Festivalsjef kobler bedrift/foredrag til rom | ✅ | `pages/AdminPage.jsx`, `admin/ProgramEditor.jsx` |
 | 5 | Programmet oppdateres med endringene | ✅ | `sections/ProgramSection.jsx` |
 | 6 | Program viser tidspunkt, rom og bedrift | ✅ | `sections/ProgramSection.jsx` |
-| 7 | Hindre to bedrifter i samme rom/tid | ✅ | `hasConflict()` + `hasRoomTimeConflict()` |
+| 7 | Hindre to bedrifter i samme rom/tid | ✅ | `hasConflict()` sjekker fullt merged program (original + overrides) |
 | 8 | Interaktiv finn-fram-funksjon | ✅ | `sections/FinnFramSection.jsx` |
 | 9 | Eget adminpanel på `/admin` | ✅ | `pages/AdminPage.jsx` |
 | 10 | Festivalsjef kan styre ledige plasser | ✅ | `admin/ProgramEditor.jsx` + `server/index.js` |
 | 11 | Påmelding lagres på server | ✅ | `server/registrations.js` + `POST /api/registrations` |
-| 12 | E-postkvittering ved påmelding | ✅ | `server/mailer.js` (Nodemailer + SMTP env vars) |
+| 12 | E-postkvittering kun hvis bruker ønsker det | ✅ | Checkbox `wantsEmailReceipt` + `server/mailer.js` |
 | 13 | Festivalsjef ser alle påmeldinger | ✅ | `admin/RegistrationsList.jsx` + `GET /api/admin/registrations` |
+| 14 | Demo-tekst «festivalsjef / 2inf2026» fjernet | ✅ | `sections/FestivalManagerSection.jsx` |
+| 15 | Program viser ikke dobbeltbookinger | ✅ | `deduplicateByRoomTime()` i `ProgramSection` |
 
 ---
 
