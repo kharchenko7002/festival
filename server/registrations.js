@@ -54,7 +54,7 @@ function saveRegistrations(registrations) {
 }
 
 // Validate and create a registration object. Returns { ok, error, registration }.
-function createRegistration({ navn, klasse, epost, bedriftId, workshopId, tidspunkt, kommentar }) {
+function createRegistration({ navn, klasse, epost, bedriftId, workshopId, tidspunkt, kommentar, wantsEmailReceipt }) {
   if (!navn || !String(navn).trim()) return { ok: false, error: 'Navn er påkrevd.' }
   if (!klasse || !String(klasse).trim()) return { ok: false, error: 'Klasse er påkrevd.' }
   if (!epost || !String(epost).trim()) return { ok: false, error: 'E-post er påkrevd.' }
@@ -83,6 +83,7 @@ function createRegistration({ navn, klasse, epost, bedriftId, workshopId, tidspu
     workshopTittel: workshop.tittel,
     tidspunkt: String(tidspunkt).trim(),
     kommentar: kommentar ? String(kommentar).trim() : '',
+    wantsEmailReceipt: wantsEmailReceipt === true,
     emailSent: false,
   }
 

@@ -21,6 +21,7 @@ const emptyForm = {
   workshop: '',
   tidspunkt: '',
   kommentar: '',
+  wantsEmailReceipt: false,
 }
 
 function PamendingSection() {
@@ -37,8 +38,11 @@ function PamendingSection() {
   const companyDetails = form.bedrift ? getCompanyDetails(form.bedrift) : null
 
   const handleChange = (event) => {
-    const { name, value } = event.target
-    setForm((current) => ({ ...current, [name]: value }))
+    const { name, value, type, checked } = event.target
+    setForm((current) => ({
+      ...current,
+      [name]: type === 'checkbox' ? checked : value,
+    }))
   }
 
   const handleSubmit = async (event) => {
@@ -55,6 +59,7 @@ function PamendingSection() {
         workshopId: form.workshop,
         tidspunkt: form.tidspunkt,
         kommentar: form.kommentar,
+        wantsEmailReceipt: form.wantsEmailReceipt,
       }
       const data = await apiSubmitRegistration(payload)
       setEmailSent(data.emailSent)
@@ -349,6 +354,23 @@ function PamendingSection() {
                     )}
                   </div>
                 )}
+
+                {/* Email receipt checkbox */}
+                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 transition hover:bg-brand-50 hover:border-brand-200">
+                  <input
+                    type="checkbox"
+                    name="wantsEmailReceipt"
+                    checked={form.wantsEmailReceipt}
+                    onChange={handleChange}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-brand-600"
+                  />
+                  <span className="text-sm text-slate-700">
+                    <span className="font-semibold">Jeg ønsker kvittering på e-post</span>
+                    <span className="block text-xs text-slate-500 mt-0.5">
+                      Kvittering sendes til e-postadressen du oppga, hvis e-post er konfigurert.
+                    </span>
+                  </span>
+                </label>
 
                 {status === 'error' && (
                   <p

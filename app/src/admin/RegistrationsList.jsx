@@ -201,7 +201,8 @@ function RegistrationsList({ onLogout }) {
                   <th className="px-4 py-3">Workshop</th>
                   <th className="px-4 py-3">Ønsket tid</th>
                   <th className="px-4 py-3">Kommentar</th>
-                  <th className="px-4 py-3">Kvittering</th>
+                  <th className="px-4 py-3">Ønsket kvittering</th>
+                  <th className="px-4 py-3">Kvittering sendt</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
@@ -227,6 +228,17 @@ function RegistrationsList({ onLogout }) {
                         </span>
                       ) : (
                         <span className="text-slate-300">–</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {r.wantsEmailReceipt ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-100">
+                          Ønsket kvittering
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
+                          Ønsket ikke kvittering
+                        </span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -268,15 +280,26 @@ function RegistrationsList({ onLogout }) {
                     <p className="font-semibold text-navy-900">{r.navn}</p>
                     <p className="text-xs text-slate-500">{r.klasse} · {formatDate(r.createdAt)}</p>
                   </div>
-                  {r.emailSent ? (
-                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100">
-                      ✓ Kvittering sendt
-                    </span>
-                  ) : (
-                    <span className="inline-flex shrink-0 items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
-                      Ikke sendt
-                    </span>
-                  )}
+                  <div className="flex shrink-0 flex-col items-end gap-1">
+                    {r.wantsEmailReceipt ? (
+                      <span className="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-100">
+                        Ønsket kvittering
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
+                        Ønsket ikke kvittering
+                      </span>
+                    )}
+                    {r.emailSent ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100">
+                        ✓ Kvittering sendt
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500">
+                        Ikke sendt
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <dl className="flex flex-col gap-1.5 text-sm">
                   <div className="flex justify-between gap-2">

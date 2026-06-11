@@ -115,9 +115,10 @@ app.delete('/api/program/overrides', requireAuth, (req, res) => {
 
 // --- Registration (påmelding) routes --------------------------------------
 
-// Public: submit a new registration. Saves to disk and sends a receipt email.
+// Public: submit a new registration. Saves to disk and optionally sends a
+// receipt email if the registrant checked the wantsEmailReceipt box.
 app.post('/api/registrations', async (req, res) => {
-  const { navn, klasse, epost, bedriftId, workshopId, tidspunkt, kommentar } =
+  const { navn, klasse, epost, bedriftId, workshopId, tidspunkt, kommentar, wantsEmailReceipt } =
     req.body || {}
 
   const result = createRegistration({
@@ -128,6 +129,7 @@ app.post('/api/registrations', async (req, res) => {
     workshopId,
     tidspunkt,
     kommentar,
+    wantsEmailReceipt: wantsEmailReceipt === true,
   })
 
   if (!result.ok) {
@@ -136,15 +138,22 @@ app.post('/api/registrations', async (req, res) => {
 
   const saved = appendRegistration(result.registration)
 
-  const { sent } = await sendReceiptEmail(saved)
-  markEmailSent(saved.id, sent)
-  saved.emailSent = sent
+  let emailSent = false
+  let message
 
-  const message = sent
-    ? 'Påmeldingen er lagret, og kvittering er sendt til e-posten din.'
-    : 'Påmeldingen er lagret. E-postkvittering er ikke konfigurert i testmiljøet.'
+  if (wantsEmailReceipt === true) {
+    const { sent } = await sendReceiptEmail(saved)
+    emailSent = sent
+    markEmailSent(saved.id, sent)
+    saved.emailSent = sent
+    message = sent
+      ? 'Påmeldingen er lagret, og kvittering er sendt til e-posten din.'
+      : 'Påmeldingen er lagret. E-postkvittering er ikke konfigurert i testmiljøet.'
+  } else {
+    message = 'Påmeldingen er lagret. Du valgte å ikke motta kvittering på e-post.'
+  }
 
-  res.status(201).json({ registration: saved, emailSent: sent, message })
+  res.status(201).json({ registration: saved, emailSent, message })
 })
 
 // Protected: list all registrations for the festival manager.
