@@ -8,6 +8,7 @@ import FestivalManagerSection from './sections/FestivalManagerSection.jsx'
 import CompaniesSection from './sections/CompaniesSection.jsx'
 import WorkshopsSection from './sections/WorkshopsSection.jsx'
 import RoomsSection from './sections/RoomsSection.jsx'
+import FinnFramSection from './sections/FinnFramSection.jsx'
 import PracticalInfoSection from './sections/PracticalInfoSection.jsx'
 import PamendingSection from './sections/PamendingSection.jsx'
 import ContactSection from './sections/ContactSection.jsx'
@@ -37,6 +38,7 @@ function App() {
         <CompaniesSection />
         <WorkshopsSection />
         <RoomsSection />
+        <FinnFramSection />
         <PracticalInfoSection />
         <PamendingSection />
         <ContactSection />
