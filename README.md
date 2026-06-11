@@ -24,6 +24,11 @@ Nettsiden kjører i en Docker-container på en Ubuntu Server, bak en Nginx
 reverse proxy med HTTPS. Navnet `festival.lan` løses via en intern DNS-server
 på Windows Server.
 
+| URL | Beskrivelse |
+| --- | --- |
+| `https://festival.lan/` | Offentlig festivalside for besøkende |
+| `https://festival.lan/admin` | Festivalsjefpanel (innlogging kreves) |
+
 ---
 
 ## Eksamenskontekst
@@ -38,12 +43,12 @@ eksamen er tverrfaglig, dokumenteres også drift, nettverk og sikkerhet.
 ## Hovedfunksjoner
 
 - Responsiv landingsside (mobil og PC) i en lys, hvit-blå SaaS-stil
-- Header med tekstlogo «2INF Festival» og CTA-knapp **«Meld meg på»**
+- Ren header med tekstlogo, hovednav og knapp **«Meld meg på»** og **«Festivalsjef»**
 - **Program** med søk, kategorifilter og sortering etter starttid – viser
-  tidspunkt, rom og bedrift, og oppdateres med festivalsjefens endringer
-- **Festivalsjef** – innlogget festivalsjef tildeler foredrag til Auditorium
-  A/B og tidspunkt. Endringene **lagres på serveren** (Express backend, JSON-fil)
-  og valideres server-side mot dobbeltbooking
+  tidspunkt, rom, bedrift og ledige plasser, og oppdateres med festivalsjefens endringer
+- **Festivalsjefpanel** (`/admin`) – innlogget festivalsjef tildeler foredrag til
+  Auditorium A/B, velger tidspunkt og setter ledige plasser. Endringene **lagres på
+  serveren** (Express backend, JSON-fil) og valideres server-side mot dobbeltbooking
 - **Finn fram** – interaktiv veiviser til rom, toaletter, spiseområde og mer
 - **Bedrifter** med søk på navn og bransje
 - **Workshops** som kobler `holderBedriftId → bedrifter.id` og `romId → rom.id`
@@ -51,7 +56,6 @@ eksamen er tverrfaglig, dokumenteres også drift, nettverk og sikkerhet.
 - **Praktisk informasjon** og **kontakt** (lærere hentet etter ansvarsområde)
 - **Påmelding** – frontend-prototype med skjema, nedtrekksmenyer fra datasettet
   og live oppsummering av valgt workshop og bedrift
-- Bilder i flere seksjoner (About, Workshops, Praktisk info, Kontakt)
 - Samtykkebanner for informasjonskapsler (valg lagres i `localStorage`)
 - Lette CSS-animasjoner som respekterer `prefers-reduced-motion`
 
@@ -87,15 +91,18 @@ Begrunnelse for valgene står i `docs/teknologivalg.md`.
 │   ├── public/
 │   │   └── images/          (bilder brukt i seksjonene)
 │   ├── src/
+│   │   ├── admin/            (AdminLogin, ProgramEditor,
+│   │   │                      AdminProgramTable, AdminStatusCard)
 │   │   ├── components/       (Header, Footer, SectionTitle, StatCard,
 │   │   │                      SearchInput, Badge, Reveal, CookieConsent)
-│   │   ├── sections/         (Hero, About, Program, FestivalManager,
-│   │   │                      Companies, Workshops, Rooms, FinnFram,
-│   │   │                      PracticalInfo, Pamending, Contact)
+│   │   ├── pages/            (HomePage.jsx, AdminPage.jsx)
+│   │   ├── sections/         (Hero, About, Program, Companies,
+│   │   │                      Workshops, Rooms, FinnFram, PracticalInfo,
+│   │   │                      Pamending, Contact)
 │   │   ├── utils/            (dataHelpers.js, apiClient.js)
 │   │   ├── data/
 │   │   │   └── datasett.json
-│   │   ├── App.jsx
+│   │   ├── App.jsx           (React Router: / og /admin)
 │   │   ├── main.jsx
 │   │   └── index.css
 │   └── package.json
@@ -159,7 +166,7 @@ Express-serveren serverer den bygde React-appen og følgende API-ruter:
 | `GET` | `/api/health` | Helsesjekk, svarer `{ "status": "ok" }` |
 | `POST` | `/api/admin/login` | Demo-innlogging, returnerer token |
 | `GET` | `/api/program/overrides` | Henter lagrede programendringer |
-| `POST` | `/api/program/overrides` | Lagrer en endring (krever token, blokkerer dobbeltbooking) |
+| `POST` | `/api/program/overrides` | Lagrer en endring med valgfritt `ledigePlasser`-felt (krever token, blokkerer dobbeltbooking) |
 | `DELETE` | `/api/program/overrides` | Nullstiller alle endringer (krever token) |
 
 Programendringene lagres server-side i `server/storage/program-overrides.json`.

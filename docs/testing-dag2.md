@@ -10,8 +10,8 @@ serveren / klienten.
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
-| `npm run build` | Bygger uten feil, lager `dist/` | ✅ Bestått | Kjørt i `app/` |
-| `npm run lint` | Ingen ESLint-feil | ✅ Bestått | Kjørt i `app/` |
+| `npm run build` | Bygger uten feil, lager `dist/` | ✅ Bestått | Kjørt fra prosjektrot |
+| `npm run lint` | Ingen ESLint-feil | ✅ Bestått | Kjørt fra prosjektrot |
 | `docker build -t 2inf-festival .` | Imaget bygges (fullstack) | ⚠️ Ikke testet | Docker Desktop var ikke startet i utviklingsmiljøet. Må testes på server |
 
 ---
@@ -27,42 +27,63 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 | Innlogging feil passord | `401` | ✅ Bestått | curl |
 | Lagre override uten token | `401` | ✅ Bestått | curl |
 | Lagre override med token | `200` + oppdaterte endringer | ✅ Bestått | curl |
+| Lagre override med `ledigePlasser` | `200` + ledigePlasser lagret | ✅ Bestått | curl |
+| Lagre med negativ `ledigePlasser` | `400` + feilmelding | ✅ Bestått | curl |
+| Lagre med `ledigePlasser` over maks | `400` + feilmelding | ✅ Bestått | curl |
 | Lagre i opptatt rom/tid | `409` + feilmelding | ✅ Bestått | curl |
 | Ugyldig rom (ikke A/B) | `400` | ✅ Bestått | curl |
 | `DELETE /api/program/overrides` | `200`, endringer nullstilt | ✅ Bestått | curl |
 | Endringer lagres i JSON-fil | `program-overrides.json` oppdateres | ✅ Bestått | Verifisert på disk |
 | Express serverer React-bygget | `GET /` svarer 200 (HTML) | ✅ Bestått | curl |
+| `GET /admin` (SPA fallback) | Svarer 200 (HTML, React Router håndterer) | ✅ Bestått | curl |
 
 ---
 
-## 2. Program (foredrag)
+## 2. Adminpanel (`/admin`)
+
+| Test | Forventet resultat | Resultat | Kommentar |
+| --- | --- | --- | --- |
+| `/admin` åpnes direkte i nettleser | Innloggingsskjema vises | ✅ Bestått | Manuell test |
+| Innlogging med riktig passord | Dashboard vises | ✅ Bestått | Manuell test |
+| Innlogging med feil passord | «Feil brukernavn eller passord.» vises | ✅ Bestått | Manuell test |
+| «Tilbake til forsiden» | Navigerer til `/` | ✅ Bestått | Manuell test |
+| «Logg ut»-knappen | Logger ut, viser innloggingsskjema igjen | ✅ Bestått | Manuell test |
+
+---
+
+## 3. Program (foredrag) og ledige plasser
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
 | Program viser tidspunkt | Hvert kort viser start–slutt | ✅ Bestått | Manuell test |
 | Program viser rom | Hvert kort viser rom | ✅ Bestått | Manuell test |
 | Program viser bedrift | Hvert kort viser bedriftsnavn | ✅ Bestått | Manuell test |
+| Uten ledige plasser | Viser «Maks X» | ✅ Bestått | Manuell test |
+| Med ledige plasser lagret | Viser «20 av 40 ledige plasser» | ✅ Bestått | Manuell test |
+| Oppdateres etter admin lagrer | ProgramSection refresher | ✅ Bestått | Manuell test |
+| Refresh bevarer endringer | Backend-lagring, ikke localStorage | ✅ Bestått | Manuell test |
+| Backend ikke tilgjengelig | Advarsel vises, originalprogram vises | ✅ Bestått | Manuell test |
 | Søk, filter og sortering | Fungerer som før | ✅ Bestått | Manuell test |
 
 ---
 
-## 3. Festivalsjef-funksjon
+## 4. Festivalsjef – ProgramEditor
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
-| Velge bedrift | Bedrifter med foredrag vises i nedtrekksliste | ✅ Bestått | Manuell test |
+| Velge bedrift | Bedrifter med foredrag vises | ✅ Bestått | Manuell test |
 | Velge foredrag | Foredrag for valgt bedrift vises | ✅ Bestått | Manuell test |
-| Innlogging kreves | Skjema skjult til man logger inn («Kun for festivalsjef») | ✅ Bestått | Manuell test |
-| Logg inn / logg ut | Innlogging viser skjema, utlogging skjuler det | ✅ Bestått | Manuell test |
-| Velge Auditorium A | Kan velges som rom | ✅ Bestått | Manuell test |
-| Velge Auditorium B | Kan velges som rom | ✅ Bestått | Manuell test |
-| Lagre endring | Endring lagres server-side via API | ✅ Bestått | Manuell test |
-| Program oppdateres etter lagring | Program viser ny rom/tid + «Endret» | ✅ Bestått | Manuell test |
-| Tilbakestill endringer | Programmet går tilbake til original | ✅ Bestått | Manuell test |
+| Velge rom | Auditorium A / B tilgjengelig | ✅ Bestått | Manuell test |
+| Velge tidspunkt | Tidslister fra programmet vises | ✅ Bestått | Manuell test |
+| Lagre endring | Endring lagres server-side, tabell oppdateres | ✅ Bestått | Manuell test |
+| Ledige plasser – gyldig tall | Lagres og vises | ✅ Bestått | Manuell test |
+| Ledige plasser – negativt tall | «Ledige plasser kan ikke være lavere enn 0 eller høyere enn maks kapasitet.» | ✅ Bestått | Manuell test |
+| Ledige plasser – over maks | Samme feilmelding | ✅ Bestått | Manuell test |
+| Tilbakestill endringer | Programmet tilbakestilles, backend nullstilles | ✅ Bestått | Manuell test |
 
 ---
 
-## 4. Konfliktkontroll (dobbeltbooking)
+## 5. Konfliktkontroll (dobbeltbooking)
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
@@ -72,7 +93,18 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 
 ---
 
-## 5. Finn fram
+## 6. Header og navigasjon
+
+| Test | Forventet resultat | Resultat | Kommentar |
+| --- | --- | --- | --- |
+| Desktop nav (xl+) | Festival, Program, Bedrifter, Workshops, Finn fram | ✅ Bestått | Manuell test |
+| «Festivalsjef»-lenke i header | Navigerer til `/admin` | ✅ Bestått | Manuell test |
+| «Meld meg på»-knapp | Navigerer til `#pamelding`, ikke linjeskift | ✅ Bestått | Manuell test |
+| Mobilmeny | Alle lenker inkl. Festivalsjef og Meld meg på | ✅ Bestått | Manuell test |
+
+---
+
+## 7. Finn fram
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
@@ -84,18 +116,19 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 
 ---
 
-## 6. Server, HTTPS og Nginx
+## 8. Server, HTTPS og Nginx
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
 | `https://festival.lan` | Nettsiden vises over HTTPS | ✅ Bestått | Manuell test (selvsignert advarsel) |
+| `https://festival.lan/admin` | Adminpanel vises | ✅ Bestått | Manuell test |
 | Nginx på port 443 | `curl -k -I https://festival.lan` svarer 200 | ✅ Bestått | Manuell test |
 | `sudo nginx -t` | Konfigurasjon er gyldig | ✅ Bestått | Manuell test |
 | `curl -I http://festival.lan` | Svarer 301 → HTTPS | ✅ Bestått | Manuell test |
 
 ---
 
-## 7. DNS og nettverk
+## 9. DNS og nettverk
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
@@ -106,12 +139,12 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 
 ---
 
-## 8. Oppsummering
+## 10. Oppsummering
 
 Alle automatiske tester (`npm run build`, `npm run lint`) er kjørt og bestått.
-Backend-API-et er testet med `curl` (helsesjekk, innlogging, lagring,
-dobbeltbooking, validering og nullstilling). De funksjonelle testene av
-festivalsjef-funksjonen, konfliktkontrollen og finn-fram-funksjonen er bekreftet
-manuelt i nettleseren. Server-, HTTPS- og nettverkstestene er utført manuelt mot
-infrastrukturen. `docker build` er **ikke** testet i utviklingsmiljøet fordi
-Docker Desktop ikke var startet, og bør verifiseres på serveren før innlevering.
+Backend-API-et er testet med `curl`, inkludert helsesjekk, innlogging, lagring,
+`ledigePlasser`-validering, dobbeltbooking og nullstilling. De funksjonelle
+testene av adminpanelet, program-seksjonen, ledige plasser, konfliktkontrollen
+og finn-fram-funksjonen er bekreftet manuelt i nettleseren. `docker build` er
+**ikke** testet i utviklingsmiljøet fordi Docker Desktop ikke var startet, og
+bør verifiseres på serveren før innlevering.

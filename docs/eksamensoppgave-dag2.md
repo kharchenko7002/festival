@@ -22,11 +22,13 @@ dokumenteres også nettverk, server og sikkerhet der det er relevant.
 | 1 | Vurdere om `/24` dekker behovet | ✅ | `docs/nettverksvurdering-24.md` |
 | 2 | Nginx standard på port 443 | ✅ | `docs/serveroppsett.md`, `docs/sikkerhet.md` |
 | 3 | Veiledning for lokal utvikling | ✅ | `docs/lokal-utvikling.md` |
-| 4 | Festivalsjef kobler bedrift/foredrag til rom | ✅ | `FestivalManagerSection.jsx` |
-| 5 | Programmet oppdateres med endringene | ✅ | `ProgramSection.jsx` |
-| 6 | Program viser tidspunkt, rom og bedrift | ✅ | `ProgramSection.jsx` |
-| 7 | Hindre to bedrifter i samme rom/tid | ✅ | `hasRoomTimeConflict()` |
-| 8 | Interaktiv finn-fram-funksjon | ✅ | `FinnFramSection.jsx` |
+| 4 | Festivalsjef kobler bedrift/foredrag til rom | ✅ | `pages/AdminPage.jsx`, `admin/ProgramEditor.jsx` |
+| 5 | Programmet oppdateres med endringene | ✅ | `sections/ProgramSection.jsx` |
+| 6 | Program viser tidspunkt, rom og bedrift | ✅ | `sections/ProgramSection.jsx` |
+| 7 | Hindre to bedrifter i samme rom/tid | ✅ | `hasConflict()` + `hasRoomTimeConflict()` |
+| 8 | Interaktiv finn-fram-funksjon | ✅ | `sections/FinnFramSection.jsx` |
+| 9 | Eget adminpanel på `/admin` | ✅ | `pages/AdminPage.jsx` |
+| 10 | Festivalsjef kan styre ledige plasser | ✅ | `admin/ProgramEditor.jsx` + `server/index.js` |
 
 ---
 
@@ -75,20 +77,24 @@ Docker-test fra prosjektroten: `docker build -t 2inf-festival .` og
 
 ---
 
-## 6. Festivalsjef-funksjon (romfordeling) med backend
+## 6. Festivalsjefpanel (`/admin`) med backend
 
-Seksjonen **«Festivalsjef»** (`FestivalManagerSection.jsx`) krever nå
-innlogging. En innlogget festivalsjef kan:
+Festivalsjef-funksjonaliteten er skilt ut som en **egen side**:
+`https://festival.lan/admin`. Siden er adskilt fra den offentlige forsiden og
+er kun ment for festivalsjefen.
+
+En innlogget festivalsjef kan:
 
 1. Velge en **bedrift som har foredrag**.
 2. Velge et **foredrag** fra bedriften.
 3. Velge **rom**: Auditorium A eller Auditorium B.
 4. Velge **tidspunkt** (tidsluke fra programmet).
-5. **Lagre endringen** og se en oppdatert programoversikt.
+5. Skrive inn **ledige plasser** (validert mot maks kapasitet fra datasettet).
+6. **Lagre endringen** og se en oppdatert programoversikt med alle kolonnene:
+   tidspunkt, rom, bedrift, foredrag og ledige plasser.
 
-Endringene lagres ikke lenger bare i nettleseren, men **server-side** via et
-lite **Express-backend** (`server/`). Endringene legges «oppå» originaldataene
-fra `datasett.json` (som ikke endres).
+Endringene lagres **server-side** via Express-backend (`server/`). Endringene
+legges «oppå» originaldataene fra `datasett.json` (som ikke endres).
 
 ### Backend (Express)
 
@@ -111,23 +117,27 @@ eller B, og at tidspunktet er satt.
 Innloggingen er en **demo/prototype** for eksamen. Faste demo-credentials er
 `festivalsjef / 2inf2026`. Ved riktig innlogging får klienten et token som
 sendes som `Authorization: Bearer <token>` på beskyttede ruter. Er man ikke
-innlogget, vises kortet «Kun for festivalsjef» med et innloggingsskjema, og
-endringsskjemaet er skjult. Dette er **ikke** produksjonssikkerhet – se
-`docs/sikkerhet.md`.
+innlogget, vises login-kortet på `/admin`, og dashbordet er skjult.
+Tokenet lagres i `sessionStorage` (slettes ved lukking av fanen).
+Dette er **ikke** produksjonssikkerhet – se `docs/sikkerhet.md`.
 
 ---
 
-## 7. Programmet oppdateres
+## 7. Programmet oppdateres – inkludert ledige plasser
 
 `ProgramSection.jsx` henter endringene fra backenden
 (`GET /api/program/overrides`) og fletter dem inn i programmet. Hvert
-programkort viser minst **tidspunkt, rom og bedrift** (i tillegg til tittel,
-kategori og maks plasser). Endrede foredrag merkes med «Endret».
+programkort viser **tidspunkt, rom og bedrift** (i tillegg til tittel og
+kategori). Endrede foredrag merkes med «Endret».
 
-Når festivalsjefen lagrer, sendes en hendelse (`festival:program-overrides`)
-som program-seksjonen lytter på, slik at den **henter endringene på nytt** og
-oppdateres umiddelbart. Søk, kategorifilter og sortering fungerer som før. Hvis
-backenden ikke svarer, vises originalprogrammet med en liten advarsel:
+Hvis festivalsjef har satt **ledige plasser**, viser programkortet:
+> «20 av 40 ledige plasser»
+
+Hvis ledige plasser ikke er satt, vises bare:
+> «Maks 30»
+
+Søk, kategorifilter og sortering fungerer som før. Hvis backenden ikke svarer,
+vises originalprogrammet med en liten advarsel:
 «Programmet vises uten serverendringer fordi backend ikke svarer.»
 
 ---

@@ -177,10 +177,19 @@ function ProgramSection() {
                     <dt className="text-slate-400">Rom:</dt>
                     <dd>{lecture.rom}</dd>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <dt className="text-slate-400">Maks plasser:</dt>
-                    <dd>{lecture.maksPlasser}</dd>
-                  </div>
+                  {lecture.ledigePlasser !== undefined ? (
+                    <div className="flex items-center gap-2">
+                      <dt className="text-slate-400">Ledige plasser:</dt>
+                      <dd className="font-medium text-emerald-700">
+                        {lecture.ledigePlasser} av {lecture.maksPlasser} ledige
+                      </dd>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <dt className="text-slate-400">Maks plasser:</dt>
+                      <dd>{lecture.maksPlasser}</dd>
+                    </div>
+                  )}
                 </dl>
               </li>
             ))}
