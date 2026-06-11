@@ -1,0 +1,315 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   2INF Festival – visuelt system
+   Polert SaaS-landingsside: rent hvitt, dyp marineblå, klar himmelblå
+   og en varm gul detaljfarge. Inspirert av referansedesignet.
+   ========================================================================= */
+@theme {
+  /* Primær blå – brukes til knapper, lenker og aksenter */
+  --color-brand-50: #eef6ff;
+  --color-brand-100: #d8eaff;
+  --color-brand-200: #b4d6ff;
+  --color-brand-300: #84bafb;
+  --color-brand-400: #5ea2fa;
+  --color-brand-500: #4f9cf9;
+  --color-brand-600: #2f7fe0;
+  --color-brand-700: #1f63b8;
+
+  /* Dyp marineblå – hero, CTA-bånd og bunntekst */
+  --color-navy-600: #06407e;
+  --color-navy-700: #053a72;
+  --color-navy-800: #043873;
+  --color-navy-900: #021d3d;
+
+  /* Himmelblå highlight til dekor og diagrammer */
+  --color-accent-300: #7dd3fc;
+  --color-accent-400: #38bdf8;
+  --color-accent-500: #0ea5e9;
+
+  /* Varm gul detaljfarge – CTA-knapper og fremheving */
+  --color-gold-300: #ffefb3;
+  --color-gold-400: #ffe492;
+  --color-gold-500: #ffd45e;
+
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+}
+
+/* --- Grunnstiler ---------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background-color: #ffffff;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Forskyv ankerscroll slik at den sticky headeren ikke dekker overskrifter */
+:target {
+  scroll-margin-top: 6rem;
+}
+
+/* Tydelig fokusring for tastaturnavigasjon */
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* --- Gjenbrukbare komponentklasser ---------------------------------------
+   Holder knappe- og kortstiler konsistente på tvers av seksjonene. */
+
+/* Primær CTA-knapp: gul, brukt på marineblå flater og i header */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.875rem;
+  background-color: var(--color-gold-400);
+  padding: 0.875rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-navy-900);
+  box-shadow: 0 10px 24px -10px rgba(255, 212, 94, 0.7);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.btn-primary:hover {
+  background-color: var(--color-gold-500);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -10px rgba(255, 212, 94, 0.85);
+}
+
+/* Blå variant av CTA-knappen til lyse seksjoner */
+.btn-blue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.875rem;
+  background-color: var(--color-brand-600);
+  padding: 0.875rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  box-shadow: 0 12px 26px -12px rgba(47, 127, 224, 0.8);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.btn-blue:hover {
+  background-color: var(--color-brand-700);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 32px -12px rgba(31, 99, 184, 0.85);
+}
+
+/* Lys/outline-knapp til mørke flater */
+.btn-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.06);
+  padding: 0.875rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+.btn-light:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+}
+
+/* Outline-knapp til lyse flater */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.875rem;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  padding: 0.875rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--color-brand-300);
+  color: var(--color-brand-700);
+  transform: translateY(-2px);
+}
+
+/* Hvitt kort med myk skygge og løft-effekt ved hover */
+.card-lift {
+  border-radius: 1.25rem;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -24px rgba(4, 56, 115, 0.35);
+}
+
+/* --- Dekorative verktøy --------------------------------------------------- */
+
+/* Gul highlight bak nøkkelord i overskrifter (som referansen) */
+.text-highlight {
+  position: relative;
+  white-space: nowrap;
+}
+.text-highlight::after {
+  content: "";
+  position: absolute;
+  left: -0.1em;
+  right: -0.1em;
+  bottom: 0.08em;
+  height: 0.38em;
+  background-color: var(--color-gold-400);
+  border-radius: 0.2em;
+  z-index: -1;
+  opacity: 0.85;
+}
+
+/* Prikkete rutenett som lett bakgrunnstekstur */
+.bg-dot-grid {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.18) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+/* Lys variant av prikkenett til hvite seksjoner */
+.bg-dot-grid-light {
+  background-image: radial-gradient(
+    rgba(47, 127, 224, 0.12) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+/* --- Animasjoner ----------------------------------------------------------
+   Lette CSS-effekter. Ingen animasjonsbibliotek brukes. */
+
+/* Scroll-reveal: elementer starter skjult og glir opp på plass.
+   Klassen `.reveal-visible` settes av Reveal-komponenten. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Rolig sveving for dekorative heroelementer */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+.animate-float-slow {
+  animation: float 9s ease-in-out infinite;
+}
+
+/* Fade-up brukt på heroinnhold ved sidelasting */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+/* Mykt pulserende glød for små aksentprikker */
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2.4s ease-in-out infinite;
+}
+
+/* Animert vekst av søylene i dashboard-mockupen */
+@keyframes grow-up {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+.animate-grow-up {
+  transform-origin: bottom;
+  animation: grow-up 1s ease-out both;
+}
+
+/* Respekter brukere som foretrekker mindre bevegelse */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-float,
+  .animate-float-slow,
+  .animate-fade-up,
+  .animate-pulse-soft,
+  .animate-grow-up {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
