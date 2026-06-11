@@ -1,29 +1,52 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SectionTitle from '../components/SectionTitle.jsx'
 import SearchInput from '../components/SearchInput.jsx'
 import Badge from '../components/Badge.jsx'
 import Reveal from '../components/Reveal.jsx'
 import {
-  getLectures,
   getLectureCategories,
   getCompanyName,
   sortByStartTime,
+  mergeProgramWithOverrides,
+  loadProgramOverrides,
+  PROGRAM_OVERRIDES_EVENT,
 } from '../utils/dataHelpers.js'
 
 // Program section: lists lectures (foredrag) with search, category filter
-// and sorting by start time.
+// and sorting by start time. The program reflects any room/time changes the
+// festival manager has saved (overrides from localStorage).
 function ProgramSection() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('Alle')
   const [sortAsc, setSortAsc] = useState(true)
 
+  // Saved festival-manager overrides, kept in state so the program updates
+  // automatically when the manager saves a change (same tab or another tab).
+  const [overrides, setOverrides] = useState(() => loadProgramOverrides())
+
+  useEffect(() => {
+    const refresh = () => setOverrides(loadProgramOverrides())
+    window.addEventListener(PROGRAM_OVERRIDES_EVENT, refresh)
+    window.addEventListener('storage', refresh)
+    return () => {
+      window.removeEventListener(PROGRAM_OVERRIDES_EVENT, refresh)
+      window.removeEventListener('storage', refresh)
+    }
+  }, [])
+
   const categories = getLectureCategories()
+
+  // The program with overrides applied (original data + manager's changes).
+  const program = useMemo(
+    () => mergeProgramWithOverrides(overrides),
+    [overrides],
+  )
 
   // Filter by search text + category, then sort by start time
   const lectures = useMemo(() => {
     const text = query.trim().toLowerCase()
 
-    const filtered = getLectures().filter((lecture) => {
+    const filtered = program.filter((lecture) => {
       const company = getCompanyName(lecture.holderBedriftId)
       const matchesText =
         text === '' ||
@@ -37,7 +60,7 @@ function ProgramSection() {
 
     const sorted = sortByStartTime(filtered)
     return sortAsc ? sorted : sorted.reverse()
-  }, [query, category, sortAsc])
+  }, [program, query, category, sortAsc])
 
   return (
     <section id="program" className="bg-slate-50">
@@ -93,7 +116,7 @@ function ProgramSection() {
 
         {/* Result count */}
         <p className="text-sm text-slate-500" aria-live="polite">
-          Viser {lectures.length} av {getLectures().length} foredrag
+          Viser {lectures.length} av {program.length} foredrag
         </p>
 
         {/* Lecture cards */}
@@ -113,7 +136,10 @@ function ProgramSection() {
                     <span aria-hidden="true">🕒</span>
                     {lecture.startTid}–{lecture.sluttTid}
                   </span>
-                  <Badge variant="brand">{lecture.kategori}</Badge>
+                  <div className="flex items-center gap-1.5">
+                    {lecture.endret && <Badge variant="success">Endret</Badge>}
+                    <Badge variant="brand">{lecture.kategori}</Badge>
+                  </div>
                 </div>
 
                 <h3 className="text-lg font-semibold leading-snug text-navy-900">
