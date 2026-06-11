@@ -4,6 +4,7 @@ import CookieConsent from './components/CookieConsent.jsx'
 import HeroSection from './sections/HeroSection.jsx'
 import AboutSection from './sections/AboutSection.jsx'
 import ProgramSection from './sections/ProgramSection.jsx'
+import FestivalManagerSection from './sections/FestivalManagerSection.jsx'
 import CompaniesSection from './sections/CompaniesSection.jsx'
 import WorkshopsSection from './sections/WorkshopsSection.jsx'
 import RoomsSection from './sections/RoomsSection.jsx'
@@ -32,6 +33,7 @@ function App() {
         <HeroSection />
         <AboutSection />
         <ProgramSection />
+        <FestivalManagerSection />
         <CompaniesSection />
         <WorkshopsSection />
         <RoomsSection />

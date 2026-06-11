@@ -130,3 +130,101 @@ export const getFestivalStats = () => ({
   workshops: data.workshops.length,
   rom: data.rom.length,
 })
+
+// --- Festivalsjef: program overrides (frontend-only) -----------------------
+// The festival manager can reassign a lecture's room and time slot directly
+// from the website. Changes are stored in localStorage (there is no backend)
+// and merged on top of the original program from datasett.json. datasett.json
+// itself is never modified.
+
+// The only rooms the festival manager assigns lectures to.
+export const AUDITORIUM_ROOMS = ['Auditorium A', 'Auditorium B']
+export const getAuditoriumRooms = () => [...AUDITORIUM_ROOMS]
+
+// localStorage key + the custom event used to notify sections about changes.
+export const PROGRAM_OVERRIDES_KEY = 'festivalProgramOverrides'
+export const PROGRAM_OVERRIDES_EVENT = 'festival:program-overrides'
+
+// Companies that actually hold at least one lecture, sorted by name.
+export const getLectureCompanies = () => {
+  const ids = new Set(data.foredrag.map((lecture) => lecture.holderBedriftId))
+  return data.bedrifter
+    .filter((company) => ids.has(company.id))
+    .sort((a, b) => a.navn.localeCompare(b.navn, 'no'))
+}
+
+// Lectures as dropdown options, optionally filtered by the holding company.
+// Sorted by start time; the label includes the time span.
+export const getLectureOptions = (companyId) => {
+  const list = companyId
+    ? data.foredrag.filter(
+        (lecture) => lecture.holderBedriftId === Number(companyId),
+      )
+    : data.foredrag
+  return sortByStartTime(list).map((lecture) => ({
+    value: lecture.id,
+    label: `${lecture.tittel} (${lecture.startTid}–${lecture.sluttTid})`,
+  }))
+}
+
+// Distinct time slots derived from the program, sorted ascending.
+// Returns [{ startTid, sluttTid }] so the manager picks a whole slot.
+export const getProgramTimeSlots = () => {
+  const slots = new Map()
+  data.foredrag.forEach((lecture) => {
+    if (!slots.has(lecture.startTid)) {
+      slots.set(lecture.startTid, {
+        startTid: lecture.startTid,
+        sluttTid: lecture.sluttTid,
+      })
+    }
+  })
+  return [...slots.values()].sort(
+    (a, b) => toMinutes(a.startTid) - toMinutes(b.startTid),
+  )
+}
+
+// Read all saved overrides as { [lectureId]: { rom, startTid, sluttTid } }.
+export const loadProgramOverrides = () => {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = window.localStorage.getItem(PROGRAM_OVERRIDES_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    // Corrupt or unreadable data: fall back to an empty set of overrides.
+    return {}
+  }
+}
+
+// Persist a single override and notify listeners (Program + Festivalsjef).
+export const saveProgramOverride = (lectureId, override) => {
+  if (typeof window === 'undefined') return
+  const overrides = loadProgramOverrides()
+  overrides[lectureId] = override
+  window.localStorage.setItem(PROGRAM_OVERRIDES_KEY, JSON.stringify(overrides))
+  window.dispatchEvent(new Event(PROGRAM_OVERRIDES_EVENT))
+}
+
+// Remove all overrides and notify listeners. Used by the reset action.
+export const clearProgramOverrides = () => {
+  if (typeof window === 'undefined') return
+  window.localStorage.removeItem(PROGRAM_OVERRIDES_KEY)
+  window.dispatchEvent(new Event(PROGRAM_OVERRIDES_EVENT))
+}
+
+// Return the program with overrides applied on top of the original data.
+// `endret: true` marks lectures the festival manager has changed.
+export const mergeProgramWithOverrides = (
+  overrides = loadProgramOverrides(),
+) =>
+  data.foredrag.map((lecture) => {
+    const override = overrides[lecture.id]
+    if (!override) return { ...lecture, endret: false }
+    return {
+      ...lecture,
+      rom: override.rom ?? lecture.rom,
+      startTid: override.startTid ?? lecture.startTid,
+      sluttTid: override.sluttTid ?? lecture.sluttTid,
+      endret: true,
+    }
+  })
