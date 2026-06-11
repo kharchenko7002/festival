@@ -39,15 +39,40 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 
 ---
 
+## 1c. Påmeldings-API (testet med curl)
+
+| Test | Forventet resultat | Resultat | Kommentar |
+| --- | --- | --- | --- |
+| `POST /api/registrations` uten felter | `400` + «Navn er påkrevd.» | ✅ Bestått | curl |
+| `POST /api/registrations` ugyldig e-post | `400` + «E-postadressen ser ikke riktig ut.» | ✅ Bestått | curl |
+| `POST /api/registrations` ugyldig bedriftId | `400` + «Ukjent bedrift.» | ✅ Bestått | curl |
+| `POST /api/registrations` gyldig payload | `201` + registration-objekt + `emailSent: false` | ✅ Bestått | curl (SMTP ikke konfigurert) |
+| `message` uten SMTP | `«Påmeldingen er lagret. E-postkvittering er ikke konfigurert i testmiljøet.»` | ✅ Bestått | curl |
+| Påmelding lagres i JSON-fil | `registrations.json` oppdateres | ✅ Bestått | Verifisert på disk |
+| `GET /api/admin/registrations` uten token | `401` | ✅ Bestått | curl |
+| `GET /api/admin/registrations` med token | `200` + liste med påmeldinger (nyeste først) | ✅ Bestått | curl |
+| `DELETE /api/admin/registrations/:id` | `200` + «Påmelding slettet.» | ✅ Bestått | curl |
+| `DELETE /api/admin/registrations/:id` ukjent id | `404` | ✅ Bestått | curl |
+| Liste etter sletting | Tom liste | ✅ Bestått | curl |
+
+---
+
 ## 2. Adminpanel (`/admin`)
 
 | Test | Forventet resultat | Resultat | Kommentar |
 | --- | --- | --- | --- |
 | `/admin` åpnes direkte i nettleser | Innloggingsskjema vises | ✅ Bestått | Manuell test |
-| Innlogging med riktig passord | Dashboard vises | ✅ Bestått | Manuell test |
+| Demo-tekst «Demo: festivalsjef / 2inf2026» | Skal IKKE vises på siden | ✅ Bestått | Fjernet fra AdminLogin |
+| Innlogging med riktig passord | Dashboard vises med faner | ✅ Bestått | Manuell test |
 | Innlogging med feil passord | «Feil brukernavn eller passord.» vises | ✅ Bestått | Manuell test |
 | «Tilbake til forsiden» | Navigerer til `/` | ✅ Bestått | Manuell test |
 | «Logg ut»-knappen | Logger ut, viser innloggingsskjema igjen | ✅ Bestått | Manuell test |
+| Fane «Programredigering» | ProgramEditor vises | ✅ Bestått | Manuell test |
+| Fane «Påmeldinger» | RegistrationsList vises | ✅ Bestått | Manuell test |
+| Søk i påmeldingsliste | Filtrerer på navn, e-post, klasse, bedrift | ✅ Bestått | Manuell test |
+| «Oppdater liste»-knappen | Henter ny liste fra backend | ✅ Bestått | Manuell test |
+| «Slett»-knapp på én påmelding | Påmelding fjernes fra listen | ✅ Bestått | Manuell test |
+| «Slett alle» + bekreft | Alle påmeldinger fjernes | ✅ Bestått | Manuell test |
 
 ---
 
@@ -139,12 +164,26 @@ API-et ble kjørt lokalt med `node server/index.js` og testet med `curl`.
 
 ---
 
-## 10. Oppsummering
+## 10. Påmeldingsskjema (frontend)
 
-Alle automatiske tester (`npm run build`, `npm run lint`) er kjørt og bestått.
-Backend-API-et er testet med `curl`, inkludert helsesjekk, innlogging, lagring,
-`ledigePlasser`-validering, dobbeltbooking og nullstilling. De funksjonelle
-testene av adminpanelet, program-seksjonen, ledige plasser, konfliktkontrollen
-og finn-fram-funksjonen er bekreftet manuelt i nettleseren. `docker build` er
-**ikke** testet i utviklingsmiljøet fordi Docker Desktop ikke var startet, og
-bør verifiseres på serveren før innlevering.
+| Test | Forventet resultat | Resultat | Kommentar |
+| --- | --- | --- | --- |
+| Sende tomt skjema | Submit-knappen er aktiv, backend gir 400 | ✅ Bestått | Manuell test |
+| Ugyldig e-post | Backend svarer «E-postadressen ser ikke riktig ut.» | ✅ Bestått | Manuell test |
+| Gyldig innsending (SMTP av) | Suksessmelding + «E-postkvittering er ikke konfigurert» | ✅ Bestått | Manuell test |
+| «Meld på en til»-knappen | Skjema nullstilles | ✅ Bestått | Manuell test |
+| Valg av bedrift viser info-kort | Bransje og standnummer vises | ✅ Bestått | Manuell test |
+| Valg av workshop viser info-kort | Tittel, rom, tid, maks, forkunnskaper vises | ✅ Bestått | Manuell test |
+| Loading state mens sending pågår | Knapp viser «Sender …» og er deaktivert | ✅ Bestått | Manuell test |
+
+---
+
+## 11. Oppsummering
+
+Alle automatiske tester (`npm run build`, `npm run lint`) er kjørt og bestått
+etter alle endringer. Backend-API-et er testet med `curl`, inkludert
+påmeldingsruter, validering, listing, sletting og autentisering.
+De funksjonelle testene av adminpanelet, programseksjonen, ledige plasser,
+konfliktkontrollen, finn-fram og påmeldingsskjemaet er bekreftet manuelt.
+`docker build` er **ikke** testet i utviklingsmiljøet fordi Docker Desktop ikke
+var tilgjengelig, og bør verifiseres på serveren før innlevering.

@@ -99,8 +99,43 @@ docker run -d --name 2inf-festival-web -p 8080:80 --restart unless-stopped 2inf-
 ```
 
 Containeren er nå en **fullstack-løsning** (frontend + backend i samme image).
-Programendringer fra festivalsjefen lagres server-side i
-`server/storage/program-overrides.json` inne i containeren.
+Programendringer lagres i `server/storage/program-overrides.json` og
+påmeldinger i `server/storage/registrations.json` inne i containeren.
+
+### Vedvarende lagring med Docker volume (anbefalt)
+
+Datafilene i `server/storage/` slettes når containeren fjernes. For å bevare
+dem mellom deployments brukes et Docker volume:
+
+```bash
+docker volume create 2inf-festival-data
+
+docker run -d --name 2inf-festival-web \
+  -p 8080:80 \
+  --restart unless-stopped \
+  -v 2inf-festival-data:/app/server/storage \
+  2inf-festival
+```
+
+### E-postkvittering med SMTP (valgfritt)
+
+For å aktivere e-post: kopier `.env.example` til `.env` på serveren og fyll
+inn reelle SMTP-verdier, og kjør containeren med `--env-file`:
+
+```bash
+cp .env.example .env
+# rediger .env: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_FROM
+
+docker run -d --name 2inf-festival-web \
+  -p 8080:80 \
+  --restart unless-stopped \
+  -v 2inf-festival-data:/app/server/storage \
+  --env-file .env \
+  2inf-festival
+```
+
+Uten `.env` kjører appen fint – påmeldinger lagres, men kvitteringsepost
+sendes ikke. `.env` skal aldri committes til git.
 
 ---
 
