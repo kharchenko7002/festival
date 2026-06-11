@@ -200,6 +200,7 @@ function RegistrationsList({ onLogout }) {
                   <th className="px-4 py-3">Bedrift</th>
                   <th className="px-4 py-3">Workshop</th>
                   <th className="px-4 py-3">Ønsket tid</th>
+                  <th className="px-4 py-3">Kommentar</th>
                   <th className="px-4 py-3">Kvittering</th>
                   <th className="px-4 py-3"></th>
                 </tr>
@@ -219,6 +220,15 @@ function RegistrationsList({ onLogout }) {
                     <td className="px-4 py-3">{r.bedriftNavn}</td>
                     <td className="px-4 py-3">{r.workshopTittel}</td>
                     <td className="whitespace-nowrap px-4 py-3">{r.tidspunkt}</td>
+                    <td className="max-w-[160px] px-4 py-3 text-xs text-slate-500">
+                      {r.kommentar ? (
+                        <span title={r.kommentar} className="line-clamp-2 cursor-default">
+                          {r.kommentar}
+                        </span>
+                      ) : (
+                        <span className="text-slate-300">–</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       {r.emailSent ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100">
