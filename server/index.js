@@ -1,0 +1,99 @@
+// Express server for 2INF Festival.
+// Serves the React production build (app/dist) and exposes a small API that
+// lets the festival manager store program changes server-side in a JSON file.
+const path = require('path')
+const express = require('express')
+const { checkCredentials, issueToken, requireAuth } = require('./auth')
+const {
+  AUDITORIUM_ROOMS,
+  getLectures,
+  loadOverrides,
+  writeOverrides,
+  hasConflict,
+  ensureStorage,
+} = require('./dataStore')
+
+const app = express()
+const PORT = process.env.PORT || 80
+const STATIC_DIR = path.join(process.cwd(), 'app', 'dist')
+
+app.use(express.json())
+
+// --- API routes -----------------------------------------------------------
+
+// Health check.
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
+
+// Demo login for the festival manager. Returns a bearer token on success.
+app.post('/api/admin/login', (req, res) => {
+  const { username, password } = req.body || {}
+  if (!checkCredentials(username, password)) {
+    return res.status(401).json({ message: 'Feil brukernavn eller passord.' })
+  }
+  res.json({ token: issueToken() })
+})
+
+// Public: read the saved program overrides.
+app.get('/api/program/overrides', (req, res) => {
+  res.json(loadOverrides())
+})
+
+// Protected: save a single program override. Validates the input and blocks
+// double-booking (same room + same start time as another lecture).
+app.post('/api/program/overrides', requireAuth, (req, res) => {
+  const { lectureId, rom, startTid, sluttTid } = req.body || {}
+  const id = Number(lectureId)
+
+  if (!getLectures().some((lecture) => lecture.id === id)) {
+    return res.status(400).json({ message: 'Ukjent foredrag.' })
+  }
+  if (!AUDITORIUM_ROOMS.includes(rom)) {
+    return res
+      .status(400)
+      .json({ message: 'Rom må være Auditorium A eller Auditorium B.' })
+  }
+  if (!startTid || !sluttTid) {
+    return res.status(400).json({ message: 'Tidspunkt mangler.' })
+  }
+
+  const overrides = loadOverrides()
+  // Server-side conflict check is the authoritative one (the frontend can be
+  // manipulated). Same room + same start time for another lecture = conflict.
+  if (hasConflict(rom, startTid, id, overrides)) {
+    return res
+      .status(409)
+      .json({ message: 'Dette tidspunktet er allerede opptatt i valgt rom.' })
+  }
+
+  overrides[id] = { rom, startTid, sluttTid }
+  writeOverrides(overrides)
+  res.json(overrides)
+})
+
+// Protected: remove all overrides (used by the reset action).
+app.delete('/api/program/overrides', requireAuth, (req, res) => {
+  writeOverrides({})
+  res.json({})
+})
+
+// --- Static React build + SPA fallback ------------------------------------
+
+app.use(express.static(STATIC_DIR))
+
+// Anything not handled above falls back to the SPA entry point, except unknown
+// API paths which return a JSON 404. (Plain middleware avoids wildcard-route
+// differences between Express versions.)
+app.use((req, res) => {
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ message: 'Ukjent endepunkt.' })
+  }
+  res.sendFile(path.join(STATIC_DIR, 'index.html'))
+})
+
+ensureStorage()
+app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`2INF Festival server lytter på port ${PORT}`)
+})

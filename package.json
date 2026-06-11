@@ -1,0 +1,16 @@
+{
+  "name": "2inf-festival-server",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Express backend that serves the 2INF Festival build and stores festival manager program changes",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "npm --prefix app run build",
+    "lint": "npm --prefix app run lint",
+    "install:app": "npm --prefix app install"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

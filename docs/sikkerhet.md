@@ -84,9 +84,37 @@ sikkerhetspoeng:
 Andre webtiltak:
 
 - All festivaldata ligger i `datasett.json` og inneholder ikke hemmeligheter.
-- Ingen passord eller hemmelige nøkler er hardkodet i kildekoden.
+- Ingen passord eller hemmelige nøkler er hardkodet i kildekoden bortsett fra
+  demo-innloggingen (se under), som bevisst er en prototype.
 - Samtykke til informasjonskapsler håndteres lokalt i nettleseren
   (`localStorage`), uten sporing.
+
+## 8b. Festivalsjef-backend og innlogging (demo)
+
+Festivalsjef-funksjonen har et lite **Express-backend** som lagrer
+programendringer server-side i en JSON-fil og validerer dem (gyldig foredrag,
+rom Auditorium A/B, og ingen dobbeltbooking). At valideringen skjer på serveren
+er et sikkerhetspoeng: **frontend kan manipuleres, så backenden er
+hovedkontrollen.**
+
+Innloggingen er bevisst en **demo/prototype**, og er ærlig dokumentert som det:
+
+- **Faste demo-credentials** (`festivalsjef / 2inf2026`) – ikke ekte brukere.
+- **Token holdes i minnet** på serveren (forsvinner ved omstart) og i
+  `sessionStorage` i nettleseren.
+- **Ingen passordhashing**, ingen utløpstid på token, ingen rollestyring.
+
+Dette er **ikke** produksjonssikkerhet. I en ekte løsning må man bruke:
+
+- ekte backend-autentisering med **passordhashing** (f.eks. bcrypt),
+- trygge **sessions eller JWT** med utløp,
+- **database** i stedet for en JSON-fil,
+- **rollebasert tilgangskontroll**,
+- **HTTPS med gyldig sertifikat**.
+
+Backenden er likevel bedre enn bare `localStorage`, fordi programendringene
+lagres på serveren og valideres server-side i stedet for å ligge ukontrollert i
+hver enkelt nettleser.
 
 ---
 
@@ -98,6 +126,8 @@ Andre webtiltak:
 | WPA2 | Eldre enn WPA3 | WPA3 der klientene støtter det |
 | Intern DNS (`festival.lan`) | Kun internt | Offentlig domene hvis tjenesten skal nås utenfra |
 | Frontend-prototype for påmelding | Lagrer ingenting | Sikker backend med validering, database og GDPR-rutiner |
+| Demo-innlogging for festivalsjef | Faste credentials, token i minnet, ingen hashing | Ekte autentisering, passordhashing, JWT/sessions, rollestyring |
+| JSON-fil-lagring for programendringer | Ingen database/backup | Ekte database med backup og transaksjoner |
 | TP-Link-svitsj | Begrenset innsyn i UniFi | UniFi-svitsj for bedre overvåking |
 | Brannmur | Grunnleggende | Strammere regler, kun nødvendige porter (22, 80, 443) |
 

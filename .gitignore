@@ -8,3 +8,6 @@ bilde.png
 # Avhengigheter og byggeutdata (også dekket av app/.gitignore)
 node_modules/
 dist/
+
+# Server-side runtime data (program-endringer lagres her ved kjøring)
+server/storage/*.json

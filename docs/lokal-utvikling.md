@@ -59,6 +59,34 @@ Stopp serveren med `Ctrl + C` i terminalen.
 
 ---
 
+## 4b. Kjør backend lokalt (Express)
+
+Festivalsjef-funksjonen bruker et lite Express-backend som ligger i mappen
+`server/`. For å teste den lokalt kjører du backenden i et **eget terminalvindu**
+fra **prosjektroten** (mappen over `app/`):
+
+```bash
+npm install                  # installerer Express (én gang)
+$env:PORT=3001; npm start    # PowerShell: starter API på http://localhost:3001
+```
+
+På macOS/Linux: `PORT=3001 npm start`.
+
+Vite er satt opp til å **proxye `/api`** til `http://localhost:3001` under
+utvikling (se `app/vite.config.js`). Da virker innlogging, lagring av
+programendringer og henting av endringer mens du jobber lokalt.
+
+Test at backenden svarer:
+
+```bash
+curl http://localhost:3001/api/health      # forventet: {"status":"ok"}
+```
+
+Programendringene lagres i `server/storage/program-overrides.json` (lages
+automatisk ved første kjøring). Demo-innlogging: `festivalsjef / 2inf2026`.
+
+---
+
 ## 5. Bygg prosjektet
 
 For å lage et produksjonsbygg (optimalisert og minifisert):

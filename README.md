@@ -41,8 +41,9 @@ eksamen er tverrfaglig, dokumenteres også drift, nettverk og sikkerhet.
 - Header med tekstlogo «2INF Festival» og CTA-knapp **«Meld meg på»**
 - **Program** med søk, kategorifilter og sortering etter starttid – viser
   tidspunkt, rom og bedrift, og oppdateres med festivalsjefens endringer
-- **Festivalsjef** – tildel foredrag til Auditorium A/B og tidspunkt, med
-  kontroll mot dobbeltbooking (frontend-prototype, lagres i `localStorage`)
+- **Festivalsjef** – innlogget festivalsjef tildeler foredrag til Auditorium
+  A/B og tidspunkt. Endringene **lagres på serveren** (Express backend, JSON-fil)
+  og valideres server-side mot dobbeltbooking
 - **Finn fram** – interaktiv veiviser til rom, toaletter, spiseområde og mer
 - **Bedrifter** med søk på navn og bransje
 - **Workshops** som kobler `holderBedriftId → bedrifter.id` og `romId → rom.id`
@@ -64,7 +65,8 @@ eksamen er tverrfaglig, dokumenteres også drift, nettverk og sikkerhet.
 | Byggeverktøy | Vite |
 | Styling | Tailwind CSS |
 | Språk | JavaScript / JSX |
-| Datakilde | JSON (`datasett.json`) |
+| Backend | Node.js + Express |
+| Datakilde | JSON (`datasett.json`) + JSON-fil for programendringer |
 | Container | Docker |
 | Webserver / proxy | Nginx |
 | Server-OS | Ubuntu Server 26.04 LTS |
@@ -90,17 +92,23 @@ Begrunnelse for valgene står i `docs/teknologivalg.md`.
 │   │   ├── sections/         (Hero, About, Program, FestivalManager,
 │   │   │                      Companies, Workshops, Rooms, FinnFram,
 │   │   │                      PracticalInfo, Pamending, Contact)
-│   │   ├── utils/            (dataHelpers.js)
+│   │   ├── utils/            (dataHelpers.js, apiClient.js)
 │   │   ├── data/
 │   │   │   └── datasett.json
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css
 │   └── package.json
+├── server/                   (Express backend)
+│   ├── index.js              (server + API-ruter)
+│   ├── dataStore.js          (JSON-fil-lagring + konfliktkontroll)
+│   ├── auth.js               (demo-innlogging)
+│   └── storage/              (program-overrides.json lages ved kjøring)
 ├── data/
 │   └── datasett.json         (originalfil fra oppgaven)
 ├── docs/                     (all dokumentasjon)
 ├── Dockerfile
+├── package.json              (backend: Express)
 ├── .dockerignore
 ├── .gitignore
 └── README.md
@@ -110,6 +118,8 @@ Begrunnelse for valgene står i `docs/teknologivalg.md`.
 
 ## Lokal utvikling
 
+Frontend (Vite dev-server):
+
 ```bash
 cd app
 npm install
@@ -117,6 +127,16 @@ npm run dev
 ```
 
 Nettsiden åpnes på `http://localhost:5173`.
+
+Backend (Express) i et eget terminalvindu, fra prosjektroten:
+
+```bash
+npm install            # installerer Express
+$env:PORT=3001; npm start   # PowerShell – starter API på http://localhost:3001
+```
+
+Vite proxyer `/api` til `http://localhost:3001` under utvikling, slik at
+festivalsjef-funksjonen virker lokalt. Se `docs/lokal-utvikling.md` for detaljer.
 
 ## Bygg og linting
 
@@ -130,14 +150,33 @@ Begge kommandoene kjører uten feil (se `docs/testing.md`).
 
 ---
 
+## API (backend)
+
+Express-serveren serverer den bygde React-appen og følgende API-ruter:
+
+| Metode | Rute | Beskrivelse |
+| --- | --- | --- |
+| `GET` | `/api/health` | Helsesjekk, svarer `{ "status": "ok" }` |
+| `POST` | `/api/admin/login` | Demo-innlogging, returnerer token |
+| `GET` | `/api/program/overrides` | Henter lagrede programendringer |
+| `POST` | `/api/program/overrides` | Lagrer en endring (krever token, blokkerer dobbeltbooking) |
+| `DELETE` | `/api/program/overrides` | Nullstiller alle endringer (krever token) |
+
+Programendringene lagres server-side i `server/storage/program-overrides.json`.
+Innloggingen er en **demo/prototype** (se `docs/sikkerhet.md`).
+
+---
+
 ## Docker
 
 Imaget bygges fra `Dockerfile` i prosjektroten. Det er et to-trinns bygg:
-React-appen bygges med Node, og den ferdige `dist/`-mappen serveres av Nginx.
+React-appen bygges med Node (stage 1), og en **Express-server** serverer den
+ferdige `dist/`-mappen og `/api/*`-rutene (stage 2). Containeren lytter på
+port 80.
 
 ```bash
 docker build -t 2inf-festival .
-docker run -d -p 8080:80 --name 2inf-festival 2inf-festival
+docker run -d --name 2inf-festival-web -p 8080:80 --restart unless-stopped 2inf-festival
 ```
 
 Nettsiden åpnes på `http://localhost:8080`.
@@ -150,10 +189,11 @@ Nettsiden er deployet på **Ubuntu Server (10.20.30.20)**:
 
 1. Prosjektet er kopiert til serveren.
 2. Docker-imaget er bygget på serveren.
-3. Containeren kjører og eksponeres internt på **port 8080** (`-p 8080:80`).
+3. Containeren kjører en **Express-server** (frontend + API) og eksponeres
+   internt på **port 8080** (`-p 8080:80`, Express lytter på 80 i containeren).
 4. **Nginx reverse proxy** står foran containeren og **lytter på port 443**.
    Port 80 videresender automatisk til HTTPS, og Nginx proxyer videre til
-   containeren på `127.0.0.1:8080`.
+   containeren på `127.0.0.1:8080` (uendret oppsett – også `/api/*` går hit).
 5. HTTPS bruker et **selvsignert sertifikat** (gir nettleseradvarsel i testmiljø,
    fordi `festival.lan` er et internt domene). I produksjon ville man brukt et
    offentlig domene med Let's Encrypt.
@@ -223,9 +263,11 @@ All dokumentasjon ligger i `docs/`:
 
 - **Påmelding** er en frontend-prototype. Skjemaet lagrer ingenting og sender
   ingen data til en server – det finnes ingen backend.
-- **Festivalsjef** er også en frontend-prototype. Endringene lagres kun i
-  nettleserens `localStorage` (per enhet), ikke i en felles database. I
-  produksjon trengs backend, database og autentisering.
+- **Festivalsjef** har nå en backend: endringene lagres server-side i en
+  JSON-fil og valideres mot dobbeltbooking. Innloggingen er likevel en
+  **demo/prototype** (faste demo-credentials, token i minnet, ingen
+  passordhashing). I produksjon trengs ekte autentisering, passordhashing,
+  database og rollebasert tilgangskontroll.
 - **HTTPS** bruker et selvsignert sertifikat, så nettleseren viser en advarsel.
 - **`festival.lan`** er kun internt og fungerer ikke utenfor festivalnettverket.
 - **TP-Link-svitsjen** er ikke en UniFi-enhet, så UniFi viser ikke full
