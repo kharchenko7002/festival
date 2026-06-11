@@ -8,29 +8,41 @@ import {
   getCompanyName,
   sortByStartTime,
   mergeProgramWithOverrides,
-  loadProgramOverrides,
-  PROGRAM_OVERRIDES_EVENT,
 } from '../utils/dataHelpers.js'
+import { apiGetOverrides, OVERRIDES_EVENT } from '../utils/apiClient.js'
 
 // Program section: lists lectures (foredrag) with search, category filter
 // and sorting by start time. The program reflects any room/time changes the
-// festival manager has saved (overrides from localStorage).
+// festival manager has saved (overrides fetched from the backend).
 function ProgramSection() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('Alle')
   const [sortAsc, setSortAsc] = useState(true)
 
-  // Saved festival-manager overrides, kept in state so the program updates
-  // automatically when the manager saves a change (same tab or another tab).
-  const [overrides, setOverrides] = useState(() => loadProgramOverrides())
+  // Festival-manager overrides fetched from the backend. Kept in state so the
+  // program updates when the manager saves a change (via OVERRIDES_EVENT).
+  // `backendOk` is false when the API cannot be reached.
+  const [overrides, setOverrides] = useState({})
+  const [backendOk, setBackendOk] = useState(true)
 
   useEffect(() => {
-    const refresh = () => setOverrides(loadProgramOverrides())
-    window.addEventListener(PROGRAM_OVERRIDES_EVENT, refresh)
-    window.addEventListener('storage', refresh)
+    let active = true
+    const refresh = async () => {
+      try {
+        const data = await apiGetOverrides()
+        if (!active) return
+        setOverrides(data || {})
+        setBackendOk(true)
+      } catch {
+        if (!active) return
+        setBackendOk(false)
+      }
+    }
+    refresh()
+    window.addEventListener(OVERRIDES_EVENT, refresh)
     return () => {
-      window.removeEventListener(PROGRAM_OVERRIDES_EVENT, refresh)
-      window.removeEventListener('storage', refresh)
+      active = false
+      window.removeEventListener(OVERRIDES_EVENT, refresh)
     }
   }, [])
 
@@ -72,6 +84,14 @@ function ProgramSection() {
             subtitle="Søk, filtrer på kategori og sorter etter starttidspunkt for å finne foredragene som passer deg."
           />
         </Reveal>
+
+        {!backendOk && (
+          <Reveal>
+            <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700 ring-1 ring-amber-100">
+              Programmet vises uten serverendringer fordi backend ikke svarer.
+            </p>
+          </Reveal>
+        )}
 
         {/* Controls */}
         <Reveal className="grid gap-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-lg shadow-navy-900/5 sm:grid-cols-2 sm:p-6 lg:grid-cols-[1fr_auto_auto] lg:items-end">

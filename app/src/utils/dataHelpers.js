@@ -131,19 +131,15 @@ export const getFestivalStats = () => ({
   rom: data.rom.length,
 })
 
-// --- Festivalsjef: program overrides (frontend-only) -----------------------
-// The festival manager can reassign a lecture's room and time slot directly
-// from the website. Changes are stored in localStorage (there is no backend)
-// and merged on top of the original program from datasett.json. datasett.json
+// --- Festivalsjef: program overrides ---------------------------------------
+// The festival manager reassigns a lecture's room and time slot. The changes
+// (overrides) are stored server-side via the API (see utils/apiClient.js) and
+// merged on top of the original program from datasett.json. datasett.json
 // itself is never modified.
 
 // The only rooms the festival manager assigns lectures to.
 export const AUDITORIUM_ROOMS = ['Auditorium A', 'Auditorium B']
 export const getAuditoriumRooms = () => [...AUDITORIUM_ROOMS]
-
-// localStorage key + the custom event used to notify sections about changes.
-export const PROGRAM_OVERRIDES_KEY = 'festivalProgramOverrides'
-export const PROGRAM_OVERRIDES_EVENT = 'festival:program-overrides'
 
 // Companies that actually hold at least one lecture, sorted by name.
 export const getLectureCompanies = () => {
@@ -184,39 +180,9 @@ export const getProgramTimeSlots = () => {
   )
 }
 
-// Read all saved overrides as { [lectureId]: { rom, startTid, sluttTid } }.
-export const loadProgramOverrides = () => {
-  if (typeof window === 'undefined') return {}
-  try {
-    const raw = window.localStorage.getItem(PROGRAM_OVERRIDES_KEY)
-    return raw ? JSON.parse(raw) : {}
-  } catch {
-    // Corrupt or unreadable data: fall back to an empty set of overrides.
-    return {}
-  }
-}
-
-// Persist a single override and notify listeners (Program + Festivalsjef).
-export const saveProgramOverride = (lectureId, override) => {
-  if (typeof window === 'undefined') return
-  const overrides = loadProgramOverrides()
-  overrides[lectureId] = override
-  window.localStorage.setItem(PROGRAM_OVERRIDES_KEY, JSON.stringify(overrides))
-  window.dispatchEvent(new Event(PROGRAM_OVERRIDES_EVENT))
-}
-
-// Remove all overrides and notify listeners. Used by the reset action.
-export const clearProgramOverrides = () => {
-  if (typeof window === 'undefined') return
-  window.localStorage.removeItem(PROGRAM_OVERRIDES_KEY)
-  window.dispatchEvent(new Event(PROGRAM_OVERRIDES_EVENT))
-}
-
 // Return the program with overrides applied on top of the original data.
 // `endret: true` marks lectures the festival manager has changed.
-export const mergeProgramWithOverrides = (
-  overrides = loadProgramOverrides(),
-) =>
+export const mergeProgramWithOverrides = (overrides = {}) =>
   data.foredrag.map((lecture) => {
     const override = overrides[lecture.id]
     if (!override) return { ...lecture, endret: false }
@@ -229,20 +195,19 @@ export const mergeProgramWithOverrides = (
     }
   })
 
-// True if another lecture (different id) already occupies the given room at
-// the given start time, based on the program with overrides applied. Used by
-// the festival manager to prevent double-booking of Auditorium A / B.
-// Same time + same room = conflict. Same time in a different room is allowed,
-// and a different time in the same room is allowed.
+// Frontend mirror of the backend conflict check (the backend is authoritative).
+// True if another of the festival manager's overrides already uses the given
+// room at the given start time. Same time in a different room, or a different
+// time in the same room, is allowed.
 export const hasRoomTimeConflict = (
   rom,
   startTid,
   excludeLectureId,
-  overrides = loadProgramOverrides(),
+  overrides = {},
 ) =>
-  mergeProgramWithOverrides(overrides).some(
-    (lecture) =>
-      lecture.id !== Number(excludeLectureId) &&
-      lecture.rom === rom &&
-      lecture.startTid === startTid,
+  Object.entries(overrides).some(
+    ([id, override]) =>
+      Number(id) !== Number(excludeLectureId) &&
+      override.rom === rom &&
+      override.startTid === startTid,
   )
