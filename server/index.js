@@ -7,6 +7,7 @@ const { checkCredentials, issueToken, requireAuth } = require('./auth')
 const {
   AUDITORIUM_ROOMS,
   getLectures,
+  getLectureById,
   loadOverrides,
   writeOverrides,
   hasConflict,
@@ -43,10 +44,11 @@ app.get('/api/program/overrides', (req, res) => {
 // Protected: save a single program override. Validates the input and blocks
 // double-booking (same room + same start time as another lecture).
 app.post('/api/program/overrides', requireAuth, (req, res) => {
-  const { lectureId, rom, startTid, sluttTid } = req.body || {}
+  const { lectureId, rom, startTid, sluttTid, ledigePlasser } = req.body || {}
   const id = Number(lectureId)
 
-  if (!getLectures().some((lecture) => lecture.id === id)) {
+  const lecture = getLectureById(id)
+  if (!lecture) {
     return res.status(400).json({ message: 'Ukjent foredrag.' })
   }
   if (!AUDITORIUM_ROOMS.includes(rom)) {
@@ -58,6 +60,24 @@ app.post('/api/program/overrides', requireAuth, (req, res) => {
     return res.status(400).json({ message: 'Tidspunkt mangler.' })
   }
 
+  // Validate ledigePlasser when provided
+  if (ledigePlasser !== undefined && ledigePlasser !== null) {
+    const lp = Number(ledigePlasser)
+    if (!Number.isInteger(lp) || isNaN(lp)) {
+      return res.status(400).json({ message: 'Ledige plasser må være et heltall.' })
+    }
+    if (lp < 0) {
+      return res
+        .status(400)
+        .json({ message: 'Ledige plasser kan ikke være lavere enn 0 eller høyere enn maks kapasitet.' })
+    }
+    if (lp > lecture.maksPlasser) {
+      return res
+        .status(400)
+        .json({ message: 'Ledige plasser kan ikke være lavere enn 0 eller høyere enn maks kapasitet.' })
+    }
+  }
+
   const overrides = loadOverrides()
   // Server-side conflict check is the authoritative one (the frontend can be
   // manipulated). Same room + same start time for another lecture = conflict.
@@ -67,7 +87,11 @@ app.post('/api/program/overrides', requireAuth, (req, res) => {
       .json({ message: 'Dette tidspunktet er allerede opptatt i valgt rom.' })
   }
 
-  overrides[id] = { rom, startTid, sluttTid }
+  const override = { rom, startTid, sluttTid }
+  if (ledigePlasser !== undefined && ledigePlasser !== null) {
+    override.ledigePlasser = Number(ledigePlasser)
+  }
+  overrides[id] = override
   writeOverrides(overrides)
   res.json(overrides)
 })

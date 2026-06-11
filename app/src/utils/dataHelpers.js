@@ -180,8 +180,13 @@ export const getProgramTimeSlots = () => {
   )
 }
 
+// Lookup a lecture's maksPlasser by id (used by the backend validator mirror).
+export const getLectureMaksPlasser = (id) =>
+  data.foredrag.find((l) => l.id === Number(id))?.maksPlasser ?? null
+
 // Return the program with overrides applied on top of the original data.
 // `endret: true` marks lectures the festival manager has changed.
+// `ledigePlasser` is included when the festival manager has set it.
 export const mergeProgramWithOverrides = (overrides = {}) =>
   data.foredrag.map((lecture) => {
     const override = overrides[lecture.id]
@@ -191,6 +196,9 @@ export const mergeProgramWithOverrides = (overrides = {}) =>
       rom: override.rom ?? lecture.rom,
       startTid: override.startTid ?? lecture.startTid,
       sluttTid: override.sluttTid ?? lecture.sluttTid,
+      ...(override.ledigePlasser !== undefined && {
+        ledigePlasser: override.ledigePlasser,
+      }),
       endret: true,
     }
   })

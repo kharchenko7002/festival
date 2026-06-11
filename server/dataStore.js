@@ -38,6 +38,11 @@ function getLectures() {
   return JSON.parse(raw).foredrag
 }
 
+// Single lecture by id, or undefined if not found.
+function getLectureById(id) {
+  return getLectures().find((lecture) => lecture.id === Number(id))
+}
+
 // Read all saved overrides as { [lectureId]: { rom, startTid, sluttTid } }.
 function loadOverrides() {
   ensureStorage()
@@ -56,7 +61,7 @@ function writeOverrides(overrides) {
 }
 
 // Merge overrides on top of the original lectures. `endret: true` marks the
-// lectures the festival manager has changed.
+// lectures the festival manager has changed. ledigePlasser is included when set.
 function mergeProgram(overrides = loadOverrides()) {
   return getLectures().map((lecture) => {
     const override = overrides[lecture.id]
@@ -66,6 +71,9 @@ function mergeProgram(overrides = loadOverrides()) {
       rom: override.rom ?? lecture.rom,
       startTid: override.startTid ?? lecture.startTid,
       sluttTid: override.sluttTid ?? lecture.sluttTid,
+      ...(override.ledigePlasser !== undefined && {
+        ledigePlasser: override.ledigePlasser,
+      }),
       endret: true,
     }
   })
@@ -96,6 +104,7 @@ module.exports = {
   STORAGE_DIR,
   ensureStorage,
   getLectures,
+  getLectureById,
   loadOverrides,
   writeOverrides,
   mergeProgram,
