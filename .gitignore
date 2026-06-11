@@ -9,5 +9,8 @@ bilde.png
 node_modules/
 dist/
 
-# Server-side runtime data (program-endringer lagres her ved kjøring)
+# Server-side runtime data (program-endringer og påmeldinger lagres her ved kjøring)
 server/storage/*.json
+
+# Environment variables with real secrets must never be committed
+.env

@@ -84,7 +84,6 @@ function AdminLogin({ onLogin }) {
           >
             {loading ? 'Logger inn …' : 'Logg inn'}
           </button>
-          <p className="text-center text-xs text-slate-400">Demo: festivalsjef / 2inf2026</p>
         </form>
       </div>
     </div>
